@@ -99,8 +99,29 @@ def codehub_topic(request):
             return redirect('/codehub/topic')
     else:
         form = CodehubTopicForm()
-        topics = CodehubTopicModel.objects.all()
+        topics = CodehubTopicModel.objects.all().order_by('-timeStamp')
     return render(request,'codehub/topic.html',{'form':form,'topics':topics})
+
+
+@loginRequired
+def edit_topic(request,id):
+    form = CodehubTopicForm()
+    topic_details = CodehubTopicModel.objects.get(id=id)
+    form.topic_heading = 'cdjkbcdkjcbdkjc'
+    return render(request,'codehub/edit_topic.html',{'form':form})
+
+
+#check that only the user can delete or removw his posts only
+@loginRequired
+def remove_topic(request,id):
+    topic_details = CodehubTopicModel.objects.get(id = id)
+    if topic_details.user.username == request.user.username:
+        CodehubTopicModel.objects.get(id = id).delete()
+        print 'deleted'
+        return redirect('/codehub/topic')
+    else:
+        print 'no acccess to delete'
+        return redirect('/codehub/topic')
 
 
 def logout_view(request):

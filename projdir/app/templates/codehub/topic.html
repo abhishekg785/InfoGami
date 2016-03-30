@@ -10,10 +10,13 @@
 <hr/>
 {% for topic in topics %}
     <h1>{{ topic.topic_heading }}</h1>
+    {{ topic.id }}
     <h3>{{ topic.user.username }}</h3>
     {{ topic.timeStamp }}
-    <a href = ''>Remove</a>
-    <a href = ''>Edit</a>
+    {% if topic.user.username == user.username %}
+    <a href = "/codehub/topic/remove/{{ topic.id }}">Remove</a>
+    <a href = "/codehub/topic/edit/{{ topic.id }}">Edit</a>
+    {% endif %}
     <hr/>
 {% endfor %}
 {% endblock %}

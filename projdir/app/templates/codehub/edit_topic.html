@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method = 'post'>
+{{ form.as_p }}
+</form>
+<a href = "{% url 'codehub_topic' %}">Cancel</a>
+{% endblock %}
