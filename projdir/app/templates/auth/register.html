@@ -3,7 +3,11 @@
   <h1>Register</h1>
   <hr/>
   <form method="post">{% csrf_token %}
-      {{ form.as_p }}
-      <input type='submit' name='submit' value = 'Register' />
+      <input type='text' name='fname' required placeholder = 'First Name'/><br/>
+      <input type='text' name='lname' required placeholder = 'Last Name'/><br/>
+      <input type='text' name='username' required placeholder = 'Pick a username'/><br/>
+      <input type='email' name='email' required placeholder="Your email address" /><br/>
+      <input type='password' name='password' required placeholder = 'Create a Password'/><br/>
+      <input type='submit' name='subButton'/><br/>
   </form>
 {% endblock %}

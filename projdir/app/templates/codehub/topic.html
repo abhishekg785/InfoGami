@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Topic</h1>
+<hr/>
+<form method="post">
+{% csrf_token %}
+{{ form.as_p }}
+<input type='submit' name='submitTopic' value= 'Post Topic'/>
+</form>
+<hr/>
+{% for topic in topics %}
+    <h1>{{ topic.topic_heading }}</h1>
+    <h3>{{ topic.user.username }}</h3>
+    {{ topic.timeStamp }}
+    <a href = ''>Remove</a>
+    <a href = ''>Edit</a>
+    <hr/>
+{% endfor %}
+{% endblock %}

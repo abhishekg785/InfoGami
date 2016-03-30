@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h1>Welcome {{ user }}!!! to Codehub</h1>
+<a href=''>Music</a>
+<a href = "{% url 'codehub_topic' %}">Recent Topics</a>
+<a href = ''>Recent Blogs</a>
+<hr/>
+{% endblock %}
