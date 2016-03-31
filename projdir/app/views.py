@@ -10,7 +10,6 @@ from django.utils.safestring import mark_safe
 import datetime
 
 from .forms import CodehubTopicForm,CodehubTopicCommentForm
-
 from .models import CodehubTopicModel,CodehubTopicCommentModel
 
 register = template.Library()
@@ -118,17 +117,18 @@ def codehub_topic(request):
 @loginRequired
 @check_user_access_for_topic_edit_or_comment
 def edit_topic(request,id):
-    initial_topic_details = CodehubTopicModel.objects.get(id=id)
     if request.method == 'POST':
         form = CodehubTopicForm(request.POST)
         if form.is_valid():
-            form = CodehubTopicForm(request.POST,instance = initial_topic_details)
+            initial_topic_details = CodehubTopicModel.objects.get(id=id)
+            form =CodehubTopicForm(request.POST,instance = initial_topic_details)
             form.save()
             #flash message for edit data
             print 'data edited'
             return redirect('/codehub/topic')
     else:
-        data = {'topic_heading':initial_topic_details.topic_heading,'topic_detail':initial_topic_details.topic_detail,'topic_link':initial_topic_details.topic_link,'tags':initial_topic_details.tags}
+        topic_details = CodehubTopicModel.objects.get(id = id)
+        data = {'topic_heading':topic_details.topic_heading,'topic_detail':topic_details.topic_detail,'topic_link':topic_details.topic_link,'tags':topic_details.tags}
         form = CodehubTopicForm(initial = data)
     return render(request,'codehub/edit_topic.html',{'form':form})
 

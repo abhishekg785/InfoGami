@@ -13,7 +13,7 @@ class CodehubTopicForm(forms.ModelForm):
 
     class Meta:
         model = CodehubTopicModel
-        fields = ['topic_heading']
+        fields = ['topic_heading','topic_detail','topic_link','tags','topic_type']
 
 #form for commenting on a topic
 class CodehubTopicCommentForm(forms.Form):
