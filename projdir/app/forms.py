@@ -1,7 +1,6 @@
 from django import forms
 from .models import CodehubTopicModel
 
-
 #forms for posting a new topic
 class CodehubTopicForm(forms.ModelForm):
     CHOICES = (('Basic', 'Basic'),('Advanced', 'Advanced'),)

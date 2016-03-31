@@ -14,10 +14,12 @@
 <input type='text' name = 'search_str' placeholder = 'Search here...'/>
 <input type='submit' name='seachTopic' value = 'Search'/>
 </form>
+<p style='color:red'>Click on topic/question to view comments</p><br/>
 <hr/>
 <div id = 'topicDisplaySec'>
 {% for topic in topics %}
     <h1><a href = "{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h1>
+    <a href = "{{ topic.topic_link }}">{{ topic.topic_link }}</a><br/>
       {{ topic.topic_type }}
     <h3>{{ topic.user.username }}</h3>
       {{ topic.timeStamp }}

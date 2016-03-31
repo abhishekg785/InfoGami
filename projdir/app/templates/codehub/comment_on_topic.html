@@ -19,6 +19,8 @@
     <P>{{ comment.comment_text }}</P>
     {{ comment.user.username }}:
     {{ comment.timeStamp }}
+    <a href = ''>Edit</a>
+    <a href = "{% url 'remove_topic_comment' comment.id %}">Remove</a>
     <hr/>
     {% endif %}
 {% endfor %}

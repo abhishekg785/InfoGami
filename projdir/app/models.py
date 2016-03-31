@@ -4,7 +4,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
-topic_type_choices = ('Basic','Advanced')
 
 class CodehubTopicModel(models.Model):
     user = models.ForeignKey(User)

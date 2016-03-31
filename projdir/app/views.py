@@ -174,10 +174,14 @@ def search_topic(request):
     if request.method == 'POST':
         string = request.POST['search_str']
         result = CodehubTopicModel.objects.filter(topic_heading__contains=string)
-        print result
         return HttpResponse(result)
     return HttpResponse('cdcdjkcbk')
 
+#COMMENT ROUTES START here
+def remove_topic_comment(request,id):
+    topic_id = CodehubTopicCommentModel.objects.get(id = id).topic.id
+    CodehubTopicCommentModel.objects.get(id = id).delete()
+    return redirect('/codehub/topic/'+str(topic_id)+'/comment')
 
 @loginRequired
 def logout_view(request):
