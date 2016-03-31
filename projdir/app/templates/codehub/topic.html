@@ -9,9 +9,12 @@
 </form>
 <hr/>
 <h1>Topics:<span>(</span>{{ topics.count }}<span>)</span></h1>
+<input type='text' placeholder = 'Search here...'/>
+<hr/>
+<div id = 'topicDisplaySec'>
 {% for topic in topics %}
     <h1><a href = "{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h1>
-      {{ topic.id }}
+      {{ topic.topic_type }}
     <h3>{{ topic.user.username }}</h3>
       {{ topic.timeStamp }}
     {% if topic.user.username == user.username %}
@@ -21,3 +24,4 @@
     <hr/>
 {% endfor %}
 {% endblock %}
+</div>

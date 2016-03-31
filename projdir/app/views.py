@@ -118,25 +118,17 @@ def codehub_topic(request):
 @loginRequired
 @check_user_access_for_topic_edit_or_comment
 def edit_topic(request,id):
+    initial_topic_details = CodehubTopicModel.objects.get(id=id)
     if request.method == 'POST':
         form = CodehubTopicForm(request.POST)
         if form.is_valid():
-            user = User.objects.get(username = request.user.username)
-            edited_topic_data = CodehubTopicModel(
-                user = user,
-                topic_heading = form.cleaned_data['topic_heading'],
-                topic_detail = form.cleaned_data['topic_detail'],
-                topic_link = form.cleaned_data['topic_link'],
-                tags = form.cleaned_data['tags'],
-                timeStamp = datetime.datetime.now()
-            )
-            edited_topic_data.save()
+            form = CodehubTopicForm(request.POST,instance = initial_topic_details)
+            form.save()
             #flash message for edit data
             print 'data edited'
             return redirect('/codehub/topic')
     else:
-        topic = CodehubTopicModel.objects.get(id=id)
-        data = {'topic_heading':topic.topic_heading,'topic_detail':topic.topic_detail,'topic_link':topic.topic_link,'tags':topic.tags}
+        data = {'topic_heading':initial_topic_details.topic_heading,'topic_detail':initial_topic_details.topic_detail,'topic_link':initial_topic_details.topic_link,'tags':initial_topic_details.tags}
         form = CodehubTopicForm(initial = data)
     return render(request,'codehub/edit_topic.html',{'form':form})
 

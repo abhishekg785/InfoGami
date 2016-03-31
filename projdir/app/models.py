@@ -13,7 +13,7 @@ class CodehubTopicModel(models.Model):
     topic_link = models.CharField(max_length = 100 )
     tags = models.CharField(max_length = 50)
     timeStamp = models.DateTimeField()
-    #topic_type = models.CharField(widget = forms.Se)
+    topic_type = models.CharField(max_length = 10)
 
     def __str__(self):
         return self.topic_heading
