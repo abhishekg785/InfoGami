@@ -9,6 +9,7 @@ from django import template
 from django.utils.safestring import mark_safe
 import datetime
 
+from django.utils.datastructures import MultiValueDictKeyError
 from .forms import CodehubTopicForm,CodehubTopicCommentForm
 from .models import CodehubTopicModel,CodehubTopicCommentModel
 
@@ -96,6 +97,10 @@ def codehub_topic(request):
         form = CodehubTopicForm(request.POST)
         if form.is_valid():
             user = User.objects.get(username = request.user.username)
+            try:
+                file = request.FILES['file']
+            except MultiValueDictKeyError:
+                file = False
             new_topic = CodehubTopicModel(
                 user = user,
                 topic_heading = form.cleaned_data['topic_heading'],
@@ -103,7 +108,8 @@ def codehub_topic(request):
                 topic_link = form.cleaned_data['topic_link'],
                 tags = form.cleaned_data['tags'],
                 topic_type = form.cleaned_data['topic_type'],
-                timeStamp = datetime.datetime.now()
+                file = file,
+                timeStamp = datetime.datetime.now(),
             )
             new_topic.save()
             #add flash message
@@ -161,6 +167,16 @@ def comment_on_topic(request,id):
     comments = CodehubTopicCommentModel.objects.all().order_by('-timeStamp')
     topic_details = CodehubTopicModel.objects.get(id = id)
     return render(request,'codehub/comment_on_topic.html',{'form':form,'comments':comments,'topic':topic_details})
+
+
+@loginRequired
+def search_topic(request):
+    if request.method == 'POST':
+        string = request.POST['search_str']
+        result = CodehubTopicModel.objects.filter(topic_heading__contains=string)
+        print result
+        return HttpResponse(result)
+    return HttpResponse('cdcdjkcbk')
 
 
 @loginRequired

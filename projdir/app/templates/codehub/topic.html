@@ -2,14 +2,18 @@
 {% block content %}
 <h1>Questions and Topics for Discussion</h1>
 <hr/>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 {% csrf_token %}
 {{ form.as_p }}
 <input type='submit' name='submitTopic' value= 'Post Topic'/>
 </form>
 <hr/>
 <h1>Topics:<span>(</span>{{ topics.count }}<span>)</span></h1>
-<input type='text' placeholder = 'Search here...'/>
+<form method='post' action = '/codehub/topic/search_topic/'>
+  {% csrf_token %}
+<input type='text' name = 'search_str' placeholder = 'Search here...'/>
+<input type='submit' name='seachTopic' value = 'Search'/>
+</form>
 <hr/>
 <div id = 'topicDisplaySec'>
 {% for topic in topics %}

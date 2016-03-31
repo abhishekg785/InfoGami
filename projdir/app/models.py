@@ -14,6 +14,7 @@ class CodehubTopicModel(models.Model):
     tags = models.CharField(max_length = 50)
     timeStamp = models.DateTimeField()
     topic_type = models.CharField(max_length = 10)
+    file = models.FileField(upload_to = 'uploads/')
 
     def __str__(self):
         return self.topic_heading

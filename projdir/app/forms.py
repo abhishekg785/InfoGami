@@ -10,10 +10,10 @@ class CodehubTopicForm(forms.ModelForm):
     topic_link = forms.URLField(label = 'Link to the topic',max_length = 100,required = False)
     tags = forms.CharField(label = 'Add tags',max_length = 100,required = True)
     topic_type = forms.ChoiceField(choices = CHOICES,required = True)
-
+    file = forms.FileField(label = 'Upload a file:',required=False)
     class Meta:
         model = CodehubTopicModel
-        fields = ['topic_heading','topic_detail','topic_link','tags','topic_type']
+        fields = ['topic_heading','topic_detail','topic_link','tags','topic_type','file']
 
 #form for commenting on a topic
 class CodehubTopicCommentForm(forms.Form):
