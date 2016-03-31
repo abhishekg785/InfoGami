@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Topic</h1>
+<h1>Questions and Topics for Discussion</h1>
 <hr/>
 <form method="post">
 {% csrf_token %}
@@ -9,8 +9,8 @@
 </form>
 <hr/>
 {% for topic in topics %}
-    <h1>{{ topic.topic_heading }}</h1>
-    {{ topic.id }}
+    <h1><a href = '/codehub/topic/{{ topic.id }}/comment/'>{{ topic.topic_heading }}</a></h1>
+      {{ topic.id }}
     <h3>{{ topic.user.username }}</h3>
     {{ topic.timeStamp }}
     {% if topic.user.username == user.username %}

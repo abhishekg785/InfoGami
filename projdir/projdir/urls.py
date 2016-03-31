@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from app.views import login_view,register_view,codehub,logout_view,index,codehub_topic,edit_topic,remove_topic
+from app.views import login_view,register_view,codehub,logout_view,index,codehub_topic,edit_topic,remove_topic,comment_on_topic
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -26,7 +26,9 @@ urlpatterns = [
     url(r'^auth/logout/$',logout_view,name='logout_view'),
     url(r'^codehub/$',codehub,name='codehub'),
     url(r'^codehub/topic/$',codehub_topic,name = 'codehub_topic'),
-    url(r'^codehub/topic/edit/(?P<id>\d+)/$',edit_topic,name = 'edit_topic'),
-    url(r'^codehub/topic/remove/(?P<id>\d+)/$',remove_topic,name = 'remove_topic'),
+    url(r'^codehub/topic/edit/(?P<id>\d+)/$',edit_topic),
+    url(r'^codehub/topic/remove/(?P<id>\d+)/$',remove_topic),
+    url(r'^codehub/topic/(?P<id>\d+)/comment/$',comment_on_topic),
+
 
 ]

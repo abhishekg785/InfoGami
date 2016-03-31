@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ topic.topic_heading }}</h1>
+{% if topic.topic_link %}
+    <a href = "{{ topic.topic_link }}">{{ topic.topic_link }}</a>
+    <br/>
+{% endif %}
+{{ topic.user.username }}:
+{{ topic.timeStamp }}
+<form method='post'>
+{% csrf_token %}
+{{ form.as_p }}
+<input type='submit' name='comment' value ='Comment'/>
+</form>
+<hr/>
+<h1>Comments:</h1>
+{% for comment in comments %}
+    {% if comment.topic.id == topic.id%}
+    <h3>{{ comment.comment_text }}</h3>
+    {{ comment.user.username }}:
+    {{ comment.timeStamp }}
+    <hr/>
+    {% endif %}
+{% endfor %}
+{% endblock %}

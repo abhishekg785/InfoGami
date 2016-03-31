@@ -9,9 +9,9 @@ from django import template
 from django.utils.safestring import mark_safe
 import datetime
 
-from .forms import CodehubTopicForm
+from .forms import CodehubTopicForm,CodehubTopicCommentForm
 
-from .models import CodehubTopicModel
+from .models import CodehubTopicModel,CodehubTopicCommentModel
 
 register = template.Library()
 # Create your views here.
@@ -35,6 +35,17 @@ def loginRequired(func):
             return redirect('login_view')
         return func(request,*args,**kwargs)
     return wrapper
+
+
+#decorator for checking that only the user of the topic can comment
+def check_user_access_for_topic_edit_or_comment(func):
+    def wrapper(request,id,*args,**kwargs):
+        topic_details = CodehubTopicModel.objects.get(id = id)
+        if topic_details.user.username != request.user.username:
+            return redirect('/codehub/topic')
+        return func(request,id,*args,**kwargs)
+    return wrapper
+
 
 
 #route for login the user
@@ -99,31 +110,67 @@ def codehub_topic(request):
             return redirect('/codehub/topic')
     else:
         form = CodehubTopicForm()
-        topics = CodehubTopicModel.objects.all().order_by('-timeStamp')
+    topics = CodehubTopicModel.objects.all().order_by('-timeStamp')
     return render(request,'codehub/topic.html',{'form':form,'topics':topics})
 
 
 @loginRequired
+@check_user_access_for_topic_edit_or_comment
 def edit_topic(request,id):
-    form = CodehubTopicForm()
-    topic_details = CodehubTopicModel.objects.get(id=id)
-    form.topic_heading = 'cdjkbcdkjcbdkjc'
+    if request.method == 'POST':
+        form = CodehubTopicForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(username = request.user.username)
+            edited_topic_data = CodehubTopicModel(
+                user = user,
+                topic_heading = form.cleaned_data['topic_heading'],
+                topic_detail = form.cleaned_data['topic_detail'],
+                topic_link = form.cleaned_data['topic_link'],
+                tags = form.cleaned_data['tags'],
+                timeStamp = datetime.datetime.now()
+            )
+            edited_topic_data.save()
+            #flash message for edit data
+            print 'data edited'
+            return redirect('/codehub/topic')
+    else:
+        topic = CodehubTopicModel.objects.get(id=id)
+        data = {'topic_heading':topic.topic_heading,'topic_detail':topic.topic_detail,'topic_link':topic.topic_link,'tags':topic.tags}
+        form = CodehubTopicForm(initial = data)
     return render(request,'codehub/edit_topic.html',{'form':form})
 
 
 #check that only the user can delete or removw his posts only
 @loginRequired
+@check_user_access_for_topic_edit_or_comment
 def remove_topic(request,id):
-    topic_details = CodehubTopicModel.objects.get(id = id)
-    if topic_details.user.username == request.user.username:
-        CodehubTopicModel.objects.get(id = id).delete()
-        print 'deleted'
-        return redirect('/codehub/topic')
+    CodehubTopicModel.objects.get(id = id).delete()
+    print 'deleted'
+    return redirect('/codehub/topic')
+
+
+@loginRequired
+def comment_on_topic(request,id):
+    if request.method == 'POST':
+        form = CodehubTopicCommentForm(request.POST)
+        if form.is_valid():
+            new_comment = CodehubTopicCommentModel(
+                user = User.objects.get(username = request.user.username),
+                topic = CodehubTopicModel.objects.get(id = id),
+                comment_text = form.cleaned_data['comment_text'],
+                timeStamp = datetime.datetime.now()
+            )
+            new_comment.save()
+            #flash message here
+            return redirect("/codehub/topic/"+id+"/comment")
     else:
-        print 'no acccess to delete'
-        return redirect('/codehub/topic')
+        form = CodehubTopicCommentForm()
+    comments = CodehubTopicCommentModel.objects.all().order_by('-timeStamp')
+    topic_details = CodehubTopicModel.objects.get(id = id)
+    return render(request,'codehub/comment_on_topic.html',{'form':form,'comments':comments,'topic':topic_details})
 
 
+@loginRequired
 def logout_view(request):
     logout(request)
     return redirect('/auth/login')
