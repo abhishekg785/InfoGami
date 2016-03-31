@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubTopicModel
+from .models import CodehubTopicModel,CodehubTopicCommentModel
 
 #forms for posting a new topic
 class CodehubTopicForm(forms.ModelForm):
@@ -15,5 +15,8 @@ class CodehubTopicForm(forms.ModelForm):
         fields = ['topic_heading','topic_detail','topic_link','tags','topic_type','file']
 
 #form for commenting on a topic
-class CodehubTopicCommentForm(forms.Form):
+class CodehubTopicCommentForm(forms.ModelForm):
     comment_text = forms.CharField(label = '',max_length = 500,widget = forms.Textarea(attrs = {'rows':'3','cols':'40'}))
+    class Meta:
+        model = CodehubTopicCommentModel
+        fields = ['comment_text']

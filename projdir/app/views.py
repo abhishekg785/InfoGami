@@ -10,6 +10,7 @@ from django.utils.safestring import mark_safe
 import datetime
 
 from django.utils.datastructures import MultiValueDictKeyError
+
 from .forms import CodehubTopicForm,CodehubTopicCommentForm
 from .models import CodehubTopicModel,CodehubTopicCommentModel
 
@@ -38,7 +39,7 @@ def loginRequired(func):
 
 
 #decorator for checking that only the user of the topic can comment
-def check_user_access_for_topic_edit_or_comment(func):
+def check_user_access_for_topic_edit(func):
     def wrapper(request,id,*args,**kwargs):
         topic_details = CodehubTopicModel.objects.get(id = id)
         if topic_details.user.username != request.user.username:
@@ -121,7 +122,7 @@ def codehub_topic(request):
 
 
 @loginRequired
-@check_user_access_for_topic_edit_or_comment
+@check_user_access_for_topic_edit
 def edit_topic(request,id):
     if request.method == 'POST':
         form = CodehubTopicForm(request.POST)
@@ -141,7 +142,7 @@ def edit_topic(request,id):
 
 #check that only the user can delete or removw his posts only
 @loginRequired
-@check_user_access_for_topic_edit_or_comment
+@check_user_access_for_topic_edit
 def remove_topic(request,id):
     CodehubTopicModel.objects.get(id = id).delete()
     print 'deleted'
@@ -177,11 +178,50 @@ def search_topic(request):
         return HttpResponse(result)
     return HttpResponse('cdcdjkcbk')
 
+
+
+
+
+
+
+
+
 #COMMENT ROUTES START here
+def check_user_access_for_comment_edit(func):
+    def wrapper(request,id,*args,**kwargs):
+        comment_details = CodehubTopicCommentModel.objects.get(id = id)
+        if comment_details.user.username != request.user.username:
+            return redirect('/codehub/topic')
+        return func(request,id,*args,**kwargs)
+    return wrapper
+
+
+
+@loginRequired
+@check_user_access_for_comment_edit
 def remove_topic_comment(request,id):
+    #get the id of the topic of the comment
     topic_id = CodehubTopicCommentModel.objects.get(id = id).topic.id
     CodehubTopicCommentModel.objects.get(id = id).delete()
     return redirect('/codehub/topic/'+str(topic_id)+'/comment')
+
+@loginRequired
+@check_user_access_for_comment_edit
+def edit_topic_comment(request,id):
+    if request.method == 'POST':
+        form = CodehubTopicCommentForm(request.POST)
+        if form.is_valid():
+            comment = CodehubTopicCommentModel.objects.get(id = id)
+            form = CodehubTopicCommentForm(request.POST,instance = comment)
+            form.save()
+            return redirect('/codehub/topic/'+str(comment.topic.id)+'/comment')
+    else:
+        comment = CodehubTopicCommentModel.objects.get(id = id)
+        comment_data = {'comment_text':comment.comment_text}
+        form = CodehubTopicCommentForm(initial = comment_data)
+    return render(request,'codehub/edit_comment_on_topic.html',{'form':form})
+
+
 
 @loginRequired
 def logout_view(request):
