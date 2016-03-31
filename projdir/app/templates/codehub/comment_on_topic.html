@@ -16,7 +16,7 @@
 <h1>Comments:</h1>
 {% for comment in comments %}
     {% if comment.topic.id == topic.id%}
-    <h3>{{ comment.comment_text }}</h3>
+    <P>{{ comment.comment_text }}</P>
     {{ comment.user.username }}:
     {{ comment.timeStamp }}
     <hr/>

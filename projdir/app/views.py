@@ -103,6 +103,7 @@ def codehub_topic(request):
                 topic_detail = form.cleaned_data['topic_detail'],
                 topic_link = form.cleaned_data['topic_link'],
                 tags = form.cleaned_data['tags'],
+                topic_type = form.cleaned_data['topic_type'],
                 timeStamp = datetime.datetime.now()
             )
             new_topic.save()

@@ -26,9 +26,9 @@ urlpatterns = [
     url(r'^auth/logout/$',logout_view,name='logout_view'),
     url(r'^codehub/$',codehub,name='codehub'),
     url(r'^codehub/topic/$',codehub_topic,name = 'codehub_topic'),
-    url(r'^codehub/topic/edit/(?P<id>\d+)/$',edit_topic),
-    url(r'^codehub/topic/remove/(?P<id>\d+)/$',remove_topic),
-    url(r'^codehub/topic/(?P<id>\d+)/comment/$',comment_on_topic),
+    url(r'^codehub/topic/edit/(?P<id>\d+)/$',edit_topic,name = 'edit_topic'),
+    url(r'^codehub/topic/remove/(?P<id>\d+)/$',remove_topic,name = 'remove_topic'),
+    url(r'^codehub/topic/(?P<id>\d+)/comment/$',comment_on_topic,name = 'comment_on_topic'),
 
 
 ]

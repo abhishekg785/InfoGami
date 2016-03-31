@@ -8,14 +8,15 @@
 <input type='submit' name='submitTopic' value= 'Post Topic'/>
 </form>
 <hr/>
+<h1>Topics:<span>(</span>{{ topics.count }}<span>)</span></h1>
 {% for topic in topics %}
-    <h1><a href = '/codehub/topic/{{ topic.id }}/comment/'>{{ topic.topic_heading }}</a></h1>
+    <h1><a href = "{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h1>
       {{ topic.id }}
     <h3>{{ topic.user.username }}</h3>
-    {{ topic.timeStamp }}
+      {{ topic.timeStamp }}
     {% if topic.user.username == user.username %}
-    <a href = "/codehub/topic/remove/{{ topic.id }}">Remove</a>
-    <a href = "/codehub/topic/edit/{{ topic.id }}">Edit</a>
+    <a href = "{% url 'remove_topic' topic.id %}">Remove</a>
+    <a href = "{% url 'edit_topic' topic.id %}">Edit
     {% endif %}
     <hr/>
 {% endfor %}
