@@ -26,11 +26,12 @@ class CodehubTopicCommentModel(models.Model):
     timeStamp = models.DateTimeField()
 
 
+
 #this will store the extra profile details of the user
-class UserDetailsModel(models.Model):
+class UserProfileModel(models.Model):
     user = models.ForeignKey(User)
     user_description = models.CharField(max_length = 200)
-    user_gravatar = models.CharField(max_length = 200)
+    # user_gravatar = models.CharField(max_length = 200)
     skills = models.CharField(max_length = 200)
-    user_type_select = models.CharField(max_length = 15)   #developer or programmer
+    user_type_select = models.CharField(max_length = 50)   #developer or programmer
     timeStamp = models.DateTimeField()

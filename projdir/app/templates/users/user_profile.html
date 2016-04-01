@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+{% if user_info.username  == user.username %}
+<h2><a href = "{% url 'edit_user_profile' user.id %}">Edit Profile</a></h2>
+{% endif %}
+<h1>{{ user_info.username }}</h1><br/>
+<p style="color:red">The image is the avatar of the user,create your own here...<a href =''>Avatar</a></p>
+<img src = "{{ gravatar_url }}" />
+<img src = "{% static 'images/default_gravators/github.png' %}" alt ='No avatar available' style="height:200px"/><br/>
+<h2>{{ user_info.first_name }}</h2>
+<h2>{{ user_info.last_name }}</h2>
+{{ user_info.email }}<br/>
+{{ user_info.date_joined}}<br/>
+{% endblock %}

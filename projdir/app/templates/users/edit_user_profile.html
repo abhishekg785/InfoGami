@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method = 'post'>
+{% csrf_token %}
+{{ form.as_p }}
+<input type='submit' name='edit_profile' value = 'Save Changes'/>
+</form>
+{% endblock %}
