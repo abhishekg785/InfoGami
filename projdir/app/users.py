@@ -21,3 +21,6 @@ def gravatar(email, size=128):
 
 def get_users(request):
     return HttpResponse(gravatar('abhishekg785@gmail.com'))
+
+def user_profile(request,id):
+    return HttpResponse(id)

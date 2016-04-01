@@ -18,7 +18,7 @@ from django.contrib import admin
 
 from app.views import login_view,register_view,logout_view,index
 from app.codehub import codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment
-from app.users import get_users
+from app.users import get_users,user_profile
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -35,4 +35,5 @@ urlpatterns = [
     url(r'^codehub/topic/comment/(?P<id>\d+)/remove$',remove_topic_comment,name = 'remove_topic_comment'),
     url(r'^codehub/topic/comment/(?P<id>\d+)/edit$',edit_topic_comment,name = 'edit_topic_comment'),
     url(r'^users/$',get_users,name='get_users'),
+    url(r'^users/profile/(?P<id>\d+)/$',user_profile,name = 'user_profile')
 ]
