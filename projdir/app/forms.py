@@ -4,10 +4,10 @@ from .models import CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel
 #forms for posting a new topic
 class CodehubTopicForm(forms.ModelForm):
     CHOICES = (('Basic', 'Basic'),('Advanced', 'Advanced'),)
-    topic_heading = forms.CharField(label = 'Topic Heading',max_length = 100)
-    topic_detail = forms.CharField(label = 'Add Details about Topic',widget = forms.Textarea(attrs = {'rows':'2','cols':'32'}),max_length = 200)
-    topic_link = forms.URLField(label = 'Link to the topic',max_length = 100,required = False)
-    tags = forms.CharField(label = 'Add tags',max_length = 100,required = True)
+    topic_heading = forms.CharField(label = '',max_length = 100,widget = forms.TextInput(attrs = {'placeholder':'Topic heading goes here..'}))
+    topic_detail = forms.CharField(label = '',widget = forms.Textarea(attrs = {'rows':'2','cols':'32','placeholder':'Enter the details about topic'}),max_length = 200)
+    topic_link = forms.URLField(label = '',max_length = 100,required = False,widget = forms.TextInput(attrs = {'placeholder':'Link to topic'}))
+    tags = forms.CharField(label = 'Add tags',max_length = 100,required = True,widget = forms.TextInput(attrs = {'placeholder':'Add tags'}))
     topic_type = forms.ChoiceField(choices = CHOICES,required = True)
     file = forms.FileField(label = 'Upload a file:',required=False)
     class Meta:
@@ -35,5 +35,16 @@ class UserProfileForm(forms.ModelForm):
         fields = ['user_description','skills','user_type_select']
 
 
+
+class CodehubClassTalkNotifiyForm(forms.ModelForm):
+    CHOICES = (('Basic', 'Basic'),('Advanced', 'Advanced'),)
+    class_heading = forms.CharField(label = 'Class Heading',max_length = 50)
+    class_on = forms.DateField()
+    venue = forms.CharField(max_length = 100)
+    class_description = forms.CharField(label = 'Class Description')
+    class_for = forms.ChoiceField(choices = CHOICES,required =True)
+
+
+
 class SearchForm(forms.Form):
-    search_str = forms.CharField(label = 'Search here:',max_length = 50)
+    search_str = forms.CharField(label = 'Search here:',max_length = 50,required = True)

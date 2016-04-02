@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 
 from app.views import login_view,register_view,logout_view,index
 from app.codehub import codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment
@@ -37,4 +39,4 @@ urlpatterns = [
     url(r'^users/$',get_users,name='get_users'),
     url(r'^users/profile/(?P<user_id>\d+)/$',user_profile,name = 'user_profile'),
     url(r'^users/profile/(?P<user_id>\d+)/edit/$',edit_user_profile,name = 'edit_user_profile')
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

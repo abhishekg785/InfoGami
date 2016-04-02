@@ -5,11 +5,11 @@
 <form method="post" enctype="multipart/form-data">
 {% csrf_token %}
 {{ form.as_p }}
-<input type='submit' name='submitTopic' value= 'Post Topic'/>
+<input type='submit'   name='submitTopic' value= 'Post Topic'/>
 </form>
 <hr/>
 <h1>Topics:<span>(</span>{{ topics.count }}<span>)</span></h1>
-<form method='post' action = '/codehub/topic/search_topic/'>
+<form method='POST' action = "{% url 'search_topic' %}">
   {% csrf_token %}
   {{ search_form.as_p }}
 <input type='submit' name='seachTopic' value = 'Search'/>
@@ -20,8 +20,9 @@
 {% for topic in topics %}
     <h1><a href = "{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h1>
     <a href = "{{ topic.topic_link }}">{{ topic.topic_link }}</a><br/>
+      <a href = "/media/{{ topic.file }}">{{ topic.file }}</a><br/>
       {{ topic.topic_type }}
-    <h3>{{ topic.user.username }}</h3>
+    <h3><a href="{% url 'user_profile' topic.user.id %}">{{ topic.user.username }}</a></h3>
       {{ topic.timeStamp }}
     {% if topic.user.username == user.username %}
     <a href = "{% url 'remove_topic' topic.id %}">Remove</a>

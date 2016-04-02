@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
-
 # Create your models here.
 
 class CodehubTopicModel(models.Model):
@@ -40,3 +39,13 @@ class UserProfileModel(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class CodehubClassTalkNotifiyModel(models.Model):
+    user = models.ForeignKey(User)
+    class_heading = models.CharField(max_length = 100)
+    class_on = models.DateField()
+    venue = models.CharField(max_length = 100)
+    class_description = models.CharField(max_length = 200)
+    class_for  = models.CharField(max_length = 25)#basic or advanced
+    timeStamp = models.DateTimeField()

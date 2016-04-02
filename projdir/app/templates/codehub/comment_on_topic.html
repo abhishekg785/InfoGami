@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>{{ topic.topic_heading }}</h1>
+<a href = "/media/{{ topic.file }}">{{ topic.file }}</a><br/>
 {% if topic.topic_link %}
     <a href = "{{ topic.topic_link }}">{{ topic.topic_link }}</a>
     <br/>

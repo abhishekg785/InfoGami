@@ -34,7 +34,7 @@ def codehub_topic(request):
             try:
                 file = request.FILES['file']
             except MultiValueDictKeyError:
-                file = False
+                file = ''
             new_topic = CodehubTopicModel(
                 user = user,
                 topic_heading = form.cleaned_data['topic_heading'],
@@ -50,7 +50,7 @@ def codehub_topic(request):
             return redirect('/codehub/topic')
     else:
         form = CodehubTopicForm()
-        search_form = SearchForm()
+    search_form = SearchForm()
     topics = CodehubTopicModel.objects.all().order_by('-timeStamp')
     return render(request,'codehub/topic.html',{'form':form,'topics':topics,'search_form':search_form})
 
@@ -62,14 +62,18 @@ def edit_topic(request,id):
         form = CodehubTopicForm(request.POST)
         if form.is_valid():
             initial_topic_details = CodehubTopicModel.objects.get(id=id)
-            form =CodehubTopicForm(request.POST,instance = initial_topic_details)
+            try:
+                initial_topic_details.file = request.FILES['file']
+            except:
+                initial_topic_details.file = ''
+            form = CodehubTopicForm(request.POST,instance = initial_topic_details)
             form.save()
             #flash message for edit data
             print 'data edited'
             return redirect('/codehub/topic')
     else:
         topic_details = CodehubTopicModel.objects.get(id = id)
-        data = {'topic_heading':topic_details.topic_heading,'topic_detail':topic_details.topic_detail,'topic_link':topic_details.topic_link,'tags':topic_details.tags}
+        data = {'topic_heading':topic_details.topic_heading,'topic_detail':topic_details.topic_detail,'topic_link':topic_details.topic_link,'tags':topic_details.tags,'file':topic_details.file}
         form = CodehubTopicForm(initial = data)
     return render(request,'codehub/edit_topic.html',{'form':form})
 
@@ -109,10 +113,15 @@ def comment_on_topic(request,id):
 @loginRequired
 def search_topic(request):
     if request.method == 'POST':
-        string = request.POST['search_str']
-        result = CodehubTopicModel.objects.filter(topic_heading__contains=string)
-        return HttpResponse(result)
-    return HttpResponse('cdcdjkcbk')
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            string = request.POST['search_str']
+            print string
+            result = CodehubTopicModel.objects.filter(topic_heading__contains=string)
+            return HttpResponse(result)
+    else:
+        form = SearchForm()
+    return HttpResponse('cdbckdbckj')
 
 
 

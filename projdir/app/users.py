@@ -82,3 +82,7 @@ def edit_user_profile(request,user_id):
             form_data = {'user_description':profile_details.user_description,'skills':profile_details.skills,'user_type_select':profile_details.user_type_select}
         form = UserProfileForm(initial = form_data)
     return render(request,'users/edit_user_profile.html',{'form':form})
+
+
+def get_user(request):
+    return request.user.username
