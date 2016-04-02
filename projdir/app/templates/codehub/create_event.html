@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Create Event</h1>
+{% if form.errors %}
+  <h2>Errors:</h2>
+  {{ form.errors }}
+  {{ form.non_field_errors }}
+{% endif %}
+<form method="post">
+{% csrf_token %}
+{{ form.as_p }}
+<input type='submit' name='create_event' value='Create Event'/>
+</form>
+{% endblock %}

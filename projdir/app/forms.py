@@ -1,9 +1,9 @@
 from django import forms
-from .models import CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel
+from .models import CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel
 
 #forms for posting a new topic
 class CodehubTopicForm(forms.ModelForm):
-    CHOICES = (('Basic', 'Basic'),('Advanced', 'Advanced'),)
+    CHOICES = (('None','None'),('Basic', 'Basic'),('Advanced', 'Advanced'),)
     topic_heading = forms.CharField(label = '',max_length = 100,widget = forms.TextInput(attrs = {'placeholder':'Topic heading goes here..'}))
     topic_detail = forms.CharField(label = '',widget = forms.Textarea(attrs = {'rows':'2','cols':'32','placeholder':'Enter the details about topic'}),max_length = 200)
     topic_link = forms.URLField(label = '',max_length = 100,required = False,widget = forms.TextInput(attrs = {'placeholder':'Link to topic'}))
@@ -36,14 +36,16 @@ class UserProfileForm(forms.ModelForm):
 
 
 
-class CodehubClassTalkNotifiyForm(forms.ModelForm):
-    CHOICES = (('Basic', 'Basic'),('Advanced', 'Advanced'),)
-    class_heading = forms.CharField(label = 'Class Heading',max_length = 50)
-    class_on = forms.DateField()
-    venue = forms.CharField(max_length = 100)
-    class_description = forms.CharField(label = 'Class Description')
-    class_for = forms.ChoiceField(choices = CHOICES,required =True)
-
+class CodehubCreateEventForm(forms.ModelForm):
+    CHOICES = (('None','None'),('Basic', 'Basic'),('Advanced', 'Advanced'),)
+    event_heading = forms.CharField(label = 'Event Heading',max_length = 50)
+    event_date = forms.DateTimeField(required = False)
+    event_description = forms.CharField(label = '',widget = forms.Textarea(attrs = {'placeholder':'Event Description goes here','rows':'2','cols':'40'}))
+    event_venue = forms.CharField(max_length = 100,required = False)
+    event_for = forms.ChoiceField(label = 'Event For:',choices = CHOICES,required =True)
+    class Meta:
+        model = CodehubCreateEventModel
+        fields = ['event_heading','event_date','event_venue','event_description','event_for']
 
 
 class SearchForm(forms.Form):

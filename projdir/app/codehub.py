@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,logout,login
@@ -12,7 +12,8 @@ from .views import loginRequired
 #decorator for checking that only the user of the topic can comment
 def check_user_access_for_topic_edit(func):
     def wrapper(request,id,*args,**kwargs):
-        topic_details = CodehubTopicModel.objects.get(id = id)
+        # topic_details = CodehubTopicModel.objects.get(id = id)
+        topic_details = get_object_or_404(CodehubTopicModel,id =id)
         if topic_details.user.username != request.user.username:
             return redirect('/codehub/topic')
         return func(request,id,*args,**kwargs)
@@ -73,7 +74,7 @@ def edit_topic(request,id):
             return redirect('/codehub/topic')
     else:
         topic_details = CodehubTopicModel.objects.get(id = id)
-        data = {'topic_heading':topic_details.topic_heading,'topic_detail':topic_details.topic_detail,'topic_link':topic_details.topic_link,'tags':topic_details.tags,'file':topic_details.file}
+        data = {'topic_heading':topic_details.topic_heading,'topic_detail':topic_details.topic_detail,'topic_link':topic_details.topic_link,'tags':topic_details.tags,'file':topic_details.file,'topic_type':topic_details.topic_type}
         form = CodehubTopicForm(initial = data)
     return render(request,'codehub/edit_topic.html',{'form':form})
 
@@ -83,9 +84,10 @@ def edit_topic(request,id):
 @loginRequired
 @check_user_access_for_topic_edit
 def remove_topic(request,id):
-    CodehubTopicModel.objects.get(id = id).delete()
+    get_object_or_404(CodehubTopicModel,id = id).delete()
     print 'deleted'
     return redirect('/codehub/topic')
+
 
 
 @loginRequired
@@ -128,7 +130,8 @@ def search_topic(request):
 #COMMENT ROUTES START here
 def check_user_access_for_comment_edit(func):
     def wrapper(request,id,*args,**kwargs):
-        comment_details = CodehubTopicCommentModel.objects.get(id = id)
+        # comment_details = CodehubTopicCommentModel.objects.get(id = id)
+        comment_details = get_object_or_404(CodehubTopicCommentModel,id = id)
         if comment_details.user.username != request.user.username:
             return redirect('/codehub/topic')
         return func(request,id,*args,**kwargs)
@@ -140,8 +143,9 @@ def check_user_access_for_comment_edit(func):
 @check_user_access_for_comment_edit
 def remove_topic_comment(request,id):
     #get the id of the topic of the comment
-    topic_id = CodehubTopicCommentModel.objects.get(id = id).topic.id
-    CodehubTopicCommentModel.objects.get(id = id).delete()
+    # topic_id = CodehubTopicCommentModel.objects.get(id = id).topic.id
+    topic_id = get_object_or_404(CodehubTopicCommentModel,id =id).topic.id
+    get_object_or_404(CodehubTopicCommentModel,id = id).delete()
     return redirect('/codehub/topic/'+str(topic_id)+'/comment')
 
 

@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>{{ topic.topic_heading }}</h1>
+{% if topic.user.username == user.username %}
+  <a href = "{% url 'edit_topic' topic.id %}">Edit</a>
+  <a href = "{% url 'remove_topic' topic.id %}">Remove</a>
+{% endif %}
 <a href = "/media/{{ topic.file }}">{{ topic.file }}</a><br/>
 {% if topic.topic_link %}
     <a href = "{{ topic.topic_link }}">{{ topic.topic_link }}</a>

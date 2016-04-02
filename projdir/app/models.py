@@ -32,20 +32,22 @@ class CodehubTopicCommentModel(models.Model):
 class UserProfileModel(models.Model):
     user = models.ForeignKey(User)
     user_description = models.CharField(max_length = 200)
-    # user_gravatar = models.CharField(max_length = 200)
     skills = models.CharField(max_length = 200)
     user_type_select = models.CharField(max_length = 50,default = 'None')   #developer or programmer
-    timeStamp = models.DateTimeField()
+    timeStamp = models.DateTimeField(auto_now_add = True)
 
     def __str__(self):
         return self.user.username
 
 
-class CodehubClassTalkNotifiyModel(models.Model):
+class CodehubCreateEventModel(models.Model):
     user = models.ForeignKey(User)
-    class_heading = models.CharField(max_length = 100)
-    class_on = models.DateField()
-    venue = models.CharField(max_length = 100)
-    class_description = models.CharField(max_length = 200)
-    class_for  = models.CharField(max_length = 25)#basic or advanced
+    event_heading = models.CharField(max_length = 100)
+    event_date = models.DateTimeField(null = True)
+    event_venue = models.CharField(max_length = 100)
+    event_description = models.CharField(max_length = 200)
+    event_for  = models.CharField(max_length = 25)#basic or advanced
     timeStamp = models.DateTimeField()
+
+    def __str__(self):
+        return self.event_heading

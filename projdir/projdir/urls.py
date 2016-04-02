@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 from app.views import login_view,register_view,logout_view,index
 from app.codehub import codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment
 from app.users import get_users,user_profile,edit_user_profile
+from app.create_event import create_codehub_event,edit_codehub_event,remove_codehub_event
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -38,5 +39,9 @@ urlpatterns = [
     url(r'^codehub/topic/comment/(?P<id>\d+)/edit$',edit_topic_comment,name = 'edit_topic_comment'),
     url(r'^users/$',get_users,name='get_users'),
     url(r'^users/profile/(?P<user_id>\d+)/$',user_profile,name = 'user_profile'),
-    url(r'^users/profile/(?P<user_id>\d+)/edit/$',edit_user_profile,name = 'edit_user_profile')
+    url(r'^users/profile/(?P<user_id>\d+)/edit/$',edit_user_profile,name = 'edit_user_profile'),
+    url(r'^codehub/create_event/$',create_codehub_event,name = 'create_codehub_event'),
+    url(r'^codehub/edit_event/(?P<event_id>\d+)$',edit_codehub_event,name = 'edit_codehub_event'),
+    url(r'^codehub/remove_event/(?P<event_id>\d+)$',remove_codehub_event,name = 'remove_codehub_event'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
