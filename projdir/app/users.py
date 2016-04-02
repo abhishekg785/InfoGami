@@ -6,9 +6,22 @@ from django.utils.safestring import mark_safe
 import hashlib
 import urllib
 
+
+from .views import loginRequired
 from .forms import UserProfileForm
 from .models import UserProfileModel
 import datetime
+
+#decorators here
+
+#decorator to check user has access to edit profile or not
+def check_user_access_for_profile_edit(func):
+    def wrapper(request,user_id,*args,**kwargs):
+        print int(request.user.id) == int(user_id)
+        if int(request.user.id) != int(user_id):
+            return redirect('/users/profile/'+str(user_id))
+        return func(request,user_id,*args,**kwargs)
+    return wrapper
 
 register = template.Library()
 
@@ -28,6 +41,8 @@ def gravatar(email, size=128):
 def get_users(request):
     return HttpResponse(gravatar('abhishekg785@gmail.com'))
 
+
+@loginRequired
 def user_profile(request,user_id):
     info = User.objects.get(id = user_id)
     try:
@@ -39,7 +54,8 @@ def user_profile(request,user_id):
     return render(request,'users/user_profile.html',{'user_info':info,'user_profile':user_profile,'gravatar_url':user_gravatar_url})
 
 
-#CREATE DECORATOR TO CHECK THE PERSON EDITIING THE FORM
+@loginRequired
+@check_user_access_for_profile_edit
 def edit_user_profile(request,user_id):
     data = ['user_description','skills','user_type_select']
     if request.method == 'POST':
