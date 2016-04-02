@@ -99,7 +99,7 @@ def comment_on_topic(request,id):
             return redirect("/codehub/topic/"+id+"/comment")
     else:
         form = CodehubTopicCommentForm()
-    comments = CodehubTopicCommentModel.objects.all().order_by('-timeStamp')
+    comments = CodehubTopicCommentModel.objects.filter(topic_id = id).order_by('-timeStamp')
     topic_details = CodehubTopicModel.objects.get(id = id)
     return render(request,'codehub/comment_on_topic.html',{'form':form,'comments':comments,'topic':topic_details})
 

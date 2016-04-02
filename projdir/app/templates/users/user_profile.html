@@ -5,11 +5,20 @@
 <h2><a href = "{% url 'edit_user_profile' user.id %}">Edit Profile</a></h2>
 {% endif %}
 <h1>{{ user_info.username }}</h1><br/>
-<p style="color:red">The image is the avatar of the user,create your own here...<a href =''>Avatar</a></p>
+<p style="color:red">The image is the avatar of the user,create your own here...<a href ='https://en.gravatar.com/'>Avatar</a></p>
 <img src = "{{ gravatar_url }}" />
 <img src = "{% static 'images/default_gravators/github.png' %}" alt ='No avatar available' style="height:200px"/><br/>
 <h2>{{ user_info.first_name }}</h2>
 <h2>{{ user_info.last_name }}</h2>
 {{ user_info.email }}<br/>
 {{ user_info.date_joined}}<br/>
+<hr/>
+<h1>User profile Data</h1>
+  {% if user_profile %}
+    Description:{{ user_profile.user_description }}<br/>
+    Skills:{{ user_profile.skills }}<br/>
+    Type:{{ user_profile.user_type_select }}
+  {% else %}
+   <h2>No description yet</h2>
+  {% endif %}
 {% endblock %}

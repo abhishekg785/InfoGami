@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubTopicModel,CodehubTopicCommentModel
+from .models import CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel
 
 #forms for posting a new topic
 class CodehubTopicForm(forms.ModelForm):
@@ -21,8 +21,12 @@ class CodehubTopicCommentForm(forms.ModelForm):
         model = CodehubTopicCommentModel
         fields = ['comment_text']
 
-class UserProfileForm(forms.Form):
-    CHOICES = (('Programmer','Programmer'),('Developer','Developer'),('Not sure right now:)','Not sure right now:)'),('Both','Both'),)
+
+class UserProfileForm(forms.ModelForm):
+    CHOICES = (('None','None'),('Programmer','Programmer'),('Developer','Developer'),('Not sure right now:)','Not sure right now:)'),('Both','Both'),)
     user_description = forms.CharField(label = 'A line about yourself(max = 200 characters)',max_length = 200)
     skills = forms.CharField(label = 'Skills you have',max_length = 200)
     user_type_select = forms.ChoiceField(choices = CHOICES, required = True )
+    class Meta:
+        model = UserProfileModel
+        fields = ['user_description','skills','user_type_select']

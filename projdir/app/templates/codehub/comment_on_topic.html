@@ -15,7 +15,6 @@
 <hr/>
 <h1>Comments:</h1>
 {% for comment in comments %}
-    {% if comment.topic.id == topic.id%}
     <P>{{ comment.comment_text }}</P>
     {{ comment.id }}
     {{ comment.user.username }}:
@@ -25,6 +24,5 @@
     <a href = "{% url 'remove_topic_comment' comment.id %}">Remove</a>
   {% endif %}
     <hr/>
-    {% endif %}
 {% endfor %}
 {% endblock %}

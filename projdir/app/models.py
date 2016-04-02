@@ -33,5 +33,5 @@ class UserProfileModel(models.Model):
     user_description = models.CharField(max_length = 200)
     # user_gravatar = models.CharField(max_length = 200)
     skills = models.CharField(max_length = 200)
-    user_type_select = models.CharField(max_length = 50)   #developer or programmer
+    user_type_select = models.CharField(max_length = 50,default = 'None')   #developer or programmer
     timeStamp = models.DateTimeField()

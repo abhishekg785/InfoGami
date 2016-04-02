@@ -35,6 +35,6 @@ urlpatterns = [
     url(r'^codehub/topic/comment/(?P<id>\d+)/remove$',remove_topic_comment,name = 'remove_topic_comment'),
     url(r'^codehub/topic/comment/(?P<id>\d+)/edit$',edit_topic_comment,name = 'edit_topic_comment'),
     url(r'^users/$',get_users,name='get_users'),
-    url(r'^users/profile/(?P<id>\d+)/$',user_profile,name = 'user_profile'),
-    url(r'^users/profile/(?P<id>\d+)/edit/$',edit_user_profile,name = 'edit_user_profile')
+    url(r'^users/profile/(?P<user_id>\d+)/$',user_profile,name = 'user_profile'),
+    url(r'^users/profile/(?P<user_id>\d+)/edit/$',edit_user_profile,name = 'edit_user_profile')
 ]
