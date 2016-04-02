@@ -14,12 +14,15 @@ class CodehubTopicForm(forms.ModelForm):
         model = CodehubTopicModel
         fields = ['topic_heading','topic_detail','topic_link','tags','topic_type','file']
 
+
+
 #form for commenting on a topic
 class CodehubTopicCommentForm(forms.ModelForm):
     comment_text = forms.CharField(label = '',max_length = 500,widget = forms.Textarea(attrs = {'rows':'3','cols':'40'}))
     class Meta:
         model = CodehubTopicCommentModel
         fields = ['comment_text']
+
 
 
 class UserProfileForm(forms.ModelForm):
@@ -30,3 +33,7 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfileModel
         fields = ['user_description','skills','user_type_select']
+
+
+class SearchForm(forms.Form):
+    search_str = forms.CharField(label = 'Search here:',max_length = 50)

@@ -11,7 +11,7 @@
 <h1>Topics:<span>(</span>{{ topics.count }}<span>)</span></h1>
 <form method='post' action = '/codehub/topic/search_topic/'>
   {% csrf_token %}
-<input type='text' name = 'search_str' placeholder = 'Search here...'/>
+  {{ search_form.as_p }}
 <input type='submit' name='seachTopic' value = 'Search'/>
 </form>
 <p style='color:red'>Click on topic/question to view comments</p><br/>

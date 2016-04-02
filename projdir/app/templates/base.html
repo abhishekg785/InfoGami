@@ -15,6 +15,7 @@
     <a href="{% url 'logout_view' %}">Logout</a>
     <a href="{% url 'index' %}">Home</a>
     <a href = "{% url 'user_profile' user.id %}">Profile</a>
+    <a href = "{% url 'get_users' %}">Users</a>
     {% else %}
     <a href="{% url 'login_view' %}">Login</a>
     <a href="{% url 'register_view' %}">Register</a>

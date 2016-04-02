@@ -25,6 +25,8 @@ class CodehubTopicCommentModel(models.Model):
     comment_text = models.CharField(max_length = 500)
     timeStamp = models.DateTimeField()
 
+    def __str__(self):
+        return self.topic.topic_heading
 
 
 #this will store the extra profile details of the user
@@ -35,3 +37,6 @@ class UserProfileModel(models.Model):
     skills = models.CharField(max_length = 200)
     user_type_select = models.CharField(max_length = 50,default = 'None')   #developer or programmer
     timeStamp = models.DateTimeField()
+
+    def __str__(self):
+        return self.user.username

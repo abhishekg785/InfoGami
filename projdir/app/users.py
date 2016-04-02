@@ -13,6 +13,7 @@ from .models import UserProfileModel
 import datetime
 
 #decorators here
+register = template.Library()
 
 #decorator to check user has access to edit profile or not
 def check_user_access_for_profile_edit(func):
@@ -23,7 +24,6 @@ def check_user_access_for_profile_edit(func):
         return func(request,user_id,*args,**kwargs)
     return wrapper
 
-register = template.Library()
 
 @register.filter
 def gravatar_url(email, size=128):
@@ -37,9 +37,10 @@ def gravatar(email, size=128):
     # return mark_safe('<img src="%s" height="%d" width="%d">' % (url, size, size))
     return url
 
-
+@loginRequired
 def get_users(request):
-    return HttpResponse(gravatar('abhishekg785@gmail.com'))
+    users = User.objects.values('id','username')
+    return render(request,'codehub/user_list.html',{'users':users})
 
 
 @loginRequired
@@ -68,6 +69,7 @@ def edit_user_profile(request,user_id):
                 profile_details = UserProfileModel(user = user,timeStamp = datetime.datetime.now())
             form = UserProfileForm(request.POST,instance = profile_details)
             form.save()
+            return redirect('/users/profile/'+str(user_id))
     else:
         try:
             profile_details = UserProfileModel.objects.get(user_id = user_id)

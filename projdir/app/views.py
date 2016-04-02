@@ -31,7 +31,7 @@ def login_view(request):
         if user is not None:
             if user.is_active:
                 login(request,user)
-                return redirect('codehub')
+                return redirect('/')
             else:
                 print 'The password is valid,but the account has been disabled'
         else:

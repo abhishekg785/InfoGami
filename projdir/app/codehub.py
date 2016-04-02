@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate,logout,login
 import datetime
 from django.utils.datastructures import MultiValueDictKeyError
 
-from .forms import CodehubTopicForm,CodehubTopicCommentForm
+from .forms import CodehubTopicForm,CodehubTopicCommentForm,SearchForm
 from .models import CodehubTopicModel,CodehubTopicCommentModel
 from .views import loginRequired
 
@@ -50,8 +50,9 @@ def codehub_topic(request):
             return redirect('/codehub/topic')
     else:
         form = CodehubTopicForm()
+        search_form = SearchForm()
     topics = CodehubTopicModel.objects.all().order_by('-timeStamp')
-    return render(request,'codehub/topic.html',{'form':form,'topics':topics})
+    return render(request,'codehub/topic.html',{'form':form,'topics':topics,'search_form':search_form})
 
 
 @loginRequired
