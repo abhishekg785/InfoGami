@@ -15,9 +15,21 @@
 {{ event.event_for }}<br/>
 <hr/>
 <h2>Ask Questions:</h2>
-<form method="POST" action = "/codehub/event/{{ event.id }}/ask/">
+<form method="POST">
   {% csrf_token %}
   {{ form.as_p }}
   <input type='submit' name='post_question' value = 'Post Question' />
 </form>
+<h2>Previous Questions:</h2>
+{% for question in event_questions %}
+  {{ question.question_text }}<br/>
+{% if question.user.username  == user.username %}
+  <a href = "">Edit</a>
+  <a href = "">Remove</a>
+{% endif %}
+  <br/>
+  {{ question.user.username }}
+  {{ question.timeStamp }}
+  <hr/>
+{% endfor %}
 {% endblock %}

@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 
 from .forms import CodehubCreateEventForm,CodehubEventQuestionForm
-from .models import CodehubCreateEventModel
+from .models import CodehubCreateEventModel,CodehubEventQuestionModel
 from .views import loginRequired
 import datetime
 
@@ -21,11 +21,30 @@ def codehub_events(request):
     events = CodehubCreateEventModel.objects.all().order_by("-timeStamp")
     return render(request,'codehub/events.html/',{'events':events})
 
+
+
 @loginRequired
 def codehub_event_details(request,event_id):
-    form = CodehubEventQuestionForm()
+    if request.method == 'POST':
+        form = CodehubEventQuestionForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(username = request.user.username)
+            event = get_object_or_404(CodehubCreateEventModel,id = event_id)
+            new_question = CodehubEventQuestionModel(
+                user = user,
+                event = event,
+                question_text = form.cleaned_data['question_text'],
+            )
+            new_question.save()
+            print 'saved'
+            #flash message
+            return redirect('/codehub/event/'+str(event_id)+'/details/')
+    else:
+        form = CodehubEventQuestionForm()
     event_details = get_object_or_404(CodehubCreateEventModel,id = event_id)
-    return render(request,'codehub/event_details.html',{'event':event_details,'form':form})
+    # event_questions = get_object_or_404(CodehubEventQuestionModel,event_id = event_id)
+    event_questions = CodehubEventQuestionModel.objects.filter(event_id = event_id).order_by("-timeStamp")
+    return render(request,'codehub/event_details.html',{'event':event_details,'form':form,'event_questions':event_questions})
 
 @loginRequired
 def create_codehub_event(request):
@@ -76,6 +95,3 @@ def remove_codehub_event(request,event_id):
     print 'event deleted'
     return redirect('/codehub/events')
     #flash message
-
-@loginRequired
-def codehub_event_question(request,event_id):
