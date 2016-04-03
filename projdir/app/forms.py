@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel
+from .models import CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel
 
 #forms for posting a new topic
 class CodehubTopicForm(forms.ModelForm):
@@ -50,3 +50,10 @@ class CodehubCreateEventForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     search_str = forms.CharField(label = 'Search here:',max_length = 50,required = True)
+
+
+class CodehubEventQuestionForm(forms.ModelForm):
+    question_text = forms.CharField(label = '',max_length = 300,widget = forms.Textarea(attrs = {'rows':'2','cols':'40','placeholder':'Ask here...'}))
+    class Meta:
+        model = CodehubEventQuestionModel
+        fields = ['question_text']

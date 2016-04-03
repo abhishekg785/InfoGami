@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ event.event_heading }}</h1>
+{% if event.user.is_superuser == 1 %}
+  <p style = 'color:red'>Created by Admin</p>
+{% endif %}
+<a href = "{% url 'edit_codehub_event' event.id %}">Edit</a>
+<a href = "{% url 'remove_codehub_event' event.id %}">Remove</a>
+<hr/>
+{{ event.user.username }}<br/>
+{{ event.user.is_superuser }}
+{{ even.event_date }}<br/>
+{{ event.event_venue }}<br/>
+{{ event.event_description }}<br/>
+{{ event.event_for }}<br/>
+<hr/>
+<h2>Ask Questions:</h2>
+<form method="POST" action = "/codehub/event/{{ event.id }}/ask/">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type='submit' name='post_question' value = 'Post Question' />
+</form>
+{% endblock %}

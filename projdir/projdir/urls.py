@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 from app.views import login_view,register_view,logout_view,index
 from app.codehub import codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment
 from app.users import get_users,user_profile,edit_user_profile
-from app.create_event import create_codehub_event,edit_codehub_event,remove_codehub_event
+from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,codehub_event_question
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -40,8 +40,11 @@ urlpatterns = [
     url(r'^users/$',get_users,name='get_users'),
     url(r'^users/profile/(?P<user_id>\d+)/$',user_profile,name = 'user_profile'),
     url(r'^users/profile/(?P<user_id>\d+)/edit/$',edit_user_profile,name = 'edit_user_profile'),
-    url(r'^codehub/create_event/$',create_codehub_event,name = 'create_codehub_event'),
-    url(r'^codehub/edit_event/(?P<event_id>\d+)$',edit_codehub_event,name = 'edit_codehub_event'),
-    url(r'^codehub/remove_event/(?P<event_id>\d+)$',remove_codehub_event,name = 'remove_codehub_event'),
+    url(r'^codehub/events/$',codehub_events,name = 'codehub_events'),
+    url(r'^codehub/event/(?P<event_id>\d+)/details/$',codehub_event_details,name = 'codehub_event_details'),
+    url(r'^codehub/event/create$',create_codehub_event,name = 'create_codehub_event'),
+    url(r'^codehub/event/(?P<event_id>\d+)/edit/$',edit_codehub_event,name = 'edit_codehub_event'),
+    url(r'^codehub/event/(?P<event_id>\d+)/remove/$',remove_codehub_event,name = 'remove_codehub_event'),
+    url(r'^codehub/event/(?P<event_id>\d+)/ask/$',codehub_event_question,name = 'codehub_event_question')
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

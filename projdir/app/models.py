@@ -51,3 +51,10 @@ class CodehubCreateEventModel(models.Model):
 
     def __str__(self):
         return self.event_heading
+
+
+class CodehubEventQuestionModel(models.Model):
+    user = models.ForeignKey(User)
+    event = models.ForeignKey(CodehubCreateEventModel)
+    question_text = models.CharField(max_length = 300)
+    timeStamp = models.DateTimeField(auto_now_add = True)

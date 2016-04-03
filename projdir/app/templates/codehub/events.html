@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Upcoming Events<span>(</span>{{ events.count }}<span>)</span></h1>
+<p style="color:red">Click on the event to see more details and ask questions about the event</p>
+<hr/>
+{% for event in events %}
+  <h3><a href = "{% url 'codehub_event_details' event.id %}">{{ event.event_heading }}</a></h3>
+  {% if event.user.is_superuser == 1 %}
+    <p style = 'color:red'>Created by Admin</p>
+  {% endif %}
+  {{ event.user.username }}<br/>
+  {{ event.timeStamp }}
+  {% if event.user.username == user.username %}
+    <a href = "{% url 'remove_codehub_event' event.id %}">Remove</a>
+    <a href = "{% url 'edit_codehub_event' event.id%}">Edit</a>
+  {% endif %}
+  <hr/>
+{% endfor %}
+{% endblock %}
