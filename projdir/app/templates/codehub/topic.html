@@ -21,7 +21,9 @@
     <h1><a href = "{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h1>
     <a href = "{{ topic.topic_link }}">{{ topic.topic_link }}</a><br/>
       <a href = "/media/{{ topic.file }}">{{ topic.file }}</a><br/>
-      {{ topic.topic_type }}
+      {% if topic.topic_type != 'None' %}
+        {{ topic.topic_type }}
+      {% endif %}
     <h3><a href="{% url 'user_profile' topic.user.id %}">{{ topic.user.username }}</a></h3>
       {{ topic.timeStamp }}
     {% if topic.user.username == user.username %}

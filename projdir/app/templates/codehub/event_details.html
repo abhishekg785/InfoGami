@@ -4,15 +4,22 @@
 {% if event.user.is_superuser == 1 %}
   <p style = 'color:red'>Created by Admin</p>
 {% endif %}
+{% if event.user.username == user.username %}
 <a href = "{% url 'edit_codehub_event' event.id %}">Edit</a>
 <a href = "{% url 'remove_codehub_event' event.id %}">Remove</a>
+{% endif %}
 <hr/>
 {{ event.user.username }}<br/>
-{{ event.user.is_superuser }}
-{{ even.event_date }}<br/>
+{% if event.event_date %}
+  {{ event.event_date }}
+{% else %}
+<p>No date yet</p>
+{% endif %}
 {{ event.event_venue }}<br/>
 {{ event.event_description }}<br/>
+{% if event.event_for != 'None' %}
 {{ event.event_for }}<br/>
+{% endif %}
 <hr/>
 <h2>Ask Questions:</h2>
 <form method="POST">
@@ -24,11 +31,12 @@
 {% for question in event_questions %}
   {{ question.question_text }}<br/>
 {% if question.user.username  == user.username %}
-  <a href = "">Edit</a>
-  <a href = "">Remove</a>
+  <a href = "{% url 'edit_codehub_event_question' question.id %}" >Edit</a>
+  <a href = "{% url 'remove_codehub_event_question' question.id %}">Remove</a>
 {% endif %}
   <br/>
   {{ question.user.username }}
+  {{ question.id }}
   {{ question.timeStamp }}
   <hr/>
 {% endfor %}

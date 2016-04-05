@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 from app.views import login_view,register_view,logout_view,index
 from app.codehub import codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment
 from app.users import get_users,user_profile,edit_user_profile
-from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details
+from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -45,5 +45,7 @@ urlpatterns = [
     url(r'^codehub/event/create$',create_codehub_event,name = 'create_codehub_event'),
     url(r'^codehub/event/(?P<event_id>\d+)/edit/$',edit_codehub_event,name = 'edit_codehub_event'),
     url(r'^codehub/event/(?P<event_id>\d+)/remove/$',remove_codehub_event,name = 'remove_codehub_event'),
+    url(r'^codehub/event/question/(?P<ques_id>\d+)/remove/$',remove_codehub_event_question,name = 'remove_codehub_event_question'),
+    url(r'^codehub/event/question/(?P<ques_id>\d+)/edit/$',edit_codehub_event_question,name = 'edit_codehub_event_question'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

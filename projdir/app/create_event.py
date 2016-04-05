@@ -11,7 +11,7 @@ def check_user_access_for_event_edit(func):
     def wrapper(request,event_id,*args,**kwargs):
         event_user = get_object_or_404(CodehubCreateEventModel,id = event_id).user.username
         if event_user != request.user.username:
-            return redirect('/')
+            return redirect('/codehub/event/'+str(event_id)+'/details/')
         return func(request,event_id,*args,**kwargs)
     return wrapper
 
@@ -95,3 +95,62 @@ def remove_codehub_event(request,event_id):
     print 'event deleted'
     return redirect('/codehub/events')
     #flash message
+
+
+#decorators for event_question comes here
+def check_user_acess_for_question_edit(func):
+    def wrapper(request,ques_id,*args,**kwargs):
+        ques_details = get_object_or_404(CodehubEventQuestionModel,id = ques_id)
+        event_id = ques_details.event.id
+        if ques_details.user.username != request.user.username:
+            return redirect('/codehub/event/'+str(event_id)+'/details/')
+        return func(request,ques_id,*args,**kwargs)
+    return wrapper
+
+
+def check_user_access_for_question_remove(func):
+    def wrapper(request,ques_id,*args,**kwargs):
+        ques_details = get_object_or_404(CodehubEventQuestionModel,id = ques_id)
+        event_id = ques_details.event.id
+        event_user = ques_details.event.user.username
+        print 'event_user',event_user
+        ques_user = ques_details.user.username
+        if event_user == request.user.username or ques_user == request.user.username:
+            return func(request,ques_id,*args,**kwargs)
+        else:
+            return redirect('/codehub/event/'+str(event_id)+'/details/')
+    return wrapper
+
+
+#edit option should be available only to the creator of the question
+@loginRequired
+@check_user_acess_for_question_edit
+def edit_codehub_event_question(request,ques_id):
+    if request.method == 'POST':
+        form = CodehubEventQuestionForm(request.POST)
+        if form.is_valid():
+            ques_details = get_object_or_404(CodehubEventQuestionModel,id = ques_id)
+            event_id = ques_details.event.id
+            form = CodehubEventQuestionForm(request.POST,instance = ques_details)
+            form.save()
+            print 'data updated'
+            #flash message
+            return redirect('/codehub/event/'+str(event_id)+'/details/')
+    else:
+        quest_details = get_object_or_404(CodehubEventQuestionModel,id = ques_id)
+        ques_data = {'question_text':quest_details.question_text}
+        form = CodehubEventQuestionForm(initial = ques_data)
+    return render(request,'codehub/edit_event_question.html',{'form':form})
+
+
+
+#decorator comes here
+#remove option should be available only to the event creator and the user of the question
+@loginRequired
+@check_user_access_for_question_remove
+def remove_codehub_event_question(request,ques_id):
+    quest_details = get_object_or_404(CodehubEventQuestionModel,id = ques_id)
+    event_id = quest_details.event.id
+    quest_details.delete()
+    print 'question deleted'
+    return redirect('/codehub/event/'+str(event_id)+'/details/')
