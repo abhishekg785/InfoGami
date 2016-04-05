@@ -67,7 +67,8 @@ def create_codehub_event(request):
             #return redirect('codehub_events')
     else:
         form = CodehubCreateEventForm()
-    return render(request,'codehub/create_event.html',{'form':form})
+        events = CodehubCreateEventModel.objects.all().order_by("-timeStamp")
+    return render(request,'codehub/create_event.html',{'form':form,'events':events})
 
 
 @loginRequired

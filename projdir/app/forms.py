@@ -38,10 +38,10 @@ class UserProfileForm(forms.ModelForm):
 
 class CodehubCreateEventForm(forms.ModelForm):
     CHOICES = (('None','None'),('Basic', 'Basic'),('Advanced', 'Advanced'),)
-    event_heading = forms.CharField(label = 'Event Heading',max_length = 50)
-    event_date = forms.DateTimeField(required = False)
+    event_heading = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Event Heading goes here...'}),max_length = 50)
+    event_date = forms.DateTimeField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Date of Event(yy-mm-dd hh:mm)'}),required = False)
     event_description = forms.CharField(label = '',widget = forms.Textarea(attrs = {'placeholder':'Event Description goes here','rows':'2','cols':'40'}))
-    event_venue = forms.CharField(max_length = 100,required = False)
+    event_venue = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Event Venue'}),max_length = 100,required = False)
     event_for = forms.ChoiceField(label = 'Event For:',choices = CHOICES,required =True)
     class Meta:
         model = CodehubCreateEventModel
