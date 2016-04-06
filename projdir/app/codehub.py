@@ -221,4 +221,16 @@ def remove_codehub_question(request,ques_id):
 @loginRequired
 @check_user_access_for_question_edit_or_remove
 def edit_codehub_question(request,ques_id):
-    return HttpResponse(ques_id)
+    if request.method == 'POST':
+        form = CodehubQuestionForm(request.POST)
+        if form.is_valid():
+            ques_details = get_object_or_404(CodehubQuestionModel,id = ques_id)
+            form = CodehubQuestionForm(request.POST,instance = ques_details)
+            form.save()
+            # flash messge here
+            return redirect('/codehub/question/' +str(ques_id) + '/details/')
+    else:
+        ques_details = get_object_or_404(CodehubQuestionModel,id = ques_id)
+        ques_data = {'question_heading':ques_details.question_heading,'question_description':ques_details.question_description,'question_link':ques_details.question_link,'question_tags':ques_details.question_tags,'question_type':ques_details.question_type}
+        form = CodehubQuestionForm(initial = ques_data)
+    return render(request,'codehub/question/edit_question.html',{'form':form})

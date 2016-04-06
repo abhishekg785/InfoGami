@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load django_markdown %}
+{% load  %}
 {% block content %}
   <h1>Question Details</h1>
   <hr/>
@@ -8,7 +10,7 @@
     <a href = "{% url 'edit_codehub_question' ques_details.id %}">Edit</a>
   {% endif %}
   <br/>
-  {{ ques_details.question_description }}<br/>
+  {{ ques_details.question_description|markdown }}<br/>
   by:{{ ques_details.user.username }}<br/>
   {{ ques_details.timeStamp }}
 {% endblock %}
