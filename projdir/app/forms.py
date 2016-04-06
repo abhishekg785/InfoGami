@@ -1,5 +1,6 @@
 from django import forms
-from .models import CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel
+from .models import CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogModel
+from tinymce.widgets import TinyMCE
 
 #forms for posting a new topic
 class CodehubTopicForm(forms.ModelForm):
@@ -57,3 +58,10 @@ class CodehubEventQuestionForm(forms.ModelForm):
     class Meta:
         model = CodehubEventQuestionModel
         fields = ['question_text']
+
+
+class BlogForm(forms.ModelForm):
+    content = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 30}))
+    class Meta:
+        model = BlogModel
+        fields = ['content']

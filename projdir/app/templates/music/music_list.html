@@ -1,0 +1,12 @@
+
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Music List({{ music_list.count }})</h1>
+  <hr/>
+  {% for music in music_list %}
+    <h2><a target = '_blank'  href = "/media/{{ music.music_file }}">{{ music.music_name }}</a></h2>
+      by:{{ music.music_artist }}<br/>
+      {{ music.music_lang }}
+    <hr/>
+  {% endfor %}
+{% endblock %}

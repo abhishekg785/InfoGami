@@ -58,3 +58,20 @@ class CodehubEventQuestionModel(models.Model):
     event = models.ForeignKey(CodehubCreateEventModel)
     question_text = models.CharField(max_length = 300)
     timeStamp = models.DateTimeField(auto_now_add = True)
+
+
+
+class MusicModel(models.Model):
+    user = models.ForeignKey(User)
+    music_name = models.CharField(max_length = 100)
+    music_file = models.FileField(upload_to = 'music/')
+    music_lang = models.CharField(max_length = 20)
+    music_artist = models.CharField(max_length = 30)
+    timeStamp = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        return self.music_name
+
+class BlogModel(models.Model):
+    user = models.ForeignKey(User)
+    content = models.CharField(max_length = 500)
