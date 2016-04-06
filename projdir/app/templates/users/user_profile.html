@@ -25,4 +25,11 @@
   {% else %}
    <h2>No description yet</h2>
   {% endif %}
+  <hr/>
+<h1>User Activities:</h1>
+<a href = "">Asked Questions</a><br/>
+<a href = "{% url 'get_topics' user_info.id %}">Posted Topics </a><br/>
+<a href = "">New way to solve problems</a><br/>
+<a href = "">Articles or Blog</a><br/>
+<a href = "">Talks or Events by User</a>
 {% endblock %}

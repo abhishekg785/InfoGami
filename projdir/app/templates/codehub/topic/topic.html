@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Questions and Topics for Discussion</h1>
+<h1>Topics for Discussion</h1>
 <hr/>
 <form method="post" enctype="multipart/form-data">
 {% csrf_token %}
@@ -14,13 +14,13 @@
   {{ search_form.as_p }}
 <input type='submit' name='seachTopic' value = 'Search'/>
 </form>
-<p style='color:red'>Click on topic/question to view comments</p><br/>
+<p style='color:red'>Click on topic to view comments ans discuss</p><br/>
 <hr/>
 <div id = 'topicDisplaySec'>
 {% for topic in topics %}
     <h1><a href = "{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h1>
     <a href = "{{ topic.topic_link }}">{{ topic.topic_link }}</a><br/>
-      <a href = "/media/{{ topic.file }}">{{ topic.file }}</a><br/>
+      <a target = "_blank" href = "/media/{{ topic.file }}">{{ topic.file }}</a><br/>
       {% if topic.topic_type != 'None' %}
         {{ topic.topic_type }}
       {% endif %}

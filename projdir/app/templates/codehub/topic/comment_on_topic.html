@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load django_markdown %}
 {% block content %}
 <h1>{{ topic.topic_heading }}</h1>
 {% if topic.user.username == user.username %}
@@ -11,7 +12,8 @@
     <br/>
 {% endif %}
 {{ topic.user.username }}:
-{{ topic.timeStamp }}
+{{ topic.timeStamp }}<br/>
+{{ topic.topic_detail|markdown }}
 <form method='post'>
 {% csrf_token %}
 {{ form.as_p }}
@@ -20,7 +22,7 @@
 <hr/>
 <h1>Comments:</h1>
 {% for comment in comments %}
-    <P>{{ comment.comment_text }}</P>
+    <P>{{ comment.comment_text|markdown }}</P>
     {{ comment.id }}
     {{ comment.user.username }}:
     {{ comment.timeStamp }}

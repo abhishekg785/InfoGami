@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Topics of {{ topic_user }}</h1>
+  <hr/>
+  {% for topic in topics %}
+    <h1><a href ="{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h1>
+    {{ topic.timeStamp }}
+    <hr/>
+  {% endfor %}
+{% endblock %}

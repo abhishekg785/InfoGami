@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django import template
@@ -12,7 +12,7 @@ from .forms import UserProfileForm
 from .models import UserProfileModel
 import datetime
 
-#decorators here
+
 register = template.Library()
 
 #decorator to check user has access to edit profile or not
@@ -84,5 +84,17 @@ def edit_user_profile(request,user_id):
     return render(request,'users/edit_user_profile.html',{'form':form})
 
 
-def get_user(request):
-    return request.user.username
+def get_user_questions_or_topics(request,user_id):
+    user_questions = get_object_or_404()
+
+
+def get_user_new_ideas(request,user_id):
+    return HttpResponse('user questions')
+
+
+def get_user_talks_or_events(request,user_id):
+    return HttpResponse('user questions')
+
+
+def get_user_articles_or_blogs(request,user_id):
+    return HttpResponse('user questions')

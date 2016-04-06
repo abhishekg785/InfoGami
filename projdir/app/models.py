@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from django_markdown.models import MarkdownField
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -7,12 +8,12 @@ from django.contrib.auth.models import User
 class CodehubTopicModel(models.Model):
     user = models.ForeignKey(User)
     topic_heading = models.CharField(max_length = 100)
-    topic_detail = models.CharField(max_length = 200)
-    topic_link = models.CharField(max_length = 100 )
+    topic_detail = MarkdownField()
+    topic_link = models.CharField(max_length = 100,blank = True)
     tags = models.CharField(max_length = 50)
-    timeStamp = models.DateTimeField()
+    timeStamp = models.DateTimeField(auto_now_add = True)
     topic_type = models.CharField(max_length = 10)
-    file = models.FileField(upload_to = 'uploads/')
+    file = models.FileField(upload_to = 'uploads/',blank = True)
 
     def __str__(self):
         return self.topic_heading
@@ -21,7 +22,7 @@ class CodehubTopicModel(models.Model):
 class CodehubTopicCommentModel(models.Model):
     user = models.ForeignKey(User)
     topic = models.ForeignKey('CodehubTopicModel')
-    comment_text = models.CharField(max_length = 500)
+    comment_text = MarkdownField()
     timeStamp = models.DateTimeField()
 
     def __str__(self):
@@ -31,7 +32,7 @@ class CodehubTopicCommentModel(models.Model):
 #this will store the extra profile details of the user
 class UserProfileModel(models.Model):
     user = models.ForeignKey(User)
-    user_description = models.CharField(max_length = 200)
+    user_description = MarkdownField()
     skills = models.CharField(max_length = 200)
     user_type_select = models.CharField(max_length = 50,default = 'None')   #developer or programmer
     timeStamp = models.DateTimeField(auto_now_add = True)
@@ -43,11 +44,11 @@ class UserProfileModel(models.Model):
 class CodehubCreateEventModel(models.Model):
     user = models.ForeignKey(User)
     event_heading = models.CharField(max_length = 100)
-    event_date = models.DateTimeField(null = True)
+    event_date = models.DateTimeField(null = True,blank = True)
     event_venue = models.CharField(max_length = 100)
-    event_description = models.CharField(max_length = 200)
+    event_description = MarkdownField()
     event_for  = models.CharField(max_length = 25)#basic or advanced
-    timeStamp = models.DateTimeField()
+    timeStamp = models.DateTimeField(auto_now_add = True)
 
     def __str__(self):
         return self.event_heading
@@ -56,7 +57,7 @@ class CodehubCreateEventModel(models.Model):
 class CodehubEventQuestionModel(models.Model):
     user = models.ForeignKey(User)
     event = models.ForeignKey(CodehubCreateEventModel)
-    question_text = models.CharField(max_length = 300)
+    question_text = MarkdownField()
     timeStamp = models.DateTimeField(auto_now_add = True)
 
 
@@ -71,6 +72,21 @@ class MusicModel(models.Model):
 
     def __str__(self):
         return self.music_name
+
+
+class CodehubQuestionModel(models.Model):
+    user = models.ForeignKey(User)
+    question_heading = models.CharField(max_length = 200)
+    question_description = MarkdownField()
+    question_link = models.CharField(max_length = 100,blank = True)
+    question_tags = models.CharField(max_length = 200)
+    question_type = models.CharField(max_length = 20)
+    timeStamp = models.DateTimeField(auto_now_add = True)
+
+
+    def __str__(self):
+        return self.question_heading
+
 
 class BlogModel(models.Model):
     user = models.ForeignKey(User)

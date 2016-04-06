@@ -19,14 +19,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from app.views import login_view,register_view,logout_view,index
-from app.codehub import codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment
+from app.codehub import codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,get_topics
 from app.users import get_users,user_profile,edit_user_profile
 from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question
 from app.music import music_list
 from app.blog import blog
+from app.questions import codehub_question
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url('^markdown/', include( 'django_markdown.urls')),
     url(r'^$',index,name = 'index'),
     url(r'^auth/login/$',login_view,name='login_view'),
     url(r'^auth/register/$',register_view,name='register_view'),
@@ -50,6 +53,9 @@ urlpatterns = [
     url(r'^codehub/event/question/(?P<ques_id>\d+)/remove/$',remove_codehub_event_question,name = 'remove_codehub_event_question'),
     url(r'^codehub/event/question/(?P<ques_id>\d+)/edit/$',edit_codehub_event_question,name = 'edit_codehub_event_question'),
     url(r'^music/$',music_list,name = 'music_list'),
+    #question for codehub ->routes comes here
+    url(r'^codehub/question/$',codehub_question,name = 'codehub_question'),
+    url(r'^user/(?P<user_id>\d+)/topics/$',get_topics,name = 'get_topics'),
     url(r'^blog/$',blog,name = 'blog'),
     url(r'^tinymce/', include('tinymce.urls'))
 

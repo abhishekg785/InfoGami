@@ -9,6 +9,7 @@ from .forms import CodehubTopicForm,CodehubTopicCommentForm,SearchForm
 from .models import CodehubTopicModel,CodehubTopicCommentModel
 from .views import loginRequired
 
+
 #decorator for checking that only the user of the topic can comment
 def check_user_access_for_topic_edit(func):
     def wrapper(request,id,*args,**kwargs):
@@ -53,7 +54,7 @@ def codehub_topic(request):
         form = CodehubTopicForm()
     search_form = SearchForm()
     topics = CodehubTopicModel.objects.all().order_by('-timeStamp')
-    return render(request,'codehub/topic.html',{'form':form,'topics':topics,'search_form':search_form})
+    return render(request,'codehub/topic/topic.html',{'form':form,'topics':topics,'search_form':search_form})
 
 
 @loginRequired
@@ -76,7 +77,7 @@ def edit_topic(request,id):
         topic_details = CodehubTopicModel.objects.get(id = id)
         data = {'topic_heading':topic_details.topic_heading,'topic_detail':topic_details.topic_detail,'topic_link':topic_details.topic_link,'tags':topic_details.tags,'file':topic_details.file,'topic_type':topic_details.topic_type}
         form = CodehubTopicForm(initial = data)
-    return render(request,'codehub/edit_topic.html',{'form':form})
+    return render(request,'codehub/topic/edit_topic.html',{'form':form})
 
 
 
@@ -108,7 +109,7 @@ def comment_on_topic(request,id):
         form = CodehubTopicCommentForm()
     comments = CodehubTopicCommentModel.objects.filter(topic_id = id).order_by('-timeStamp')
     topic_details = CodehubTopicModel.objects.get(id = id)
-    return render(request,'codehub/comment_on_topic.html',{'form':form,'comments':comments,'topic':topic_details})
+    return render(request,'codehub/topic/comment_on_topic.html',{'form':form,'comments':comments,'topic':topic_details})
 
 
 
@@ -164,4 +165,11 @@ def edit_topic_comment(request,id):
         comment = CodehubTopicCommentModel.objects.get(id = id)
         comment_data = {'comment_text':comment.comment_text}
         form = CodehubTopicCommentForm(initial = comment_data)
-    return render(request,'codehub/edit_comment_on_topic.html',{'form':form})
+    return render(request,'codehub/topic/edit_comment_on_topic.html',{'form':form})
+
+
+@loginRequired
+def get_topics(request,user_id):
+    topic_user = get_object_or_404(User,id = user_id).username
+    topics = CodehubTopicModel.objects.filter(user_id = user_id)
+    return render(request,'codehub/topic/get_user_topics.html',{'topics':topics,'topic_user':topic_user})

@@ -19,7 +19,7 @@ def check_user_access_for_event_edit(func):
 @loginRequired
 def codehub_events(request):
     events = CodehubCreateEventModel.objects.all().order_by("-timeStamp")
-    return render(request,'codehub/events.html/',{'events':events})
+    return render(request,'codehub/event/events.html/',{'events':events})
 
 
 
@@ -44,7 +44,7 @@ def codehub_event_details(request,event_id):
     event_details = get_object_or_404(CodehubCreateEventModel,id = event_id)
     # event_questions = get_object_or_404(CodehubEventQuestionModel,event_id = event_id)
     event_questions = CodehubEventQuestionModel.objects.filter(event_id = event_id).order_by("-timeStamp")
-    return render(request,'codehub/event_details.html',{'event':event_details,'form':form,'event_questions':event_questions})
+    return render(request,'codehub/event/event_details.html',{'event':event_details,'form':form,'event_questions':event_questions})
 
 @loginRequired
 def create_codehub_event(request):
@@ -68,7 +68,7 @@ def create_codehub_event(request):
     else:
         form = CodehubCreateEventForm()
     events = CodehubCreateEventModel.objects.all().order_by("-timeStamp")
-    return render(request,'codehub/create_event.html',{'form':form,'events':events})
+    return render(request,'codehub/event/create_event.html',{'form':form,'events':events})
 
 
 @loginRequired
@@ -86,7 +86,7 @@ def edit_codehub_event(request,event_id):
         event_details = get_object_or_404(CodehubCreateEventModel,id = event_id)
         data = {'event_heading':event_details.event_heading,'event_date':event_details.event_date,'event_venue':event_details.event_venue,'event_description':event_details.event_description,'event_for':event_details.event_for}
         form = CodehubCreateEventForm(initial = data)
-    return render(request,'codehub/edit_event.html',{'form':form})
+    return render(request,'codehub/event/edit_event.html',{'form':form})
 
 
 @loginRequired
@@ -141,7 +141,7 @@ def edit_codehub_event_question(request,ques_id):
         quest_details = get_object_or_404(CodehubEventQuestionModel,id = ques_id)
         ques_data = {'question_text':quest_details.question_text}
         form = CodehubEventQuestionForm(initial = ques_data)
-    return render(request,'codehub/edit_event_question.html',{'form':form})
+    return render(request,'codehub/event/edit_event_question.html',{'form':form})
 
 
 
