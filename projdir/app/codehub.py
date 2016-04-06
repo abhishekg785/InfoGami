@@ -172,11 +172,9 @@ def edit_topic_comment(request,id):
 #question section starts here
 
 #decorators for login section comes here
-def check_user_access_for_question_edit(func):
+def check_user_access_for_question_edit_or_remove(func):
     def wrapper(request,ques_id,*args,**kwargs):
         ques_details = get_object_or_404(CodehubQuestionModel,id = ques_id)
-        print ques_details.user.username
-        print request.user.username
         if ques_details.user.username != request.user.username:
             return redirect('/codehub')
         return func(request,ques_id,*args,**kwargs)
@@ -211,6 +209,7 @@ def codehub_question_details(request,ques_id):
 
 
 @loginRequired
+@check_user_access_for_question_edit_or_remove
 def remove_codehub_question(request,ques_id):
     ques_details = get_object_or_404(CodehubQuestionModel,id = ques_id)
     ques_user_id = ques_details.user.id
@@ -220,6 +219,6 @@ def remove_codehub_question(request,ques_id):
     #flash message here
 
 @loginRequired
-@check_user_access_for_question_edit
+@check_user_access_for_question_edit_or_remove
 def edit_codehub_question(request,ques_id):
     return HttpResponse(ques_id)
