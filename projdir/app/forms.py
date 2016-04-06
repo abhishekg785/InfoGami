@@ -66,7 +66,7 @@ class CodehubQuestionForm(forms.ModelForm):
     CHOICES = (('Basic','Basic'),('Intermediate','Intermediate'),('Advanced','Advanced'))
     question_heading = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Question Heading'}),max_length = 200)
     question_description = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Question Description'}),max_length = 500)
-    question_link = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Question Link'}),max_length = 100,required = False)
+    question_link = forms.URLField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Question Link'}),max_length = 100,required = False)
     question_tags = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Question Tags'}),max_length = 200)
     question_type = forms.ChoiceField(label = '',choices = CHOICES)
     class Meta:

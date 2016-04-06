@@ -1,8 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
+<h1>Ask Question</h1>
+<hr/>
 <form method = "post">
   {% csrf_token %}
   {{ form.as_p }}
   <input type="submit" name = 'post_question' value="Post Question"/>
 </form>
+<h2>Questions({{ questions.count }})</h2>
+<hr/>
+{% if questions.count == 0 %}
+  <h2>No questions Yet!!!</h2>
+{% endif %}
+{% for question in questions %}
+  <h1><a href="{% url 'codehub_question_details' question.id %}">{{ question.question_heading }}</a></h1>
+  {% if question.user.username == user.username %}
+    <a href = "{% url 'edit_codehub_question' question.id %}">Edit</a>
+    <a href = "{% url 'remove_codehub_question' question.id %}">Remove</a>
+  {% endif %}
+  by:{{ question.user.username }}<br/>
+  {{ question.timeStamp }}
+{% endfor %}
 {% endblock %}

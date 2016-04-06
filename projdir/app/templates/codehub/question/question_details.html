@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Question Details</h1>
+  <hr/>
+  <h2>{{ ques_details.question_heading }}</h2>
+  {% if ques_details.user.username  == user.username %}
+    <a href = "{% url 'remove_codehub_question' ques_details.id %}">Remove</a>
+    <a href = "{% url 'edit_codehub_question' ques_details.id %}">Edit</a>
+  {% endif %}
+  <br/>
+  {{ ques_details.question_description }}<br/>
+  by:{{ ques_details.user.username }}<br/>
+  {{ ques_details.timeStamp }}
+{% endblock %}

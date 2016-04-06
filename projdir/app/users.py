@@ -9,7 +9,7 @@ import urllib
 
 from .views import loginRequired
 from .forms import UserProfileForm
-from .models import UserProfileModel
+from .models import UserProfileModel,CodehubTopicModel,CodehubQuestionModel
 import datetime
 
 
@@ -84,17 +84,26 @@ def edit_user_profile(request,user_id):
     return render(request,'users/edit_user_profile.html',{'form':form})
 
 
-def get_user_questions_or_topics(request,user_id):
-    user_questions = get_object_or_404()
+@loginRequired
+def get_user_topics(request,user_id):
+    topics = CodehubTopicModel.objects.all().order_by("-timeStamp")
+    topic_user = get_object_or_404(User,id = user_id).username
+    return render(request,'codehub/topic/get_user_topics.html',{'topics':topics,'topic_user':topic_user})
 
+@loginRequired
+def get_user_questions(request,user_id):
+    questions = CodehubQuestionModel.objects.all().order_by("-timeStamp")
+    question_user = get_object_or_404(User,id = user_id).username
+    return render(request,'codehub/question/get_user_questions.html',{'questions':questions,'question_user':question_user})
 
+@loginRequired
 def get_user_new_ideas(request,user_id):
     return HttpResponse('user questions')
 
-
+@loginRequired
 def get_user_talks_or_events(request,user_id):
     return HttpResponse('user questions')
 
-
+@loginRequired
 def get_user_articles_or_blogs(request,user_id):
     return HttpResponse('user questions')
