@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,logout,login
 import datetime
 from django.utils.datastructures import MultiValueDictKeyError
+from django.core.paginator import Paginator
 
 from .forms import CodehubTopicForm,CodehubTopicCommentForm,SearchForm,CodehubQuestionForm,CodehubQuestionCommentForm
 from .models import CodehubTopicModel,CodehubTopicCommentModel,CodehubQuestionModel,CodehubQuestionCommentModel
@@ -53,7 +54,18 @@ def codehub_topic(request):
     else:
         form = CodehubTopicForm()
     search_form = SearchForm()
-    topics = CodehubTopicModel.objects.all().order_by('-timeStamp')
+    topics_list = CodehubTopicModel.objects.all().order_by('-timeStamp')
+    paginator = Paginator(topics_list,2)
+    try:
+        page = int(request.GET.get('page','1'))
+    except:
+        page = 1
+
+    try:
+        topics = paginator.page(page)
+    except(EmptyPage,InvalidPage):
+        topics = paginator.page(paginator.num_pages)
+
     return render(request,'codehub/topic/topic.html',{'form':form,'topics':topics,'search_form':search_form})
 
 
