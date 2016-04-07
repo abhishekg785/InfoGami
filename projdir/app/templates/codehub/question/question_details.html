@@ -13,4 +13,20 @@
   {{ ques_details.question_description|markdown }}<br/>
   by:{{ ques_details.user.username }}<br/>
   {{ ques_details.timeStamp }}
+  <hr/>
+  <h2>Answer here:</h2>
+  <form method = 'POST'>
+    {% csrf_token %}
+    {{ form.as_p }}
+  <input type = 'submit' name = 'answer_ques' value = 'Post Answer'/>
+  <hr/>
+  <h1>Previous Answers</h1>
+  {% for ans in ques_answers %}
+    {{ ans.comment_text }}<br/>
+    {% if ans.user.username == user.username %}
+      <a href = "{% url 'edit_codehub_question_comment' ans.id %}">Edit</a>
+      <a href = "{% url 'remove_codehub_question_comment' ans.id %}">Remove</a>
+    {% endif %}
+    <hr/>
+  {% endfor %}
 {% endblock %}

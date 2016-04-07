@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Edit Answer</h1>
+  <hr/>
+  <form method = 'post'>
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type='submit' name='Save Changes'/>
+  </form>
+{% endblock %}

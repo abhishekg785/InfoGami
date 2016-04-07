@@ -5,8 +5,8 @@ from django.contrib.auth import authenticate,logout,login
 import datetime
 from django.utils.datastructures import MultiValueDictKeyError
 
-from .forms import CodehubTopicForm,CodehubTopicCommentForm,SearchForm,CodehubQuestionForm
-from .models import CodehubTopicModel,CodehubTopicCommentModel,CodehubQuestionModel
+from .forms import CodehubTopicForm,CodehubTopicCommentForm,SearchForm,CodehubQuestionForm,CodehubQuestionCommentForm
+from .models import CodehubTopicModel,CodehubTopicCommentModel,CodehubQuestionModel,CodehubQuestionCommentModel
 from .views import loginRequired
 
 
@@ -204,8 +204,21 @@ def codehub_question(request):
 
 @loginRequired
 def codehub_question_details(request,ques_id):
+    if request.method == 'POST':
+        form = CodehubQuestionCommentForm(request.POST)
+        if form.is_valid():
+            new_answer = CodehubQuestionCommentModel(
+                user = request.user,
+                question = get_object_or_404(CodehubQuestionModel,id = ques_id),
+                comment_text = form.cleaned_data['comment_text']
+            )
+            new_answer.save()
+            print 'saved'
+    else:
+        form = CodehubQuestionCommentForm()
     ques_details = get_object_or_404(CodehubQuestionModel,id = ques_id)
-    return render(request,'codehub/question/question_details.html',{'ques_details':ques_details})
+    ques_answers = CodehubQuestionCommentModel.objects.filter(question_id = ques_id).order_by("-timeStamp")
+    return render(request,'codehub/question/question_details.html',{'ques_details':ques_details,'form':form,'ques_answers':ques_answers})
 
 
 @loginRequired
@@ -234,3 +247,28 @@ def edit_codehub_question(request,ques_id):
         ques_data = {'question_heading':ques_details.question_heading,'question_description':ques_details.question_description,'question_link':ques_details.question_link,'question_tags':ques_details.question_tags,'question_type':ques_details.question_type}
         form = CodehubQuestionForm(initial = ques_data)
     return render(request,'codehub/question/edit_question.html',{'form':form})
+
+
+@loginRequired
+def remove_codehub_question_comment(request,ans_id):
+    c_details = get_object_or_404(CodehubQuestionCommentModel,id = ans_id)
+    ques_id = c_details.question.id
+    c_details.delete()
+    return redirect('/codehub/question/'+str(ques_id)+'/details/')
+
+
+def edit_codehub_question_comment(request,ans_id):
+    if request.method == 'POST':
+        form = CodehubQuestionCommentForm(request.POST)
+        if form.is_valid():
+            ans_details = get_object_or_404(CodehubQuestionCommentModel,id = ans_id)
+            ques_id = ans_details.question.id
+            form = CodehubQuestionCommentForm(request.POST,instance = ans_details)
+            form.save()
+            #flash message here
+            return redirect('/codehub/question/'+str(ques_id)+'/details')
+    else:
+        ans_details = get_object_or_404(CodehubQuestionCommentModel,id = ans_id)
+        ans_data = {'comment_text':ans_details.comment_text}
+        form = CodehubQuestionCommentForm(initial = ans_data)
+    return render(request,'codehub/question/edit_question_comment.html',{'form':form})

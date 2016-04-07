@@ -87,6 +87,15 @@ class CodehubQuestionModel(models.Model):
     def __str__(self):
         return self.question_heading
 
+class CodehubQuestionCommentModel(models.Model):
+    user = models.ForeignKey(User)
+    question = models.ForeignKey(CodehubQuestionModel)
+    comment_text = MarkdownField()
+    timeStamp = models.DateTimeField(auto_now_add = True)
+
+    def __str__(self):
+        return self.question.question_heading
+
 
 class BlogModel(models.Model):
     user = models.ForeignKey(User)

@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogModel,CodehubQuestionModel
+from .models import CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogModel,CodehubQuestionModel,CodehubQuestionCommentModel
 
 from django_markdown.widgets import MarkdownWidget
 
@@ -72,6 +72,14 @@ class CodehubQuestionForm(forms.ModelForm):
     class Meta:
         model = CodehubQuestionModel
         fields = ['question_heading','question_description','question_link','question_tags','question_type']
+
+
+class CodehubQuestionCommentForm(forms.ModelForm):
+    comment_text = forms.CharField(label = '',widget = forms.Textarea(attrs = {'placeholder':'Enter your answer or suggestions here...'}))
+
+    class Meta:
+        model = CodehubQuestionCommentModel
+        fields = ['comment_text']
 
 
 class BlogForm(forms.ModelForm):
