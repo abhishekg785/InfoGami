@@ -28,15 +28,13 @@
       {{ topic.timeStamp }}
     {% if topic.user.username == user.username %}
     <a href = "{% url 'remove_topic' topic.id %}">Remove</a>
-    <a href = "{% url 'edit_topic' topic.id %}">Edit
+    <a href = "{% url 'edit_topic' topic.id %}">Edit</a>
     {% endif %}
     <hr/>
 {% endfor %}
 <div class = "pagination">
-  <ul>
   {% if topics.has_previous %}
     <li><a href = "?page={{ topics.previous_page_number }}">Previous</a></li>
-  </ul>
   {% endif %}
   {% for pg in topics.paginator.page_range %}
     {% if topics.number == pg %}
@@ -48,6 +46,7 @@
   {% if topics.has_next %}
     <li><a href = "?page={{ topics.next_page_number }}">Next</a></li>
   {% endif %}
+  </ul>
 </div>
 {% endblock %}
 </div>
