@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Users</h1>
+  <hr/>
+  {% for user in users %}
+    <a href = "{% url 'user_profile' user.id %}">{{ user.username }}</a>
+    <hr/>
+  {% endfor %}
+  <div class = "pagination">
+    {% if users.has_previous %}
+      <li><a href = "?page={{ users.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    {% for pg in users.paginator.page_range %}
+      {% if users.number == pg %}
+        <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% else %}
+        <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if users.has_next %}
+      <li><a href = "?page={{ users.next_page_number }}">Next</a></li>
+    {% endif %}
+    </ul>
+  </div>
+{% endblock %}

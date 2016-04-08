@@ -12,6 +12,8 @@ from .forms import UserProfileForm
 from .models import UserProfileModel,CodehubTopicModel,CodehubQuestionModel
 import datetime
 
+#pagination stuff
+from .codehub import do_pagination
 
 register = template.Library()
 
@@ -39,8 +41,9 @@ def gravatar(email, size=128):
 
 @loginRequired
 def get_users(request):
-    users = User.objects.values('id','username')
-    return render(request,'codehub/user_list.html',{'users':users})
+    users_list = User.objects.values('id','username')
+    users = do_pagination(request,users_list,5)
+    return render(request,'users/user_list.html',{'users':users})
 
 
 @loginRequired

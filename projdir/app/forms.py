@@ -82,6 +82,7 @@ class CodehubQuestionCommentForm(forms.ModelForm):
         fields = ['comment_text']
 
 
+
 class BlogForm(forms.ModelForm):
     content = forms.CharField()
     class Meta:

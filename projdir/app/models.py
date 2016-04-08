@@ -4,13 +4,15 @@ from django_markdown.models import MarkdownField
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
+from taggit.managers import TaggableManager
 
 class CodehubTopicModel(models.Model):
     user = models.ForeignKey(User)
     topic_heading = models.CharField(max_length = 100)
     topic_detail = MarkdownField()
     topic_link = models.CharField(max_length = 100,blank = True)
-    tags = models.CharField(max_length = 50)
+    # tags = models.CharField(max_length = 50)
+    tags = TaggableManager()
     timeStamp = models.DateTimeField(auto_now_add = True)
     topic_type = models.CharField(max_length = 10)
     file = models.FileField(upload_to = 'uploads/',blank = True)
@@ -79,7 +81,7 @@ class CodehubQuestionModel(models.Model):
     question_heading = models.CharField(max_length = 200)
     question_description = MarkdownField()
     question_link = models.CharField(max_length = 100,blank = True)
-    question_tags = models.CharField(max_length = 200)
+    question_tags = TaggableManager()
     question_type = models.CharField(max_length = 20)
     timeStamp = models.DateTimeField(auto_now_add = True)
 
