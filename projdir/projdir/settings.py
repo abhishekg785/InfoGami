@@ -39,9 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'bootstrap3',
-    'tinymce',
     'django_markdown',
-    'pagedown',
 ]
 
 MIDDLEWARE_CLASSES = [
