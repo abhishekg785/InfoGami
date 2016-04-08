@@ -10,6 +10,8 @@ from .forms import CodehubTopicForm,CodehubTopicCommentForm,SearchForm,CodehubQu
 from .models import CodehubTopicModel,CodehubTopicCommentModel,CodehubQuestionModel,CodehubQuestionCommentModel
 from .views import loginRequired
 
+from taggit.models import Tag
+
 
 #decorator for checking that only the user of the topic can comment
 def check_user_access_for_topic_edit(func):
@@ -50,6 +52,7 @@ def codehub_topic(request):
         form = CodehubTopicForm(request.POST)
         if form.is_valid():
             user = User.objects.get(username = request.user.username)
+            tags = form.cleaned_data['tags']
             try:
                 file = request.FILES['file']
             except MultiValueDictKeyError:
@@ -59,12 +62,12 @@ def codehub_topic(request):
                 topic_heading = form.cleaned_data['topic_heading'],
                 topic_detail = form.cleaned_data['topic_detail'],
                 topic_link = form.cleaned_data['topic_link'],
-                tags = form.cleaned_data['tags'],
                 topic_type = form.cleaned_data['topic_type'],
                 file = file,
                 timeStamp = datetime.datetime.now(),
             )
             new_topic.save()
+            new_topic.tags.add(*tags)
             #add flash message
             return redirect('/codehub/topic')
     else:
@@ -95,7 +98,11 @@ def edit_topic(request,id):
             return redirect('/codehub/topic')
     else:
         topic_details = CodehubTopicModel.objects.get(id = id)
-        data = {'topic_heading':topic_details.topic_heading,'topic_detail':topic_details.topic_detail,'topic_link':topic_details.topic_link,'tags':topic_details.tags,'file':topic_details.file,'topic_type':topic_details.topic_type}
+        tagArr = []
+        for tag in topic_details.tags.all():
+            tagArr.append(tag.name)
+        tags = ",".join(tagArr)
+        data = {'topic_heading':topic_details.topic_heading,'topic_detail':topic_details.topic_detail,'topic_link':topic_details.topic_link,'file':topic_details.file,'topic_type':topic_details.topic_type,'tags':tags}
         form = CodehubTopicForm(initial = data)
     return render(request,'codehub/topic/edit_topic.html',{'form':form})
 
@@ -206,15 +213,16 @@ def codehub_question(request):
     if request.method == 'POST':
         form = CodehubQuestionForm(request.POST)
         if form.is_valid():
+            tags = form.cleaned_data['question_tags']
             new_ques = CodehubQuestionModel(
                 user = request.user,
                 question_heading = form.cleaned_data['question_heading'],
                 question_description = form.cleaned_data['question_description'],
                 question_link = form.cleaned_data['question_link'],
-                question_tags = form.cleaned_data['question_tags'],
                 question_type = form.cleaned_data['question_type']
             )
             new_ques.save()
+            new_ques.question_tags.add(*tags)
             return redirect('/codehub/question')
     else:
         form = CodehubQuestionForm()
@@ -266,7 +274,11 @@ def edit_codehub_question(request,ques_id):
             return redirect('/codehub/question/' +str(ques_id) + '/details/')
     else:
         ques_details = get_object_or_404(CodehubQuestionModel,id = ques_id)
-        ques_data = {'question_heading':ques_details.question_heading,'question_description':ques_details.question_description,'question_link':ques_details.question_link,'question_tags':ques_details.question_tags,'question_type':ques_details.question_type}
+        tagArr = []
+        for tag in ques_details.question_tags.all():
+            tagArr.append(tag.name)
+        tags = ",".join(tagArr)
+        ques_data = {'question_heading':ques_details.question_heading,'question_description':ques_details.question_description,'question_link':ques_details.question_link,'question_type':ques_details.question_type,'question_tags':tags}
         form = CodehubQuestionForm(initial = ques_data)
     return render(request,'codehub/question/edit_question.html',{'form':form})
 

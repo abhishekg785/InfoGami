@@ -24,6 +24,9 @@
       {% if topic.topic_type != 'None' %}
         {{ topic.topic_type }}
       {% endif %}
+      Tags:{% for tag in topic.tags.all %}
+      {{ tag.name }}
+      {% endfor %}
     <h3><a href="{% url 'user_profile' topic.user.id %}">{{ topic.user.username }}</a></h3>
       {{ topic.timeStamp }}
     {% if topic.user.username == user.username %}

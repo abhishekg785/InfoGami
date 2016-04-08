@@ -7,7 +7,7 @@
   {{ form.as_p }}
   <input type="submit" name = 'post_question' value="Post Question"/>
 </form>
-<h2>Questions({{ questions.count }})</h2>
+<h2>Questions</h2>
 <hr/>
 {% if questions.count == 0 %}
   <h2>No questions Yet!!!</h2>
@@ -19,6 +19,11 @@
     <a href = "{% url 'remove_codehub_question' question.id %}">Remove</a>
   {% endif %}
   by:{{ question.user.username }}<br/>
+  Tags:
+  {% for tag in question.question_tags.all %}
+      {{ tag.name }}
+  {% endfor %}
+  <br/>
   {{ question.timeStamp }}
   <hr/>
 {% endfor %}

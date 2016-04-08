@@ -2,6 +2,7 @@ from django import forms
 from .models import CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogModel,CodehubQuestionModel,CodehubQuestionCommentModel
 
 from django_markdown.widgets import MarkdownWidget
+from taggit.forms import *
 
 #forms for posting a new topic
 class CodehubTopicForm(forms.ModelForm):
@@ -10,7 +11,8 @@ class CodehubTopicForm(forms.ModelForm):
     topic_detail = forms.CharField(label = '',widget=MarkdownWidget(attrs = {'placeholder':'Topic Details goes here..'}))
     # topic_detail = forms.CharField(label = '',widget = forms.Textarea(attrs = {'rows':'2','cols':'32','placeholder':'Enter the details about topic'}),max_length = 200)
     topic_link = forms.URLField(label = '',max_length = 100,required = False,widget = forms.TextInput(attrs = {'placeholder':'Link to topic'}))
-    tags = forms.CharField(label = 'Add tags',max_length = 100,required = True,widget = forms.TextInput(attrs = {'placeholder':'Add tags'}))
+    # tags = forms.CharField(label = 'Add tags',max_length = 100,required = True,widget = forms.TextInput(attrs = {'placeholder':'Add tags'}))
+    tags = TagField()
     topic_type = forms.ChoiceField(choices = CHOICES,required = True)
     file = forms.FileField(label = 'Upload a file:',required=False)
     class Meta:
@@ -67,7 +69,7 @@ class CodehubQuestionForm(forms.ModelForm):
     question_heading = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Question Heading'}),max_length = 200)
     question_description = forms.CharField(label = '',widget = forms.Textarea(attrs = {'placeholder':'Question Description'}),max_length = 500)
     question_link = forms.URLField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Question Link'}),max_length = 100,required = False)
-    question_tags = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Question Tags'}),max_length = 200)
+    question_tags = TagField()
     question_type = forms.ChoiceField(label = '',choices = CHOICES)
     class Meta:
         model = CodehubQuestionModel

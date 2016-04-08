@@ -101,4 +101,8 @@ class CodehubQuestionCommentModel(models.Model):
 
 class BlogModel(models.Model):
     user = models.ForeignKey(User)
-    content = models.CharField(max_length = 500)
+    title = models.CharField(max_length = 200)
+    body = models.TextField()
+    publish = models.BooleanField(default = True)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
