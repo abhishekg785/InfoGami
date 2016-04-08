@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,logout,login
 import datetime
 from django.utils.datastructures import MultiValueDictKeyError
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator,EmptyPage,InvalidPage
 
 from .forms import CodehubTopicForm,CodehubTopicCommentForm,SearchForm,CodehubQuestionForm,CodehubQuestionCommentForm
 from .models import CodehubTopicModel,CodehubTopicCommentModel,CodehubQuestionModel,CodehubQuestionCommentModel
@@ -20,6 +20,22 @@ def check_user_access_for_topic_edit(func):
             return redirect('/codehub/topic')
         return func(request,id,*args,**kwargs)
     return wrapper
+
+
+#does the pagination stuff here
+def do_pagination(request,list,num_of_pages):
+    paginator = Paginator(list,num_of_pages)
+    try:
+        page = int(request.GET.get('page','1'))
+    except:
+        page = 1
+
+    try:
+        data = paginator.page(page)
+    except(EmptyPage,InvalidPage):
+        data = paginator.page(paginator.num_pages)
+
+    return data
 
 
 @loginRequired
@@ -55,18 +71,10 @@ def codehub_topic(request):
         form = CodehubTopicForm()
     search_form = SearchForm()
     topics_list = CodehubTopicModel.objects.all().order_by('-timeStamp')
-    paginator = Paginator(topics_list,2)
-    try:
-        page = int(request.GET.get('page','1'))
-    except:
-        page = 1
-
-    try:
-        topics = paginator.page(page)
-    except(EmptyPage,InvalidPage):
-        topics = paginator.page(paginator.num_pages)
-
+    topics = do_pagination(request,topics_list,3)  #it does the pagination stuff
     return render(request,'codehub/topic/topic.html',{'form':form,'topics':topics,'search_form':search_form})
+
+
 
 
 @loginRequired
@@ -210,8 +218,10 @@ def codehub_question(request):
             return redirect('/codehub/question')
     else:
         form = CodehubQuestionForm()
-    codehub_questions = CodehubQuestionModel.objects.all().order_by("-timeStamp")
+    codehub_questions_list = CodehubQuestionModel.objects.all().order_by("-timeStamp")
+    codehub_questions = do_pagination(request,codehub_questions_list,2)
     return render(request,'codehub/question/question.html',{'form':form,'questions':codehub_questions})
+
 
 
 @loginRequired

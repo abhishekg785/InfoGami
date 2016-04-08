@@ -12,7 +12,7 @@
 {% if questions.count == 0 %}
   <h2>No questions Yet!!!</h2>
 {% endif %}
-{% for question in questions %}
+{% for question in questions.object_list %}
   <h1><a href="{% url 'codehub_question_details' question.id %}">{{ question.question_heading }}</a></h1>
   {% if question.user.username == user.username %}
     <a href = "{% url 'edit_codehub_question' question.id %}">Edit</a>
@@ -22,4 +22,20 @@
   {{ question.timeStamp }}
   <hr/>
 {% endfor %}
+<div class = "pagination">
+  {% if questions.has_previous %}
+    <li><a href = "?page={{ questions.previous_page_number }}">Previous</a></li>
+  {% endif %}
+  {% for pg in questions.paginator.page_range %}
+    {% if questions.number == pg %}
+      <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+    {% else %}
+      <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+    {% endif %}
+  {% endfor %}
+  {% if questions.has_next %}
+    <li><a href = "?page={{ questions.next_page_number }}">Next</a></li>
+  {% endif %}
+  </ul>
+</div>
 {% endblock %}
