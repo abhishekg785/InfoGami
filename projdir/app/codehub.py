@@ -64,7 +64,6 @@ def codehub_topic(request):
                 topic_link = form.cleaned_data['topic_link'],
                 topic_type = form.cleaned_data['topic_type'],
                 file = file,
-                timeStamp = datetime.datetime.now(),
             )
             new_topic.save()
             new_topic.tags.add(*tags)
@@ -73,7 +72,7 @@ def codehub_topic(request):
     else:
         form = CodehubTopicForm()
     search_form = SearchForm()
-    topics_list = CodehubTopicModel.objects.all().order_by('-timeStamp')
+    topics_list = CodehubTopicModel.objects.all().order_by('-created')
     topics = do_pagination(request,topics_list,3)  #it does the pagination stuff
     return render(request,'codehub/topic/topic.html',{'form':form,'topics':topics,'search_form':search_form})
 
@@ -127,14 +126,13 @@ def comment_on_topic(request,id):
                 user = User.objects.get(username = request.user.username),
                 topic = CodehubTopicModel.objects.get(id = id),
                 comment_text = form.cleaned_data['comment_text'],
-                timeStamp = datetime.datetime.now()
             )
             new_comment.save()
             #flash message here
             return redirect("/codehub/topic/"+id+"/comment")
     else:
         form = CodehubTopicCommentForm()
-    comments = CodehubTopicCommentModel.objects.filter(topic_id = id).order_by('-timeStamp')
+    comments = CodehubTopicCommentModel.objects.filter(topic_id = id).order_by('-created')
     topic_details = CodehubTopicModel.objects.get(id = id)
     return render(request,'codehub/topic/comment_on_topic.html',{'form':form,'comments':comments,'topic':topic_details})
 
@@ -226,7 +224,7 @@ def codehub_question(request):
             return redirect('/codehub/question')
     else:
         form = CodehubQuestionForm()
-    codehub_questions_list = CodehubQuestionModel.objects.all().order_by("-timeStamp")
+    codehub_questions_list = CodehubQuestionModel.objects.all().order_by("-created")
     codehub_questions = do_pagination(request,codehub_questions_list,2)
     return render(request,'codehub/question/question.html',{'form':form,'questions':codehub_questions})
 
@@ -247,7 +245,7 @@ def codehub_question_details(request,ques_id):
     else:
         form = CodehubQuestionCommentForm()
     ques_details = get_object_or_404(CodehubQuestionModel,id = ques_id)
-    ques_answers = CodehubQuestionCommentModel.objects.filter(question_id = ques_id).order_by("-timeStamp")
+    ques_answers = CodehubQuestionCommentModel.objects.filter(question_id = ques_id).order_by("-created")
     return render(request,'codehub/question/question_details.html',{'ques_details':ques_details,'form':form,'ques_answers':ques_answers})
 
 

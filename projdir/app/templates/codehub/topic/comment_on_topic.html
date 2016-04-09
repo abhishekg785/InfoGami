@@ -12,7 +12,7 @@
     <br/>
 {% endif %}
 {{ topic.user.username }}:
-{{ topic.timeStamp }}<br/>
+{{ topic.created }}<br/>
 {{ topic.topic_detail|markdown }}
 Tags:{% for tag in topic.tags.all %}
   {{ tag.name }}
@@ -28,7 +28,7 @@ Tags:{% for tag in topic.tags.all %}
     <P>{{ comment.comment_text|markdown }}</P>
     {{ comment.id }}
     {{ comment.user.username }}:
-    {{ comment.timeStamp }}
+    {{ comment.created }}
   {% if comment.user.username == request.user.username %}
     <a href = "{% url 'edit_topic_comment' comment.id %}">Edit</a>
     <a href = "{% url 'remove_topic_comment' comment.id %}">Remove</a>

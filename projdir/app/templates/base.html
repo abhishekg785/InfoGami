@@ -12,6 +12,7 @@
   <body>
   <div class = 'page-header'>
     {% if user.is_authenticated %}
+    <img height = "50px" src ="{% static 'images/default_gravators/github.png' %}" alt ='No gravatar'/>
     <a href="{% url 'logout_view' %}">Logout</a>
     <a href="{% url 'index' %}">Home</a>
     <a href = "{% url 'user_profile' user.id %}">Profile</a>

@@ -8,9 +8,9 @@
 <p style="color:red">The image is the avatar of the user,create your own here...<a href ='https://en.gravatar.com/'>Avatar</a></p>
 <img src = "{{ gravatar_url }}" />
 {% if user_info.is_superuser == 1 %}
-  <img src = "{% static 'images/default_gravators/admin.png' %}" alt ='No avatar available' style="height:200px"/><br/>
+  <img src = "{% static 'images/default_gravators/admin.png' %}" alt ='No avatar available' style="height:150px"/><br/>
 {% else %}
-  <img src = "{% static 'images/default_gravators/github.png' %}" alt ='No avatar available' style="height:200px"/><br/>
+  <img src = "{% static 'images/default_gravators/github.png' %}" alt ='No avatar available' style="height:150px"/><br/>
 {% endif %}
 <h2>{{ user_info.first_name }}</h2>
 <h2>{{ user_info.last_name }}</h2>

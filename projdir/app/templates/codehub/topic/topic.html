@@ -28,7 +28,8 @@
       {{ tag.name }}
       {% endfor %}
     <h3><a href="{% url 'user_profile' topic.user.id %}">{{ topic.user.username }}</a></h3>
-      {{ topic.timeStamp }}
+      Created:{{ topic.created }}<br/>
+      Last Modified:{{ topic.modified }}<br/>
     {% if topic.user.username == user.username %}
     <a href = "{% url 'remove_topic' topic.id %}">Remove</a>
     <a href = "{% url 'edit_topic' topic.id %}">Edit</a>

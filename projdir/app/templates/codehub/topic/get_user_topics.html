@@ -9,7 +9,7 @@
       <a href = "{% url 'remove_topic' topic.id %}">Remove</a>
     {% endif %}
     <br/>
-    {{ topic.timeStamp }}
+    {{ topic.created }}
     <hr/>
   {% endfor %}
 {% endblock %}

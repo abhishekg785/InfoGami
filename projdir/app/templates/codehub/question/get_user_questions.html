@@ -9,7 +9,7 @@
       <a href = "{% url 'edit_codehub_question' question.id %}">Edit</a>
     {% endif %}
     <br/>
-    {{ question.timeStamp }}
+    {{ question.created }}
     <hr/>
   {% endfor %}
 {% endblock %}

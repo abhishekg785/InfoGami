@@ -13,9 +13,10 @@ class CodehubTopicModel(models.Model):
     topic_link = models.CharField(max_length = 100,blank = True)
     # tags = models.CharField(max_length = 50)
     tags = TaggableManager()
-    timeStamp = models.DateTimeField(auto_now_add = True)
     topic_type = models.CharField(max_length = 10)
     file = models.FileField(upload_to = 'uploads/',blank = True)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
 
     def __str__(self):
         return self.topic_heading
@@ -25,7 +26,8 @@ class CodehubTopicCommentModel(models.Model):
     user = models.ForeignKey(User)
     topic = models.ForeignKey('CodehubTopicModel')
     comment_text = MarkdownField()
-    timeStamp = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
 
     def __str__(self):
         return self.topic.topic_heading
@@ -37,7 +39,8 @@ class UserProfileModel(models.Model):
     user_description = MarkdownField()
     skills = models.CharField(max_length = 200)
     user_type_select = models.CharField(max_length = 50,default = 'None')   #developer or programmer
-    timeStamp = models.DateTimeField(auto_now_add = True)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
 
     def __str__(self):
         return self.user.username
@@ -50,7 +53,8 @@ class CodehubCreateEventModel(models.Model):
     event_venue = models.CharField(max_length = 100)
     event_description = MarkdownField()
     event_for  = models.CharField(max_length = 25)#basic or advanced
-    timeStamp = models.DateTimeField(auto_now_add = True)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
 
     def __str__(self):
         return self.event_heading
@@ -60,8 +64,8 @@ class CodehubEventQuestionModel(models.Model):
     user = models.ForeignKey(User)
     event = models.ForeignKey(CodehubCreateEventModel)
     question_text = MarkdownField()
-    timeStamp = models.DateTimeField(auto_now_add = True)
-
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
 
 
 class MusicModel(models.Model):
@@ -70,7 +74,8 @@ class MusicModel(models.Model):
     music_file = models.FileField(upload_to = 'music/')
     music_lang = models.CharField(max_length = 20)
     music_artist = models.CharField(max_length = 30)
-    timeStamp = models.DateTimeField(auto_now_add = True)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
 
     def __str__(self):
         return self.music_name
@@ -83,8 +88,8 @@ class CodehubQuestionModel(models.Model):
     question_link = models.CharField(max_length = 100,blank = True)
     question_tags = TaggableManager()
     question_type = models.CharField(max_length = 20)
-    timeStamp = models.DateTimeField(auto_now_add = True)
-
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
 
     def __str__(self):
         return self.question_heading
@@ -93,16 +98,20 @@ class CodehubQuestionCommentModel(models.Model):
     user = models.ForeignKey(User)
     question = models.ForeignKey(CodehubQuestionModel)
     comment_text = MarkdownField()
-    timeStamp = models.DateTimeField(auto_now_add = True)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
 
     def __str__(self):
         return self.question.question_heading
 
 
-class BlogModel(models.Model):
+class BlogPostModel(models.Model):
     user = models.ForeignKey(User)
     title = models.CharField(max_length = 200)
-    body = models.TextField()
-    publish = models.BooleanField(default = True)
+    body = MarkdownField()
+    tags = TaggableManager()
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.title

@@ -23,7 +23,7 @@ from app.codehub import codehub_question,remove_codehub_question,edit_codehub_qu
 from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics
 from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question
 from app.music import music_list
-from app.blog import blog
+from app.blog import blog,blog_post_edit,blog_post_remove,blog_post_details
 
 
 urlpatterns = [
@@ -60,7 +60,11 @@ urlpatterns = [
     url(r'^codehub/question/answer/(?P<ans_id>\d+)/edit/$',edit_codehub_question_comment,name = 'edit_codehub_question_comment'),
     url(r'^user/(?P<user_id>\d+)/topics/$',get_user_topics,name = 'get_user_topics'),
     url(r'^user/(?P<user_id>\d+)/questions/$',get_user_questions,name = 'get_user_questions'),
-    url(r'^blog/$',blog,name = 'blog'),
+    url(r'^blog/$',blog,name = 'write_blog'),
+    #route for a particular users's blog
+    url(r'^blog/post/(?P<post_id>\d+)/edit/$',blog_post_edit,name = 'edit_blog_post'),
+    url(r'^blog/post/(?P<post_id>\d+)/remove/$',blog_post_remove,name = 'remove_blog_post'),
+    url(r'^blog/post/(?P<post_id>\d+)/details/$',blog_post_details,name = 'blog_post_details'),
 
 
 

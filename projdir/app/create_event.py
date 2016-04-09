@@ -18,7 +18,7 @@ def check_user_access_for_event_edit(func):
 
 @loginRequired
 def codehub_events(request):
-    events = CodehubCreateEventModel.objects.all().order_by("-timeStamp")
+    events = CodehubCreateEventModel.objects.all().order_by("-created")
     return render(request,'codehub/event/events.html/',{'events':events})
 
 
@@ -43,7 +43,7 @@ def codehub_event_details(request,event_id):
         form = CodehubEventQuestionForm()
     event_details = get_object_or_404(CodehubCreateEventModel,id = event_id)
     # event_questions = get_object_or_404(CodehubEventQuestionModel,event_id = event_id)
-    event_questions = CodehubEventQuestionModel.objects.filter(event_id = event_id).order_by("-timeStamp")
+    event_questions = CodehubEventQuestionModel.objects.filter(event_id = event_id).order_by("-created")
     return render(request,'codehub/event/event_details.html',{'event':event_details,'form':form,'event_questions':event_questions})
 
 @loginRequired
@@ -59,7 +59,6 @@ def create_codehub_event(request):
                 event_venue = form.cleaned_data['event_venue'],
                 event_description = form.cleaned_data['event_venue'],
                 event_for = form.cleaned_data['event_for'],
-                timeStamp = datetime.datetime.now()
             )
             new_event.save()
             return redirect('/codehub/events')
@@ -67,7 +66,7 @@ def create_codehub_event(request):
             #return redirect('codehub_events')
     else:
         form = CodehubCreateEventForm()
-    events = CodehubCreateEventModel.objects.all().order_by("-timeStamp")
+    events = CodehubCreateEventModel.objects.all().order_by("-created")
     return render(request,'codehub/event/create_event.html',{'form':form,'events':events})
 
 

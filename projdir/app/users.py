@@ -69,7 +69,7 @@ def edit_user_profile(request,user_id):
                 profile_details = UserProfileModel.objects.get(user_id = user_id)
             except:
                 user = User.objects.get(id = user_id)
-                profile_details = UserProfileModel(user = user,timeStamp = datetime.datetime.now())
+                profile_details = UserProfileModel(user = user)
             form = UserProfileForm(request.POST,instance = profile_details)
             form.save()
             return redirect('/users/profile/'+str(user_id))
@@ -89,13 +89,13 @@ def edit_user_profile(request,user_id):
 
 @loginRequired
 def get_user_topics(request,user_id):
-    topics = CodehubTopicModel.objects.all().order_by("-timeStamp")
+    topics = CodehubTopicModel.objects.all().order_by("-created")
     topic_user = get_object_or_404(User,id = user_id).username
     return render(request,'codehub/topic/get_user_topics.html',{'topics':topics,'topic_user':topic_user})
 
 @loginRequired
 def get_user_questions(request,user_id):
-    questions = CodehubQuestionModel.objects.all().order_by("-timeStamp")
+    questions = CodehubQuestionModel.objects.all().order_by("-created")
     question_user = get_object_or_404(User,id = user_id).username
     return render(request,'codehub/question/get_user_questions.html',{'questions':questions,'question_user':question_user})
 

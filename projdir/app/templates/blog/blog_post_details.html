@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Post Details</h1>
+<hr/>
+<h1>{{ post_details.title }}</h1>
+{{ post_details.body }}<br/>
+Tags:
+{% for tag in post_details.tags.all %}
+  {{ tag.name }}
+{% endfor %}
+<br/>
+{% if post_details.user.username == user.username %}
+  <a href= "{% url 'edit_blog_post' post_details.id %}">Edit</a>
+  <a href = "{% url 'remove_blog_post' post_details.id %}">Remove</a>
+{% endif %}
+<br/>
+Created:{{ post_details.created }}<br/>
+Modified:{{ post_details.modified }}
+{% endblock %}

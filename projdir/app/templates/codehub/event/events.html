@@ -10,7 +10,7 @@
     <p style = 'color:red'>Created by Admin</p>
   {% endif %}
   {{ event.user.username }}<br/>
-  {{ event.timeStamp }}
+  {{ event.created }}
   {% if event.user.username == user.username %}
     <a href = "{% url 'remove_codehub_event' event.id %}">Remove</a>
     <a href = "{% url 'edit_codehub_event' event.id%}">Edit</a>
