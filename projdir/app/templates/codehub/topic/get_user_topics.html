@@ -2,14 +2,18 @@
 {% block content %}
   <h1>Topics of {{ topic_user }}</h1>
   <hr/>
-  {% for topic in topics %}
-    <h1><a href ="{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h1>
-    {% if topic.user.username  == user.username %}
-      <a href = "{% url 'edit_topic' topic.id %}">Edit</a>
-      <a href = "{% url 'remove_topic' topic.id %}">Remove</a>
-    {% endif %}
-    <br/>
-    {{ topic.created }}
-    <hr/>
-  {% endfor %}
+  {% if not topics %}
+    <h3>No Topics Yet!!!</h3>
+  {% else %}
+    {% for topic in topics %}
+      <h1><a href ="{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h1>
+      {% if topic.user.username  == user.username %}
+        <a href = "{% url 'edit_topic' topic.id %}">Edit</a>
+        <a href = "{% url 'remove_topic' topic.id %}">Remove</a>
+      {% endif %}
+      <br/>
+      {{ topic.created }}
+      <hr/>
+    {% endfor %}
+  {% endif %}
 {% endblock %}

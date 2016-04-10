@@ -6,10 +6,11 @@ from django.utils.safestring import mark_safe
 import hashlib
 import urllib
 
+from sets import Set
 
 from .views import loginRequired
 from .forms import UserProfileForm
-from .models import UserProfileModel,CodehubTopicModel,CodehubQuestionModel
+from .models import UserProfileModel,CodehubTopicModel,CodehubQuestionModel,BlogPostModel
 import datetime
 
 #pagination stuff
@@ -48,7 +49,8 @@ def get_users(request):
 
 @loginRequired
 def user_profile(request,user_id):
-    info = User.objects.get(id = user_id)
+    # info = User.objects.get(id = user_id)
+    info = get_object_or_404(User,id = user_id)
     try:
         user_profile = UserProfileModel.objects.get(user_id = user_id)
     except:
@@ -89,13 +91,13 @@ def edit_user_profile(request,user_id):
 
 @loginRequired
 def get_user_topics(request,user_id):
-    topics = CodehubTopicModel.objects.all().order_by("-created")
+    topics = CodehubTopicModel.objects.filter(user_id = user_id).order_by("-created")
     topic_user = get_object_or_404(User,id = user_id).username
     return render(request,'codehub/topic/get_user_topics.html',{'topics':topics,'topic_user':topic_user})
 
 @loginRequired
 def get_user_questions(request,user_id):
-    questions = CodehubQuestionModel.objects.all().order_by("-created")
+    questions = CodehubQuestionModel.objects.filter(user_id = user_id).order_by("-created")
     question_user = get_object_or_404(User,id = user_id).username
     return render(request,'codehub/question/get_user_questions.html',{'questions':questions,'question_user':question_user})
 
@@ -110,3 +112,25 @@ def get_user_talks_or_events(request,user_id):
 @loginRequired
 def get_user_articles_or_blogs(request,user_id):
     return HttpResponse('user questions')
+
+
+def user_blog(request,user_id):
+    user_details = get_object_or_404(User,id = user_id)
+    # user_profile = get_object_or_404(UserProfileModel,user_id = user_id)
+    try:
+        user_profile = UserProfileModel.objects.get(user_id = user_id)
+    except:
+        user_profile = False
+    user_gravatar_url = gravatar(user_details.email)
+    #get all tags related
+    tagArr = []
+    blog_posts = BlogPostModel.objects.filter(user_id = user_id)
+    for post in blog_posts:
+        for tag in post.tags.all():
+            tagArr.append(tag)
+    tagArr = Set(tagArr)
+    return render(request,'blog/user_blog.html',{'user_info':user_details,'user_profile':user_profile,'blog_posts':blog_posts,'user_gravatar_url':user_gravatar_url,'tagArr':tagArr})
+
+
+    def search_post_by_slug(request,slug):
+        return HttpResponse(slug)

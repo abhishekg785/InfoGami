@@ -1,4 +1,34 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h1>Blog</h1>
+  <img style ="border-radius:50% "src = "{{ user_gravatar_url }}" />
+  <h1>Welcome to the blog of {{ user_info.username }}!!!</h1>
+  {% if user_profile != False %}
+    <h3><span>"</span>{{ user_profile.user_description }}<span>"</span></h3>
+  {% else %}
+    <h3>No Description yet!!!</h3>
+  {% endif %}
+  <hr/>
+  {% if not tagArr %}
+    <h3>No categories yet!!</h3>
+  {% else %}
+    <h3>Categories:</h3><br/>
+    {% for tag in tagArr %}
+      <a href = "{% url 'search_blog_post_by_slug' user_info.id tag.slug %}">{{ tag.name }}</a><br/>
+    {% endfor %}
+  {% endif %}
+  <br/>
+  {% if not blog_posts %}
+    <h3>No blogs or posts yet!!!</h3>
+  {% else %}
+    <h2>Posts and Articles by {{user_info.username }}:</h2>
+    {% for post in blog_posts %}
+      {{ post.title }}<br/>
+      Tags:{% for tag in post.tags.all %}
+       {{ tag.name }}
+      {% endfor %}
+      <br/>
+      {{ post.body }}
+      <hr/>
+    {% endfor %}
+  {% endif %}
 {% endblock %}
