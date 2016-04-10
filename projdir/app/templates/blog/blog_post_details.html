@@ -14,6 +14,7 @@ Tags:
   <a href = "{% url 'remove_blog_post' post_details.id %}">Remove</a>
 {% endif %}
 <br/>
+by:<a href ="{% url 'user_profile' post_details.user.id %}">{{ post_details.user.username }}</a><br/>
 Created:{{ post_details.created }}<br/>
 Modified:{{ post_details.modified }}
 {% endblock %}

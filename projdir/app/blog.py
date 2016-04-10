@@ -8,8 +8,14 @@ from .views import loginRequired
 
 
 #decorators comes here
-
-
+def check_user_access_for_blog_post_edit_delete(func):
+    def wrapper(request,post_id,*args,**kwargs):
+        post_details = get_object_or_404(BlogPostModel,id = post_id)
+        if post_details.user.username  != request.user.username:
+            return redirect('/')
+        else:
+            return func(request,post_id,*args,**kwargs)
+    return wrapper
 
 
 @loginRequired
@@ -33,6 +39,8 @@ def blog(request):
     return render(request,'blog/index.html',{'form':form,'blog_posts':blog_posts})
 
 
+@loginRequired
+@check_user_access_for_blog_post_edit_delete
 def blog_post_edit(request,post_id):
     if request.method == 'POST':
         form = BlogPostForm(request.POST)
@@ -52,14 +60,15 @@ def blog_post_edit(request,post_id):
     return render(request,'blog/edit_blog_post.html',{'form':form})
 
 
-
-
+@loginRequired
+@check_user_access_for_blog_post_edit_delete
 def blog_post_remove(request,post_id):
     post_details = get_object_or_404(BlogPostModel,id = post_id)
     post_details.delete()
     return redirect('/blog')
 
 
+@loginRequired
 def blog_post_details(request,post_id):
     post_details = get_object_or_404(BlogPostModel,id = post_id)
     return render(request,'blog/blog_post_details.html',{'post_details':post_details})
