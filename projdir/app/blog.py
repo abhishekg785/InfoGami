@@ -73,7 +73,7 @@ def blog_post_details(request,post_id):
     post_details = get_object_or_404(BlogPostModel,id = post_id)
     return render(request,'blog/blog_post_details.html',{'post_details':post_details})
 
-
+@loginRequired
 def search_blog_post_by_slug(request,user_id,slug_str):
     user = get_object_or_404(User,id = user_id)
     posts = BlogPostModel.objects.filter(user_id = user_id,tags__slug = slug_str).distinct()
