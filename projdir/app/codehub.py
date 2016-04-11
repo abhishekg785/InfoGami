@@ -11,6 +11,7 @@ from .models import CodehubTopicModel,CodehubTopicCommentModel,CodehubQuestionMo
 from .views import loginRequired
 
 from taggit.models import Tag
+from itertools import chain
 
 
 #decorator for checking that only the user of the topic can comment
@@ -143,13 +144,16 @@ def search_topic(request):
     if request.method == 'POST':
         form = SearchForm(request.POST)
         if form.is_valid():
-            string = request.POST['search_str']
-            print string
-            result = CodehubTopicModel.objects.filter(topic_heading__contains=string)
-            return HttpResponse(result)
+            search_str = form.cleaned_data['search_str']
+            list_by_topic_name = CodehubTopicModel.objects.filter(topic_heading__contains=search_str)
+            list_by_slug = CodehubTopicModel.objects.filter(tags__name__in = [search_str])
+            #merging the two queries
+            result_list = list(chain(list_by_topic_name,list_by_slug))
+            form = SearchForm()
+            return render(request,'codehub/topic/search_topic.html',{'search_str':search_str,'results':result_list,'form':form})
     else:
         form = SearchForm()
-    return HttpResponse('cdbckdbckj')
+    return render(request,'codehub/topic/search_topic.html',{'form':form})
 
 
 

@@ -4,9 +4,15 @@
   <hr/>
   <form method="POST">
   {% csrf_token %}
+  <p style = 'color:red'>  Note:Atleast add 2 tags</p>
   {{ form.as_p }}
   <input type='submit' value='Post' name='post_blog' />
   </form>
+  <hr/>
+  <h3>Search by Tags:</h3>
+  {% for tag in all_tags %}
+    <a href = "{% url 'search_all_blog_posts_by_slug' tag.slug %}">{{ tag.name }}</a><br/>
+  {% endfor %}
   <hr/>
   <h1>Recent Posts or Articles:</h1>
   {% for post in blog_posts %}

@@ -35,8 +35,9 @@ def blog(request):
             return redirect('/blog')
     else:
         form = BlogPostForm()
+    all_tags = BlogPostModel.tags.all().distinct()
     blog_posts = BlogPostModel.objects.all().order_by('-created')
-    return render(request,'blog/index.html',{'form':form,'blog_posts':blog_posts})
+    return render(request,'blog/index.html',{'form':form,'blog_posts':blog_posts,'all_tags':all_tags})
 
 
 @loginRequired
@@ -73,9 +74,15 @@ def blog_post_details(request,post_id):
     post_details = get_object_or_404(BlogPostModel,id = post_id)
     return render(request,'blog/blog_post_details.html',{'post_details':post_details})
 
-
+#searches blog posts of a particular user for a particular tag
 @loginRequired
-def search_blog_post_by_slug(request,user_id,slug_str):
+def search_user_blog_post_by_slug(request,user_id,slug_str):
     username = get_object_or_404(User,id = user_id).username
     posts = BlogPostModel.objects.filter(user_id = user_id,tags__slug = slug_str).distinct()
-    return render(request,'blog/blog_posts_by_slug.html',{'posts':posts,'username':username,'tag_str':slug_str})
+    return render(request,'blog/user_blog_posts_by_slug.html',{'posts':posts,'username':username,'tag_str':slug_str})
+
+
+#searches all posts according to slug string
+def search_all_blog_posts_by_slug(request,slug_str):
+    posts = BlogPostModel.objects.filter(tags__slug = slug_str).distinct()
+    return render(request,'blog/search_all_blog_posts_by_slug.html',{'tag_str':slug_str,'posts':posts})

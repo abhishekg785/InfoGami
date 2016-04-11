@@ -17,7 +17,7 @@
 Tags:{% for tag in topic.tags.all %}
   {{ tag.name }}
 {% endfor %}
-<form method='post'>
+<form name  = 'form' method='post'>
 {% csrf_token %}
 {{ form.as_p }}
 <input type='submit' name='comment' value ='Comment'/>

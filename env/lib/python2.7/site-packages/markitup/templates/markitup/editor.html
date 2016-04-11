@@ -1,0 +1,12 @@
+<script type="text/javascript">
+(function($) {
+$(document).ready(function() {
+  var element = $("#{{ textarea_id }}");
+  if(!element.hasClass("markItUpEditor")) {
+    {% if preview_url %}mySettings["previewParserPath"] = "{{ preview_url }}";{% endif %}
+    element.markItUp(mySettings);
+  }
+  {% if AUTO_PREVIEW %}$('a[title="Preview"]').trigger('mouseup');{% endif %}
+});
+})(jQuery);
+</script>
