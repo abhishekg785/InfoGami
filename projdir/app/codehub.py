@@ -228,9 +228,10 @@ def codehub_question(request):
             return redirect('/codehub/question')
     else:
         form = CodehubQuestionForm()
+    search_form = SearchForm()
     codehub_questions_list = CodehubQuestionModel.objects.all().order_by("-created")
     codehub_questions = do_pagination(request,codehub_questions_list,2)
-    return render(request,'codehub/question/question.html',{'form':form,'questions':codehub_questions})
+    return render(request,'codehub/question/question.html',{'form':form,'questions':codehub_questions,'search_form':search_form})
 
 
 
@@ -308,3 +309,13 @@ def edit_codehub_question_comment(request,ans_id):
         ans_data = {'comment_text':ans_details.comment_text}
         form = CodehubQuestionCommentForm(initial = ans_data)
     return render(request,'codehub/question/edit_question_comment.html',{'form':form})
+
+
+def search_question(request):
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            return HttpResponse(' cjb kjcb c')
+    else:
+        form = SearchForm()
+    return render(request,'codehub/question/search_question.html',{'form':form})

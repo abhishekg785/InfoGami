@@ -59,7 +59,7 @@ class CodehubCreateEventForm(forms.ModelForm):
 
 
 class SearchForm(forms.Form):
-    search_str = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Search topic here...'}),max_length = 50,required = True)
+    search_str = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Search here...'}),max_length = 50,required = True)
 
 
 class CodehubEventQuestionForm(forms.ModelForm):

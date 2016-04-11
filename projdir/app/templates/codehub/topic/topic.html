@@ -8,12 +8,12 @@
 <input type='submit'   name='submitTopic' value= 'Post Topic'/>
 </form>
 <hr/>
-<h1>Topics:</h1>
-<form method='POST' action = "{% url 'search_topic' %}">
+<form align='center' method='POST' action = "{% url 'search_topic' %}">
   {% csrf_token %}
   {{ search_form.as_p }}
 <input type='submit' name='seachTopic' value = 'Search'/>
 </form>
+<h1>Topics:</h1>
 <p style='color:red'>Click on topic to view comments ans discuss</p><br/>
 <hr/>
 <div id = 'topicDisplaySec'>

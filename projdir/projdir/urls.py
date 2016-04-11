@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from app.views import login_view,register_view,logout_view,index
-from app.codehub import codehub_question,remove_codehub_question,edit_codehub_question,codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,codehub_question_details,remove_codehub_question_comment,edit_codehub_question_comment
+from app.codehub import codehub_question,remove_codehub_question,edit_codehub_question,codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,codehub_question_details,remove_codehub_question_comment,edit_codehub_question_comment,search_question
 from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog
 from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question
 from app.music import music_list
@@ -54,6 +54,7 @@ urlpatterns = [
     url(r'^codehub/event/question/(?P<ques_id>\d+)/edit/$',edit_codehub_event_question,name = 'edit_codehub_event_question'),
     url(r'^music/$',music_list,name = 'music_list'),
     url(r'^codehub/question/$',codehub_question,name = 'codehub_question'),
+    url(r'^codehub/question/search_question/$',search_question,name = 'search_question'),
     url(r'^codehub/question/(?P<ques_id>\d+)/details/$',codehub_question_details,name = 'codehub_question_details'),
     url(r'^codehub/question/(?P<ques_id>\d+)/remove/$',remove_codehub_question,name = 'remove_codehub_question'),
     url(r'^codehub/question/(?P<ques_id>\d+)/edit/$',edit_codehub_question,name = 'edit_codehub_question'),

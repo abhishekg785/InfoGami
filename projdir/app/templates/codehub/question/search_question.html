@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Search Questions here...</h1>
+<form method= "POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+<input type='submit' name ='search_ques' />
+</form>
+{% if not results %}
+<h1>No results yet!!!</h1>
+{% else %}
+<h1>Results for "{{ search_str }}" </h1>
+//get results here
+{% endif %}
+{% endblock %}
