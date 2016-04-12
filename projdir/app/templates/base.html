@@ -18,7 +18,10 @@
     <a href="{% url 'index' %}">Home</a>
     <a href = "{% url 'user_profile' user.id %}">Profile</a>
     <a href = "{% url 'get_users' %}">Users</a>
-    <h1>Welcome "<a href = "{% url 'user_profile' user.id %}">{{ user.username }}</a>"</h1>
+    <a href = "{% url 'user_blog' user.id %}">My Blog</a>
+    <a href = "">Notifications</a>
+    <a href = "">My activities</a>
+    <h1 align = 'right'>Welcome "<a href = "{% url 'user_profile' user.id %}">{{ user.username }}</a>"</h1>
     {% else %}
     <a href="{% url 'login_view' %}">Login</a>
     <a href="{% url 'register_view' %}">Register</a>

@@ -138,7 +138,7 @@ def user_blog(request,user_id):
     user_gravatar_url = gravatar(user_details.email)
     #get all tags related
     tagArr = []
-    blog_posts = BlogPostModel.objects.filter(user_id = user_id)
+    blog_posts = BlogPostModel.objects.filter(user_id = user_id).order_by('-created')
     for post in blog_posts:
         for tag in post.tags.all():
             tagArr.append(tag)

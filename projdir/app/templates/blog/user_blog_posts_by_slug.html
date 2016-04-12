@@ -3,7 +3,7 @@
 {% if not posts %}
   <h3>NO posts yet!!!</h3>
 {% else %}
-  <h3>List of posts and articles by {{user}} under tag {{ tag_str }} </h3>
+  <h3>List of posts and articles by {{user}} under tag "{{ tag_str }}" </h3>
   {% for post in posts %}
     <a href = "{% url 'blog_post_details' post.id %}">{{ post.title }}</a><br/>
     by:{{ post.user.username }}

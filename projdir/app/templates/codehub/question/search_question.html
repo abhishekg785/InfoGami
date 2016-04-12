@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Search Questions here...</h1>
+<h3>Search Questions</h3>
 <form method= "POST">
   {% csrf_token %}
   {{ form.as_p }}
-<input type='submit' name ='search_ques' />
+<input type='submit' name ='search_ques' value='Go' />
 </form>
 {% if not results %}
-<h1>No results yet!!!</h1>
+<h3>No results yet!!!</h3>
 {% else %}
-<h1>Results for "{{ search_str }}" </h1>
+<h3>Results for "{{ search_str }}" </h3>
   {% for result in results %}
     <a href = "{% url 'codehub_question_details' result.id %}">{{ result }}</a><br/>
     by:{{ result.user.username }}<br/>

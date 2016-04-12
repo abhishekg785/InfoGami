@@ -13,6 +13,8 @@ from os.path import join as isfile
 from django.conf import settings
 import os
 
+from .codehub import do_pagination
+
 #decorators comes here
 def check_user_access_for_blog_post_edit_delete(func):
     def wrapper(request,post_id,*args,**kwargs):
@@ -47,7 +49,8 @@ def blog(request):
     else:
         form = BlogPostForm()
     all_tags = BlogPostModel.tags.all().distinct()
-    blog_posts = BlogPostModel.objects.all().order_by('-created')
+    blog_posts_list = BlogPostModel.objects.all().order_by('-created')
+    blog_posts = do_pagination(request,blog_posts_list,3)
     return render(request,'blog/index.html',{'form':form,'blog_posts':blog_posts,'all_tags':all_tags})
 
 
@@ -150,7 +153,7 @@ def remove_blog_post_comment(request,post_id,com_id):
 @loginRequired
 def search_user_blog_post_by_slug(request,user_id,slug_str):
     username = get_object_or_404(User,id = user_id).username
-    posts = BlogPostModel.objects.filter(user_id = user_id,tags__slug = slug_str).distinct()
+    posts = BlogPostModel.objects.filter(user_id = user_id,tags__slug = slug_str).order_by('-created').distinct()
     return render(request,'blog/user_blog_posts_by_slug.html',{'posts':posts,'username':username,'tag_str':slug_str})
 
 

@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Search Topics here</h1>
+<h3>Search Topics</h3>
 <form method = "POST">
   {% csrf_token %}
   {{ form.as_p }}
-  <input type = 'submit' name='search_topic'/>
+  <input type = 'submit' name='search_topic' value ='Go'/>
 </form>
 <hr/>
 {% if not results %}
   <h3>No results yet!!!</h3>
 {% else %}
-<h1>Search results for " {{ search_str }} "</h1>
+<h3>Search results for " {{ search_str }} "</h3>
 {% for result in results %}
   <a href = "{% url 'comment_on_topic' result.id %}">{{ result.topic_heading }}</a><br/>
   by:{{ result.user.username }}<br/>

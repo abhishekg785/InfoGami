@@ -19,7 +19,7 @@
   {% endif %}
   <hr/>
   <h1>Recent Posts or Articles:</h1>
-  {% for post in blog_posts %}
+  {% for post in blog_posts.object_list %}
     <a href = "{% url 'blog_post_details' post.id %}"><h1>{{ post.title }}</h1></a>
     by:<a href = "{% url 'user_profile' post.user.id %}">{{ post.user.username }}</a><br/>
     Image:<a href = "/media/{{ post.image_file }}">{{ post.image_file }}</a><br/>
@@ -31,4 +31,20 @@
     {% endif %}
     <hr/>
   {% endfor %}
+  <div class = "pagination">
+    {% if blog_posts.has_previous %}
+      <li><a href = "?page={{ blog_posts.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    {% for pg in blog_posts.paginator.page_range %}
+      {% if blog_posts.number == pg %}
+        <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% else %}
+        <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if blog_posts.has_next %}
+      <li><a href = "?page={{ blog_posts.next_page_number }}">Next</a></li>
+    {% endif %}
+    </ul>
+  </div>
 {% endblock %}
