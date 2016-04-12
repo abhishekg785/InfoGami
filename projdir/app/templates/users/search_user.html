@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="post">
+{% csrf_token %}
+{{ form.as_p }}
+<input type='submit' name='search_user' value="search user"/>
+<h1>Search results for users "{{ search_str }}"</h1>
+{% for user in result %}
+  <a href = "{% url 'user_profile' user.id %}">{{ user }}</a>
+  <hr/>
+{% endfor %}
+{% endblock %}

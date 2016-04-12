@@ -10,9 +10,13 @@
   </form>
   <hr/>
   <h3>Search by Tags:</h3>
+  {% if not all_tags %}
+  <h3>No tags yet!!!</h3>
+  {% else %}
   {% for tag in all_tags %}
     <a href = "{% url 'search_all_blog_posts_by_slug' tag.slug %}">{{ tag.name }}</a><br/>
   {% endfor %}
+  {% endif %}
   <hr/>
   <h1>Recent Posts or Articles:</h1>
   {% for post in blog_posts %}

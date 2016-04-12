@@ -12,6 +12,11 @@ from .views import loginRequired
 
 from taggit.models import Tag
 from itertools import chain
+from sets import Set
+
+from os.path import join as isfile
+from django.conf import settings
+import os
 
 
 #decorator for checking that only the user of the topic can comment
@@ -112,7 +117,14 @@ def edit_topic(request,id):
 @loginRequired
 @check_user_access_for_topic_edit
 def remove_topic(request,id):
-    get_object_or_404(CodehubTopicModel,id = id).delete()
+    topic_obj = get_object_or_404(CodehubTopicModel,id = id)
+    #delete related files
+    file_path = os.path.join(settings.MEDIA_ROOT,topic_obj.file.name)
+    print file_path
+    if os.path.isfile(file_path):
+        print 'file is there'
+        os.remove(file_path)
+    topic_obj.delete()
     print 'deleted'
     return redirect('/codehub/topic')
 
@@ -146,9 +158,10 @@ def search_topic(request):
         if form.is_valid():
             search_str = form.cleaned_data['search_str']
             list_by_topic_name = CodehubTopicModel.objects.filter(topic_heading__contains=search_str)
-            list_by_slug = CodehubTopicModel.objects.filter(tags__name__in = [search_str])
+            list_by_slug = CodehubTopicModel.objects.filter(tags__name__in = [search_str]).distinct()
             #merging the two queries
             result_list = list(chain(list_by_topic_name,list_by_slug))
+            result_list = Set(result_list)
             form = SearchForm()
             return render(request,'codehub/topic/search_topic.html',{'search_str':search_str,'results':result_list,'form':form})
     else:
@@ -176,6 +189,7 @@ def remove_topic_comment(request,id):
     # topic_id = CodehubTopicCommentModel.objects.get(id = id).topic.id
     topic_id = get_object_or_404(CodehubTopicCommentModel,id =id).topic.id
     get_object_or_404(CodehubTopicCommentModel,id = id).delete()
+
     return redirect('/codehub/topic/'+str(topic_id)+'/comment')
 
 
@@ -315,7 +329,13 @@ def search_question(request):
     if request.method == 'POST':
         form = SearchForm(request.POST)
         if form.is_valid():
-            return HttpResponse(' cjb kjcb c')
+            search_str = form.cleaned_data['search_str']
+            list_by_question_heading = CodehubQuestionModel.objects.filter(question_heading__contains = search_str)
+            list_by_tags = CodehubQuestionModel.objects.filter(question_tags__name__in = [search_str]).distinct()
+            result_list = list(chain(list_by_question_heading,list_by_tags))
+            result_list = Set(result_list)
+            form = SearchForm()
+            return render(request,'codehub/question/search_question.html',{'form':form,'results':result_list,'search_str':search_str})
     else:
         form = SearchForm()
     return render(request,'codehub/question/search_question.html',{'form':form})

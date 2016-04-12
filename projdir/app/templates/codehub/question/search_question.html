@@ -10,6 +10,12 @@
 <h1>No results yet!!!</h1>
 {% else %}
 <h1>Results for "{{ search_str }}" </h1>
-//get results here
+  {% for result in results %}
+    <a href = "{% url 'codehub_question_details' result.id %}">{{ result }}</a><br/>
+    by:{{ result.user.username }}<br/>
+    created:{{ result.created }}<br/>
+    modified:{{ result.modified }}
+    <hr/>
+  {% endfor %}
 {% endif %}
 {% endblock %}

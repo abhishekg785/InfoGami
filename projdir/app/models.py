@@ -6,6 +6,10 @@ from django.contrib.auth.models import User
 # Create your models here.
 from taggit.managers import TaggableManager
 
+from os.path import join as isfile
+from django.conf import settings
+import os
+
 class CodehubTopicModel(models.Model):
     user = models.ForeignKey(User)
     topic_heading = models.CharField(max_length = 100)
@@ -20,6 +24,15 @@ class CodehubTopicModel(models.Model):
 
     def __str__(self):
         return self.topic_heading
+
+    def delete(self,*args,**kwargs):
+        print 'in the delete function of codehub model'
+        if self.file:
+            file_path = os.path.join(settings.MEDIA_ROOT,self.file.name)
+            print file_path
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        super(CodehubTopicModel,self).delete(*args,**kwargs)
 
 
 class CodehubTopicCommentModel(models.Model):
@@ -37,7 +50,8 @@ class CodehubTopicCommentModel(models.Model):
 class UserProfileModel(models.Model):
     user = models.ForeignKey(User)
     user_description = MarkdownField()
-    skills = models.CharField(max_length = 200)
+    # skills = models.CharField(max_length = 200)
+    skills = TaggableManager()
     user_type_select = models.CharField(max_length = 50,default = 'None')   #developer or programmer
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)

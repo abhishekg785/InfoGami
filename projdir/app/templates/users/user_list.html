@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
   <h1>Users</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="search_user" value ='Search User' />
+  </form>
   <hr/>
   {% for user in users %}
     <a href = "{% url 'user_profile' user.id %}">{{ user.username }}</a>

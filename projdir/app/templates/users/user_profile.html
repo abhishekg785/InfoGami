@@ -20,7 +20,11 @@ Date Joined:{{ user_info.date_joined}}<br/>
 <h1>User profile Data</h1>
   {% if user_profile %}
     Description:{{ user_profile.user_description }}<br/>
-    Skills:{{ user_profile.skills }}<br/>
+    Skills:
+    {% for skill in  user_profile.skills.all %}
+      {{ skill.name }}
+    {% endfor %}
+    <br/>
     Type:{{ user_profile.user_type_select }}
   {% else %}
    <h2>No description yet</h2>

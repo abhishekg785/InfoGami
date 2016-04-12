@@ -9,7 +9,7 @@ import urllib
 from sets import Set
 
 from .views import loginRequired
-from .forms import UserProfileForm
+from .forms import UserProfileForm,SearchForm
 from .models import UserProfileModel,CodehubTopicModel,CodehubQuestionModel,BlogPostModel
 import datetime
 
@@ -42,9 +42,17 @@ def gravatar(email, size=128):
 
 @loginRequired
 def get_users(request):
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            user_str = form.cleaned_data['search_str']
+            users = User.objects.filter(username__contains = user_str)
+            return render(request,'users/search_user.html',{'form':form,'result':users,'search_str':user_str})
+    else:
+        form = SearchForm()
     users_list = User.objects.values('id','username')
     users = do_pagination(request,users_list,5)
-    return render(request,'users/user_list.html',{'users':users})
+    return render(request,'users/user_list.html',{'users':users,'form':form})
 
 
 @loginRequired
@@ -84,7 +92,13 @@ def edit_user_profile(request,user_id):
         if not profile_details:
             form_data = {key:'' for key in data}
         else:
-            form_data = {'user_description':profile_details.user_description,'skills':profile_details.skills,'user_type_select':profile_details.user_type_select}
+            skillArr = []
+            skills = profile_details.skills.all()
+            print skills
+            for skill in skills:
+                skillArr.append(skill.name)
+            skills = ",".join(skillArr)
+            form_data = {'user_description':profile_details.user_description,'skills':skills,'user_type_select':profile_details.user_type_select}
         form = UserProfileForm(initial = form_data)
     return render(request,'users/edit_user_profile.html',{'form':form})
 
