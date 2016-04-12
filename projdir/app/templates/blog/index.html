@@ -2,7 +2,7 @@
 {% block content %}
   <h1>Write an article or Blog here</h1>
   <hr/>
-  <form method="POST">
+  <form method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   <p style = 'color:red'>  Note:Atleast add 2 tags</p>
   {{ form.as_p }}
@@ -22,6 +22,7 @@
   {% for post in blog_posts %}
     <a href = "{% url 'blog_post_details' post.id %}"><h1>{{ post.title }}</h1></a>
     by:<a href = "{% url 'user_profile' post.user.id %}">{{ post.user.username }}</a><br/>
+    Image:<a href = "/media/{{ post.image_file }}">{{ post.image_file }}</a><br/>
     Created on:{{ post.created }}<br/>
     Last Modified:{{ post.modified }}<br/>
     {% if post.user.username == user.username %}

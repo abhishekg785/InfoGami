@@ -124,8 +124,17 @@ class BlogPostModel(models.Model):
     title = models.CharField(max_length = 200)
     body = MarkdownField()
     tags = TaggableManager()
+    image_file = models.FileField(upload_to = 'blog_images/',blank = True)
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)
 
     def __str__(self):
         return self.title
+
+    def delete(self,*args,**kwargs):
+        print 'In the delete function of the BlogPostModel'
+        if self.image_file:
+            file_path = os.path.join(settings.MEDIA_ROOT,self.image_file.name)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        super(BlogPostModel,self).delete(*args,**kwargs)

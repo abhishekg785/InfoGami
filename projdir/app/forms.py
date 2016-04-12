@@ -95,6 +95,7 @@ class BlogPostForm(forms.ModelForm):
     title = forms.CharField(label = '',max_length = 200,widget = forms.TextInput(attrs = {'placeholder':'Title goes here'}))
     body = forms.CharField(label ='',widget = MarkdownWidget(attrs = {'placeholder':'Body goes here'}))
     tags = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Add tags(comma separated)'}))
+    image_file = forms.FileField(label = 'Upload an Image:',required=False)
     class Meta:
         model = BlogPostModel
-        fields = ['title','body','tags']
+        fields = ['title','body','tags','image_file']

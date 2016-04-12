@@ -14,10 +14,6 @@ from taggit.models import Tag
 from itertools import chain
 from sets import Set
 
-from os.path import join as isfile
-from django.conf import settings
-import os
-
 
 #decorator for checking that only the user of the topic can comment
 def check_user_access_for_topic_edit(func):
@@ -57,14 +53,13 @@ def codehub_topic(request):
     if request.method == 'POST':
         form = CodehubTopicForm(request.POST)
         if form.is_valid():
-            user = User.objects.get(username = request.user.username)
             tags = form.cleaned_data['tags']
             try:
                 file = request.FILES['file']
             except MultiValueDictKeyError:
                 file = ''
             new_topic = CodehubTopicModel(
-                user = user,
+                user = request.user,
                 topic_heading = form.cleaned_data['topic_heading'],
                 topic_detail = form.cleaned_data['topic_detail'],
                 topic_link = form.cleaned_data['topic_link'],
@@ -118,12 +113,6 @@ def edit_topic(request,id):
 @check_user_access_for_topic_edit
 def remove_topic(request,id):
     topic_obj = get_object_or_404(CodehubTopicModel,id = id)
-    #delete related files
-    file_path = os.path.join(settings.MEDIA_ROOT,topic_obj.file.name)
-    print file_path
-    if os.path.isfile(file_path):
-        print 'file is there'
-        os.remove(file_path)
     topic_obj.delete()
     print 'deleted'
     return redirect('/codehub/topic')

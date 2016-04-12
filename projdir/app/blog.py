@@ -6,6 +6,8 @@ from .forms import BlogPostForm
 from .models import BlogPostModel
 from .views import loginRequired
 
+from django.utils.datastructures import MultiValueDictKeyError
+
 
 #decorators comes here
 def check_user_access_for_blog_post_edit_delete(func):
@@ -24,10 +26,15 @@ def blog(request):
         form = BlogPostForm(request.POST)
         if form.is_valid():
             tags = form.cleaned_data['tags']
+            try:
+                file = request.FILES['image_file']
+            except MultiValueDictKeyError:
+                file = ''
             new_blog = BlogPostModel(
                 user = request.user,
                 title = form.cleaned_data['title'],
                 body = form.cleaned_data['body'],
+                image_file = file,
             )
             new_blog.save()
             new_blog.tags.add(*tags)
@@ -47,6 +54,7 @@ def blog_post_edit(request,post_id):
         form = BlogPostForm(request.POST)
         if form.is_valid():
             post_details = get_object_or_404(BlogPostModel,id = post_id)
+            post_details.image_file = request.FILES['image_file']
             form = BlogPostForm(request.POST,instance = post_details)
             form.save()
             return redirect('/blog')
@@ -56,7 +64,7 @@ def blog_post_edit(request,post_id):
         for tag in post_details.tags.all():
             tagArr.append(tag.name)
         tags = ",".join(tagArr)
-        blog_post_data = {'title':post_details.title,'body':post_details.body,'tags':tags}
+        blog_post_data = {'title':post_details.title,'body':post_details.body,'tags':tags,'image_file':post_details.image_file}
         form = BlogPostForm(initial = blog_post_data)
     return render(request,'blog/edit_blog_post.html',{'form':form})
 
