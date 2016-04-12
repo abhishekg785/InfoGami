@@ -337,3 +337,8 @@ def search_question(request):
     else:
         form = SearchForm()
     return render(request,'codehub/question/search_question.html',{'form':form})
+
+
+#codehub innovatio center comes here
+def codehub_innovation(request):
+    return HttpResponse('innovation')
