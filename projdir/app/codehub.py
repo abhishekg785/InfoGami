@@ -14,6 +14,9 @@ from taggit.models import Tag
 from itertools import chain
 from sets import Set
 
+from os.path import join as isfile
+from django.conf import settings
+import os
 
 #decorator for checking that only the user of the topic can comment
 def check_user_access_for_topic_edit(func):
@@ -88,9 +91,15 @@ def edit_topic(request,id):
         if form.is_valid():
             initial_topic_details = CodehubTopicModel.objects.get(id=id)
             try:
-                initial_topic_details.file = request.FILES['file']
+                file = request.FILES['file']
             except:
-                initial_topic_details.file = ''
+                file = ''
+            if initial_topic_details.file != file:
+                if initial_topic_details.file:
+                    file_path = os.path.join(settings.MEDIA_ROOT,initial_topic_details.file.name)
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)
+            initial_topic_details.file = file
             form = CodehubTopicForm(request.POST,instance = initial_topic_details)
             form.save()
             #flash message for edit data

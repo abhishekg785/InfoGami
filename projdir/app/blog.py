@@ -8,6 +8,9 @@ from .views import loginRequired
 
 from django.utils.datastructures import MultiValueDictKeyError
 
+from os.path import join as isfile
+from django.conf import settings
+import os
 
 #decorators comes here
 def check_user_access_for_blog_post_edit_delete(func):
@@ -54,7 +57,16 @@ def blog_post_edit(request,post_id):
         form = BlogPostForm(request.POST)
         if form.is_valid():
             post_details = get_object_or_404(BlogPostModel,id = post_id)
-            post_details.image_file = request.FILES['image_file']
+            try:
+                file = request.FILES['image_file']
+            except:
+                file = ''
+            if post_details.image_file != file:
+                if post_details.image_file:
+                    file_path = os.path.join(settings.MEDIA_ROOT,post_details.image_file.name)
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)
+            post_details.image_file = file
             form = BlogPostForm(request.POST,instance = post_details)
             form.save()
             return redirect('/blog')
