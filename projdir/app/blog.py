@@ -3,10 +3,11 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 
 from .forms import BlogPostForm
-from .models import BlogPostModel
+from .models import BlogPostModel,BlogPostCommentModel
 from .views import loginRequired
 
 from django.utils.datastructures import MultiValueDictKeyError
+from .forms import BlogPostCommentForm
 
 from os.path import join as isfile
 from django.conf import settings
@@ -91,8 +92,59 @@ def blog_post_remove(request,post_id):
 
 @loginRequired
 def blog_post_details(request,post_id):
+    if request.method == 'POST':
+        form = BlogPostCommentForm(request.POST)
+        if form.is_valid():
+            blog_post = get_object_or_404(BlogPostModel,id = post_id)
+            new_comment = BlogPostCommentModel(
+                user = request.user,
+                blog_post = blog_post,
+                comment_text = form.cleaned_data['comment_text']
+            )
+            new_comment.save()
+            return redirect('/blog/post/'+str(post_id)+'/details')
+    else:
+        form = BlogPostCommentForm()
+    post_comments = BlogPostCommentModel.objects.filter(blog_post_id = post_id).order_by('-created')
     post_details = get_object_or_404(BlogPostModel,id = post_id)
-    return render(request,'blog/blog_post_details.html',{'post_details':post_details})
+    return render(request,'blog/blog_post_details.html',{'post_details':post_details,'form':form,'comments':post_comments})
+
+
+#decorators here
+def check_user_access_for_blog_post_comment_edit(func):
+    def wrapper(request,post_id,com_id,*args,**kwargs):
+        comment_details = get_object_or_404(BlogPostCommentModel,id = com_id)
+        if comment_details.user.username != request.user.username:
+            return redirect('/')
+        return func(request,post_id,com_id,*args,**kwargs)
+    return wrapper
+
+
+@loginRequired
+@check_user_access_for_blog_post_comment_edit
+def edit_blog_post_comment(request,post_id,com_id):    #com_id is comment_id
+    if request.method == 'POST':
+        form = BlogPostCommentForm(request.POST)
+        if form.is_valid():
+            comment_details = get_object_or_404(BlogPostCommentModel,id = com_id)
+            form = BlogPostCommentForm(request.POST,instance = comment_details)
+            form.save()
+            return redirect('/blog/post/'+str(post_id)+'/details')
+    else:
+        comment_details = get_object_or_404(BlogPostCommentModel,id = com_id)
+        comment_data = {'comment_text':comment_details.comment_text}
+        form = BlogPostCommentForm(initial = comment_data)
+    return render(request,'blog/edit_blog_post_comment.html',{'form':form})
+
+
+@loginRequired
+@check_user_access_for_blog_post_comment_edit
+def remove_blog_post_comment(request,post_id,com_id):
+    comment_obj = get_object_or_404(BlogPostCommentModel,id = com_id)
+    comment_obj.delete()
+    return redirect('/blog/post/'+str(post_id)+'/details')
+
+
 
 #searches blog posts of a particular user for a particular tag
 @loginRequired
@@ -103,6 +155,7 @@ def search_user_blog_post_by_slug(request,user_id,slug_str):
 
 
 #searches all posts according to slug string
+@loginRequired
 def search_all_blog_posts_by_slug(request,slug_str):
     posts = BlogPostModel.objects.filter(tags__slug = slug_str).distinct()
     return render(request,'blog/search_all_blog_posts_by_slug.html',{'tag_str':slug_str,'posts':posts})

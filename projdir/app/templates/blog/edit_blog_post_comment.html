@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Edit Comment</h1>
+<hr/>
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type='submit' name='edit_comment' value = 'Edit Comment' />
+</form>
+{% endblock %}

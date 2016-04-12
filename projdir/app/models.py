@@ -143,7 +143,7 @@ class BlogPostModel(models.Model):
 
 class BlogPostCommentModel(models.Model):
     user = models.ForeignKey(User)
-    blog = models.ForeignKey(BlogPostModel)
+    blog_post = models.ForeignKey(BlogPostModel)
     comment_text = MarkdownField()
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)

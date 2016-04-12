@@ -21,4 +21,22 @@ Tags:
 by:<a href ="{% url 'user_profile' post_details.user.id %}">{{ post_details.user.username }}</a><br/>
 Created:{{ post_details.created }}<br/>
 Modified:{{ post_details.modified }}
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type='submit' name='post_comment' value = 'Post Comment'/>
+</form>
+<hr/>
+<h3>Comments</h3>
+<hr/>
+{% for comment in comments %}
+  {{ comment.comment_text|markdown }}<br/>
+  {% if comment.user.username == user.username %}
+    <a href = "{% url 'edit_blog_post_comment' post_details.id comment.id %}">Edit</a>
+    <a href = "{% url 'remove_blog_post_comment' post_details.id comment.id %}">Remove</a>
+  {% endif %}
+  created:{{ comment.created }}<br/>
+  modified:{{ comment.modified }}
+  <hr/>
+{% endfor %}
 {% endblock %}

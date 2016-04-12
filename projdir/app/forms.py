@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel
+from .models import BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel
 
 from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
@@ -83,7 +83,7 @@ class CodehubQuestionForm(forms.ModelForm):
 
 
 class CodehubQuestionCommentForm(forms.ModelForm):
-    comment_text = forms.CharField(label = '',widget = forms.Textarea(attrs = {'placeholder':'Enter your answer or suggestions here...'}))
+    comment_text = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Enter your answer or suggestions here...'}))
 
     class Meta:
         model = CodehubQuestionCommentModel
@@ -99,3 +99,12 @@ class BlogPostForm(forms.ModelForm):
     class Meta:
         model = BlogPostModel
         fields = ['title','body','tags','image_file']
+
+
+
+class BlogPostCommentForm(forms.ModelForm):
+    comment_text = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Your comment...'}))
+
+    class Meta:
+        model = BlogPostCommentModel
+        fields = ['comment_text']
