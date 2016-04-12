@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
+{% load django_markdown %}
 {% block content %}
 <h1>Post Details</h1>
 <hr/>
 <h1>{{ post_details.title }}</h1>
-{{ post_details.body }}<br/>
+{% if post_details.image_file %}
+  <img style="height:300px" src = "/media/{{ post_details.image_file }}"/><br/>
+{% endif %}
+{{ post_details.body|markdown }}<br/>
 Tags:
 {% for tag in post_details.tags.all %}
   {{ tag.name }}

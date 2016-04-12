@@ -138,3 +138,15 @@ class BlogPostModel(models.Model):
             if os.path.isfile(file_path):
                 os.remove(file_path)
         super(BlogPostModel,self).delete(*args,**kwargs)
+
+
+
+class BlogPostCommentModel(models.Model):
+    user = models.ForeignKey(User)
+    blog = models.ForeignKey(BlogPostModel)
+    comment_text = MarkdownField()
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.comment_text

@@ -3,7 +3,7 @@ from django_markdown.admin import MarkdownModelAdmin
 from django_markdown.widgets import AdminMarkdownWidget
 from django.db.models import TextField
 
-from .models import BlogPostModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,MusicModel,CodehubQuestionModel,CodehubQuestionCommentModel
+from .models import BlogPostModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,MusicModel,CodehubQuestionModel,CodehubQuestionCommentModel,BlogPostCommentModel
 # Register your models here.
 
 class TopicAdmin(MarkdownModelAdmin):
@@ -19,3 +19,4 @@ admin.site.register(MusicModel)
 admin.site.register(CodehubQuestionModel)
 admin.site.register(CodehubQuestionCommentModel)
 admin.site.register(BlogPostModel)
+admin.site.register(BlogPostCommentModel)

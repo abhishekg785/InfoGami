@@ -26,8 +26,6 @@
       Tags:{% for tag in post.tags.all %}
        {{ tag.name }}
       {% endfor %}
-      <br/>
-      {{ post.body }}
       <hr/>
     {% endfor %}
   {% endif %}
