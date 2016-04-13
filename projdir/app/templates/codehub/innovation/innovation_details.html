@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load django_markdown %}
+{% block content %}
+<h2>Details</h2>
+<hr/>
+<h3>{{ idea_details.title }}</h3>
+by:{{ idea_details.user.username }}<br/>
+{{ idea_details.description|markdown }}<br/>
+Tags:
+{% for tag in idea_details.tags.all %}
+  {{ tag.name }}
+{% endfor %}
+<br/>
+Created:{{ idea_details.created }}<br/>
+Modified:{{ idea_details.modified }}
+{% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel
+from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel
 
 from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
@@ -108,3 +108,13 @@ class BlogPostCommentForm(forms.ModelForm):
     class Meta:
         model = BlogPostCommentModel
         fields = ['comment_text']
+
+
+class CodehubInnovationPostForm(forms.ModelForm):
+    title = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Title here'}))
+    description = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Description here'}))
+    tags = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Enter Tags here'}))
+
+    class Meta:
+        model = CodehubInnovationPostModel
+        fields = ['title','description','tags']

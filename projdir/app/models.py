@@ -157,7 +157,9 @@ class CodehubInnovationPostModel(models.Model):
     title = models.CharField(max_length = 200)
     description = MarkdownField()
     tags = TaggableManager()
-    vote = models.CharField(max_length = 100)
+    vote = models.CharField(max_length = 100,default = 0)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
 
     def __str__(self):
         return self.title

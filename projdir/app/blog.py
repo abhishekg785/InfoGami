@@ -7,7 +7,7 @@ from .models import BlogPostModel,BlogPostCommentModel
 from .views import loginRequired
 
 from django.utils.datastructures import MultiValueDictKeyError
-from .forms import BlogPostCommentForm
+from .forms import BlogPostCommentForm,SearchForm
 
 from os.path import join as isfile
 from django.conf import settings
@@ -48,10 +48,11 @@ def blog(request):
             return redirect('/blog')
     else:
         form = BlogPostForm()
+    search_form = SearchForm()
     all_tags = BlogPostModel.tags.all().distinct()
     blog_posts_list = BlogPostModel.objects.all().order_by('-created')
     blog_posts = do_pagination(request,blog_posts_list,3)
-    return render(request,'blog/index.html',{'form':form,'blog_posts':blog_posts,'all_tags':all_tags})
+    return render(request,'blog/index.html',{'form':form,'blog_posts':blog_posts,'all_tags':all_tags,'search_form':search_form})
 
 
 @loginRequired
@@ -162,3 +163,14 @@ def search_user_blog_post_by_slug(request,user_id,slug_str):
 def search_all_blog_posts_by_slug(request,slug_str):
     posts = BlogPostModel.objects.filter(tags__slug = slug_str).distinct()
     return render(request,'blog/search_all_blog_posts_by_slug.html',{'tag_str':slug_str,'posts':posts})
+
+
+
+def search_blog_post(request):
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            return HttpResponse('cddcjcbdjcdcd')
+    else:
+        form = SearchForm()
+    return render(request,'blog/search_blog_post.html',{'form':form})

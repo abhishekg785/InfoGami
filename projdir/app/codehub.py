@@ -6,8 +6,8 @@ import datetime
 from django.utils.datastructures import MultiValueDictKeyError
 from django.core.paginator import Paginator,EmptyPage,InvalidPage
 
-from .forms import CodehubTopicForm,CodehubTopicCommentForm,SearchForm,CodehubQuestionForm,CodehubQuestionCommentForm
-from .models import CodehubTopicModel,CodehubTopicCommentModel,CodehubQuestionModel,CodehubQuestionCommentModel
+from .forms import CodehubTopicForm,CodehubTopicCommentForm,SearchForm,CodehubQuestionForm,CodehubQuestionCommentForm,CodehubInnovationPostForm
+from .models import CodehubTopicModel,CodehubTopicCommentModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationPostModel
 from .views import loginRequired
 
 from taggit.models import Tag
@@ -306,6 +306,7 @@ def remove_codehub_question_comment(request,ans_id):
     return redirect('/codehub/question/'+str(ques_id)+'/details/')
 
 
+@loginRequired
 def edit_codehub_question_comment(request,ans_id):
     if request.method == 'POST':
         form = CodehubQuestionCommentForm(request.POST)
@@ -323,6 +324,7 @@ def edit_codehub_question_comment(request,ans_id):
     return render(request,'codehub/question/edit_question_comment.html',{'form':form})
 
 
+@loginRequired
 def search_question(request):
     if request.method == 'POST':
         form = SearchForm(request.POST)
@@ -339,6 +341,58 @@ def search_question(request):
     return render(request,'codehub/question/search_question.html',{'form':form})
 
 
+@loginRequired
 #codehub innovatio center comes here
 def codehub_innovation(request):
-    return HttpResponse('innovation')
+    if request.method == 'POST':
+        form = CodehubInnovationPostForm(request.POST)
+        if form.is_valid():
+            tags = form.cleaned_data['tags']
+            new_idea = CodehubInnovationPostModel(
+                user = request.user,
+                title = form.cleaned_data['title'],
+                description = form.cleaned_data['description'],
+            )
+            new_idea.save()
+            new_idea.tags.add(*tags)
+            return redirect('/codehub/innovation')
+
+    else:
+        form = CodehubInnovationPostForm()
+    ideas = CodehubInnovationPostModel.objects.all().order_by('-created')
+    return render(request,'codehub/innovation/innovation.html',{'form':form,'ideas':ideas})
+
+
+@loginRequired
+def codehub_innovation_details(request,idea_id):
+    idea_details = get_object_or_404(CodehubInnovationPostModel,id = idea_id)
+    return render(request,'codehub/innovation/innovation_details.html',{'idea_details':idea_details})
+
+
+@loginRequired
+def edit_codehub_innovation_idea(request,idea_id):
+    if request.method == 'POST':
+        form = CodehubInnovationPostForm(request.POST)
+        if form.is_valid():
+            # idea_details = CodehubInnovationPostModel(id = idea_id)
+            idea_details = get_object_or_404(CodehubInnovationPostModel,id = idea_id)
+            form = CodehubInnovationPostForm(request.POST,instance = idea_details)
+            form.save()
+            return redirect('/codehub/innovation')
+    else:
+        tagArr = []
+        idea_details = get_object_or_404(CodehubInnovationPostModel,id = idea_id)
+        tags = idea_details.tags.all()
+        for tag in tags:
+            tagArr.append(tag.name)
+        tags = ",".join(tagArr)
+        idea_data = {'title':idea_details.title,'description':idea_details.description,'tags':tags}
+        form = CodehubInnovationPostForm(initial = idea_data)
+    return render(request,'codehub/innovation/edit_innovation_idea.html',{'form':form})
+
+
+@loginRequired
+def remove_codehub_innovation_idea(request,idea_id):
+    idea_obj = get_object_or_404(CodehubInnovationPostModel,id = idea_id)
+    idea_obj.delete()
+    return redirect('/codehub/innovation')
