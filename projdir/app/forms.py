@@ -118,3 +118,11 @@ class CodehubInnovationPostForm(forms.ModelForm):
     class Meta:
         model = CodehubInnovationPostModel
         fields = ['title','description','tags']
+
+
+class CodehubInnovationCommentForm(forms.ModelForm):
+    comment_text = forms.CharField(label ='',widget = MarkItUpWidget(attrs = ('placeholder':'Comment')))
+
+    class Meta:
+        model = CodehubInnovationCommentModel
+        fields = ['comment_text']
