@@ -6,8 +6,17 @@
   {% csrf_token %}
   {{ form.as_p }}
 <input type='submit' name='post_idea' value = 'Innovate!!!'/>
+</form>
 <hr/>
-<h3>Recent posted solutions:</h3>
+<h3>Recent posted Ideas:</h3>
+
+<!-- search form -->
+<form method = 'POST' action = "{% url 'search_codehub_innovation_post' %}">
+  {% csrf_token %}
+  {{ search_form.as_p }}
+  <input type="submit" name='search_idea' value='Go'/>
+</form>
+
   {% for idea in ideas %}
     <h3><a href = "{% url 'codehub_innovation_details' idea.id %}">{{ idea.title }}</a></h3><br/>
     by:<a href ="{% url 'user_profile' idea.user.id %}">{{ idea.user.username }}</a><br/>

@@ -8,17 +8,17 @@
 <input type='submit'   name='submitTopic' value= 'Post Topic'/>
 </form>
 <hr/>
+<h1>Topics:</h1>
 <form align='center' method='POST' action = "{% url 'search_topic' %}">
   {% csrf_token %}
   {{ search_form.as_p }}
 <input type='submit' name='seachTopic' value = 'Search'/>
 </form>
-<h1>Topics:</h1>
 <p style='color:red'>Click on topic to view comments ans discuss</p><br/>
 <hr/>
 <div id = 'topicDisplaySec'>
 {% for topic in topics.object_list %}
-    <h1><a href = "{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h1>
+    <h3><a href = "{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h3>
     <a href = "{{ topic.topic_link }}">{{ topic.topic_link }}</a><br/>
       <a target = "_blank" href = "/media/{{ topic.file }}">{{ topic.file }}</a><br/>
       {% if topic.topic_type != 'None' %}
@@ -27,7 +27,9 @@
       Tags:{% for tag in topic.tags.all %}
       {{ tag.name }}
       {% endfor %}
-    <h3><a href="{% url 'user_profile' topic.user.id %}">{{ topic.user.username }}</a></h3>
+      <br/>
+      by:<a href="{% url 'user_profile' topic.user.id %}">{{ topic.user.username }}</a>
+      <br/>
       Created:{{ topic.created }}<br/>
       Last Modified:{{ topic.modified }}<br/>
     {% if topic.user.username == user.username %}

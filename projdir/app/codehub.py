@@ -359,8 +359,9 @@ def codehub_innovation(request):
 
     else:
         form = CodehubInnovationPostForm()
+    search_form = SearchForm()
     ideas = CodehubInnovationPostModel.objects.all().order_by('-created')
-    return render(request,'codehub/innovation/innovation.html',{'form':form,'ideas':ideas})
+    return render(request,'codehub/innovation/innovation.html',{'form':form,'ideas':ideas,'search_form':search_form})
 
 
 @loginRequired
@@ -433,6 +434,7 @@ def check_user_access_for_innovation_comment_edit(func):
     return wrapper
 
 
+
 @loginRequired
 @check_user_access_for_innovation_comment_edit
 def edit_codehub_innovation_idea_comment(request,idea_id,com_id):
@@ -457,3 +459,22 @@ def remove_codehub_innovation_idea_comment(request,idea_id,com_id):
     comment_details = get_object_or_404(CodehubInnovationCommentModel,id = com_id)
     comment_details.delete()
     return redirect('/codehub/innovation/'+str(idea_id)+'/details')
+
+
+
+
+@loginRequired
+def search_codehub_innovation_post(request):
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search_str = form.cleaned_data['search_str']
+            list_by_title = CodehubInnovationPostModel.objects.filter(title__contains = search_str)
+            list_by_tags = CodehubInnovationPostModel.objects.filter(tags__name__in = [search_str])
+            result_list = list(chain(list_by_title,list_by_tags))
+            result_list = Set(result_list)
+            search_form = SearchForm()
+            return render(request,'codehub/innovation/search_idea.html',{'form':search_form,'results':result_list,'search_str':search_str})
+    else:
+        form = SearchForm()
+    return render(request,'codehub/innovation/search_idea.html',{'form':form})

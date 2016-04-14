@@ -12,7 +12,7 @@ from markitup.widgets import MarkItUpWidget
 class CodehubTopicForm(forms.ModelForm):
     CHOICES = (('None','None'),('Basic', 'Basic'),('Advanced', 'Advanced'),)
     topic_heading = forms.CharField(label = '',max_length = 100,widget = forms.TextInput(attrs = {'placeholder':'Topic heading goes here..'}))
-    topic_detail = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Topic Details goes here...'}))
+    topic_detail = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Topic Details goes here...','style':'height:20%;width:75%'}))
     # topic_detail = forms.CharField(label = '',widget = forms.Textarea(attrs = {'rows':'2','cols':'32','placeholder':'Enter the details about topic'}),max_length = 200)
     topic_link = forms.URLField(label = '',max_length = 100,required = False,widget = forms.TextInput(attrs = {'placeholder':'Link to topic'}))
     # tags = forms.CharField(label = 'Add tags',max_length = 100,required = True,widget = forms.TextInput(attrs = {'placeholder':'Add tags'}))

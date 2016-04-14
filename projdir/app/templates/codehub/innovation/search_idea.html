@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Search Ideas</h1>
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type='submit' name='search_idea' value = 'Go'/>
+</form>
+<hr/>
+<h1>Results:</h1>
+{% if not results %}
+  <h3>No results yet!!!</h3>
+{% else %}
+  {% for result in results %}
+    <a href ="{% url 'codehub_innovation_details' result.id %}">{{ result.title }}</a><br/>
+    by:{{ result.user.username }}<br/>
+    Created:{{ result.created }}
+    <hr/>
+  {% endfor %}
+{% endif %}
+{% endblock %}
