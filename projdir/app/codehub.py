@@ -369,7 +369,19 @@ def codehub_innovation_details(request,idea_id):
     return render(request,'codehub/innovation/innovation_details.html',{'idea_details':idea_details})
 
 
+#decorators for new ideas
+def check_user_access_for_edit_ideas(func):
+    def wrapper(request,idea_id,*args,**kwargs):
+        idea_user = get_object_or_404(CodehubInnovationPostModel,id = idea_id).user.username
+        if idea_user != request.user.username:
+            return redirect('/')
+        return func(request,idea_id,*args,**kwargs)
+    return wrapper
+
+
+
 @loginRequired
+@check_user_access_for_edit_ideas
 def edit_codehub_innovation_idea(request,idea_id):
     if request.method == 'POST':
         form = CodehubInnovationPostForm(request.POST)
@@ -392,6 +404,7 @@ def edit_codehub_innovation_idea(request,idea_id):
 
 
 @loginRequired
+@check_user_access_for_edit_ideas
 def remove_codehub_innovation_idea(request,idea_id):
     idea_obj = get_object_or_404(CodehubInnovationPostModel,id = idea_id)
     idea_obj.delete()

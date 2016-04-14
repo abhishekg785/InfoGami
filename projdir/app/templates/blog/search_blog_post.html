@@ -1,4 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
 <h3>Search here</h3>
+<form method="POST">
+  {% csrf_token %}
+  {{ search_form.as_p }}
+<input type='submit' name='search_post' value='GO'/>
+</form>
+<hr/>
+<h3>Results</h3>
+{% if not results %}
+<h3>No results yet!!!</h3>
+{% else %}
+  {% for result in results %}
+    <a href ="{% url 'blog_post_details' result.id %}">{{ result }}</a><br/>
+    by:{{ result.user.username }}<br/>
+    Created:{{ result.created }}
+    <hr/>
+  {% endfor %}
+{% endif %}
 {% endblock %}

@@ -13,6 +13,9 @@ from os.path import join as isfile
 from django.conf import settings
 import os
 
+from itertools import chain
+from sets import Set
+
 from .codehub import do_pagination
 
 #decorators comes here
@@ -168,9 +171,15 @@ def search_all_blog_posts_by_slug(request,slug_str):
 
 def search_blog_post(request):
     if request.method == 'POST':
-        form = SearchForm(request.POST)
-        if form.is_valid():
-            return HttpResponse('cddcjcbdjcdcd')
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            search_str = search_form.cleaned_data['search_str']
+            blog_post_list = BlogPostModel.objects.filter(title__contains = search_str)
+            blog_post_slug = BlogPostModel.objects.filter(tags__name__in = [search_str])
+            result_list = list(chain(blog_post_list,blog_post_slug))
+            result_list = Set(result_list)
+            search_form = SearchForm()
+            return render(request,'blog/search_blog_post.html',{'search_form':search_form,'results':result_list,'search_str':search_str})
     else:
-        form = SearchForm()
-    return render(request,'blog/search_blog_post.html',{'form':form})
+        search_form = SearchForm()
+    return render(request,'blog/search_blog_post.html',{'search_form':search_form})
