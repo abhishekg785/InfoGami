@@ -163,3 +163,14 @@ class CodehubInnovationPostModel(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class CodehubInnovationCommentModel(models.Model):
+    user = models.ForeignKey(User)
+    innovation_post = models.ForeignKey(CodehubInnovationPostModel)
+    comment_text = MarkdownField()
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.comment_text
