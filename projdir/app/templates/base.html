@@ -21,7 +21,7 @@
     <a href = "{% url 'user_blog' user.id %}">My Blog</a>
     <a href = "">Notifications</a>
     <a href = "">My activities</a>
-    <h1 align = 'right'>Welcome "<a href = "{% url 'user_profile' user.id %}">{{ user.username }}</a>"</h1>
+    <h3 align = 'right'>Welcome "<a href = "{% url 'user_profile' user.id %}">{{ user.username }}</a>"</h3>
     {% else %}
     <a href="{% url 'login_view' %}">Login</a>
     <a href="{% url 'register_view' %}">Register</a>

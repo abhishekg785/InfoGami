@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from app.views import login_view,register_view,logout_view,index
-from app.codehub import codehub_question,remove_codehub_question,edit_codehub_question,codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,codehub_question_details,remove_codehub_question_comment,edit_codehub_question_comment,search_question,codehub_innovation,codehub_innovation_details,edit_codehub_innovation_idea,remove_codehub_innovation_idea
+from app.codehub import codehub_question,remove_codehub_question,edit_codehub_question,codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,codehub_question_details,remove_codehub_question_comment,edit_codehub_question_comment,search_question,codehub_innovation,codehub_innovation_details,edit_codehub_innovation_idea,remove_codehub_innovation_idea,edit_codehub_innovation_idea_comment,remove_codehub_innovation_idea_comment
 from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog
 from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question
 from app.music import music_list
@@ -69,13 +69,14 @@ urlpatterns = [
     url(r'^blog/post/(?P<post_id>\d+)/edit/$',blog_post_edit,name = 'edit_blog_post'),
     url(r'^blog/post/(?P<post_id>\d+)/remove/$',blog_post_remove,name = 'remove_blog_post'),
     url(r'^blog/post/(?P<post_id>\d+)/details/$',blog_post_details,name = 'blog_post_details'),
-    url(r'^blog/post/(?P<post_id>\d+)/comment/(?P<com_id>\d+)/edit$',edit_blog_post_comment,name = 'edit_blog_post_comment'),
-    url(r'^blog/post/(?P<post_id>\d+)/comment/(?P<com_id>\d+)/remove$',remove_blog_post_comment,name = 'remove_blog_post_comment'),
+    url(r'^blog/post/(?P<post_id>\d+)/comment/(?P<com_id>\d+)/edit/$',edit_blog_post_comment,name = 'edit_blog_post_comment'),
+    url(r'^blog/post/(?P<post_id>\d+)/comment/(?P<com_id>\d+)/remove/$',remove_blog_post_comment,name = 'remove_blog_post_comment'),
     url(r'^blog/search_post/$',search_blog_post,name = 'search_blog_post'),
     #codehub innovation routes here
     url(r'^codehub/innovation/$',codehub_innovation,name = 'codehub_innovation'),
     url(r'^codehub/innovation/(?P<idea_id>\d+)/details/$',codehub_innovation_details,name = 'codehub_innovation_details'),
     url(r'^codehub/innovation/(?P<idea_id>\d+)/edit/$',edit_codehub_innovation_idea,name = 'edit_codehub_innovation_idea'),
-    url(r'^codehub/innovation/(?P<idea_id>\d+)/remove/$',remove_codehub_innovation_idea,name = 'remove_codehub_innovation_idea')
-
+    url(r'^codehub/innovation/(?P<idea_id>\d+)/remove/$',remove_codehub_innovation_idea,name = 'remove_codehub_innovation_idea'),
+    url(r'^codehub/innovation/(?P<idea_id>\d+)/comment/(?P<com_id>\d+)/edit/$',edit_codehub_innovation_idea_comment,name = 'edit_codehub_innovation_idea_comment'),
+    url(r'^codehub/innovation/(?P<idea_id>\d+)/comment/(?P<com_id>\d+)/remove/$',remove_codehub_innovation_idea_comment,name = 'remove_codehub_innovation_idea_comment'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

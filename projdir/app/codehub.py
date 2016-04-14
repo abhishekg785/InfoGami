@@ -6,8 +6,8 @@ import datetime
 from django.utils.datastructures import MultiValueDictKeyError
 from django.core.paginator import Paginator,EmptyPage,InvalidPage
 
-from .forms import CodehubTopicForm,CodehubTopicCommentForm,SearchForm,CodehubQuestionForm,CodehubQuestionCommentForm,CodehubInnovationPostForm
-from .models import CodehubTopicModel,CodehubTopicCommentModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationPostModel
+from .forms import CodehubTopicForm,CodehubTopicCommentForm,SearchForm,CodehubQuestionForm,CodehubQuestionCommentForm,CodehubInnovationPostForm,CodehubInnovationCommentForm
+from .models import CodehubTopicModel,CodehubTopicCommentModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationPostModel,CodehubInnovationCommentModel
 from .views import loginRequired
 
 from taggit.models import Tag
@@ -365,8 +365,21 @@ def codehub_innovation(request):
 
 @loginRequired
 def codehub_innovation_details(request,idea_id):
+    if request.method == 'POST':
+        form = CodehubInnovationCommentForm(request.POST)
+        if form.is_valid():
+            new_comment = CodehubInnovationCommentModel(
+                user = request.user,
+                innovation_post = get_object_or_404(CodehubInnovationPostModel,id = idea_id),
+                comment_text = form.cleaned_data['comment_text']
+            )
+            new_comment.save()
+            return redirect('/codehub/innovation/'+str(idea_id)+'/details')
+    else:
+        form = CodehubInnovationCommentForm()
     idea_details = get_object_or_404(CodehubInnovationPostModel,id = idea_id)
-    return render(request,'codehub/innovation/innovation_details.html',{'idea_details':idea_details})
+    comments_on_post = CodehubInnovationCommentModel.objects.filter(innovation_post_id = idea_id).order_by('-created')
+    return render(request,'codehub/innovation/innovation_details.html',{'idea_details':idea_details,'form':form,'comments':comments_on_post})
 
 
 #decorators for new ideas
@@ -409,3 +422,38 @@ def remove_codehub_innovation_idea(request,idea_id):
     idea_obj = get_object_or_404(CodehubInnovationPostModel,id = idea_id)
     idea_obj.delete()
     return redirect('/codehub/innovation')
+
+#decorator for comment comes here
+def check_user_access_for_innovation_comment_edit(func):
+    def wrapper(request,idea_id,com_id,*args,**kwargs):
+        comment_details = get_object_or_404(CodehubInnovationCommentModel,id = com_id)
+        if comment_details.user.username != request.user.username:
+            return redirect('/')
+        return func(request,idea_id,com_id,*args,**kwargs)
+    return wrapper
+
+
+@loginRequired
+@check_user_access_for_innovation_comment_edit
+def edit_codehub_innovation_idea_comment(request,idea_id,com_id):
+    if request.method == 'POST':
+        form = CodehubInnovationCommentForm(request.POST)
+        if form.is_valid():
+            comment_details = get_object_or_404(CodehubInnovationCommentModel,id = com_id)
+            form = CodehubInnovationCommentForm(request.POST,instance = comment_details)
+            form.save()
+            return redirect('/codehub/innovation/'+str(idea_id)+'/details')
+    else:
+        comment_details = get_object_or_404(CodehubInnovationCommentModel,id = com_id)
+        comment_data = {'comment_text':comment_details.comment_text}
+        form = CodehubInnovationCommentForm(initial = comment_data)
+    return render(request,'codehub/innovation/edit_comment.html',{'form':form})
+
+
+
+@loginRequired
+@check_user_access_for_innovation_comment_edit
+def remove_codehub_innovation_idea_comment(request,idea_id,com_id):
+    comment_details = get_object_or_404(CodehubInnovationCommentModel,id = com_id)
+    comment_details.delete()
+    return redirect('/codehub/innovation/'+str(idea_id)+'/details')

@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 {% load django_markdown %}
 {% block content %}
-<h2>Details</h2>
+<h2>{{ idea_details.title }}</h2>
 <hr/>
-<h3>{{ idea_details.title }}</h3>
 by:{{ idea_details.user.username }}<br/>
 {{ idea_details.description|markdown }}<br/>
 Tags:
@@ -13,4 +12,24 @@ Tags:
 <br/>
 Created:{{ idea_details.created }}<br/>
 Modified:{{ idea_details.modified }}
+<hr/>
+<h3>Comment:</h3>
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type='submit' name='post-comment' value='Post' />
+</form>
+<h3>Previous Comments</h3>
+  {% for comment in comments %}
+    {{ comment.comment_text|markdown }}<br/>
+    by:{{ comment.user.username }}<br/>
+    {% if comment.user.username == user.username %}
+      <a href = "{% url 'edit_codehub_innovation_idea_comment' idea_details.id comment.id %}">Edit</a>
+      <a href ="{% url 'remove_codehub_innovation_idea_comment' idea_details.id comment.id %}">Remove</a>
+    {% endif %}
+    <br/>
+    created:{{ comment.created }}<br/>
+    modified:{{ comment.modified }}
+    <hr/>
+  {% endfor %}
 {% endblock %}
