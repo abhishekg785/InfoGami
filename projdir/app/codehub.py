@@ -169,7 +169,7 @@ def search_topic(request):
 
 
 
-
+@loginRequired
 def get_all_codehub_topics(request):
     topics_list = CodehubTopicModel.objects.all().order_by('-created')
     topic_count = topics_list.count()
