@@ -15,7 +15,6 @@ class CodehubTopicModel(models.Model):
     topic_heading = models.CharField(max_length = 100)
     topic_detail = MarkdownField()
     topic_link = models.CharField(max_length = 100,blank = True)
-    # tags = models.CharField(max_length = 50)
     tags = TaggableManager()
     topic_type = models.CharField(max_length = 10)
     file = models.FileField(upload_to = 'uploads/',blank = True)
@@ -35,6 +34,8 @@ class CodehubTopicModel(models.Model):
         super(CodehubTopicModel,self).delete(*args,**kwargs)
 
 
+
+
 class CodehubTopicCommentModel(models.Model):
     user = models.ForeignKey(User)
     topic = models.ForeignKey('CodehubTopicModel')
@@ -46,18 +47,22 @@ class CodehubTopicCommentModel(models.Model):
         return self.topic.topic_heading
 
 
+
+
 #this will store the extra profile details of the user
 class UserProfileModel(models.Model):
     user = models.ForeignKey(User)
     user_description = MarkdownField()
-    # skills = models.CharField(max_length = 200)
     skills = TaggableManager()
     user_type_select = models.CharField(max_length = 50,default = 'None')   #developer or programmer
+    user_profile_pic = models.FileField(upload_to = 'profile_pics/',blank = True)
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)
 
     def __str__(self):
         return self.user.username
+
+
 
 
 class CodehubCreateEventModel(models.Model):
@@ -72,6 +77,7 @@ class CodehubCreateEventModel(models.Model):
 
     def __str__(self):
         return self.event_heading
+
 
 
 class CodehubEventQuestionModel(models.Model):

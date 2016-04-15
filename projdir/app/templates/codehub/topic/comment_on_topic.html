@@ -2,39 +2,48 @@
 {% load django_markdown %}
 {% block content %}
 <div id = 'main'>
-<h1>{{ topic.topic_heading }}</h1>
-{% if topic.user.username == user.username %}
-  <a href = "{% url 'edit_topic' topic.id %}">Edit</a>
-  <a href = "{% url 'remove_topic' topic.id %}">Remove</a>
-{% endif %}
-<a href = "/media/{{ topic.file }}">{{ topic.file }}</a><br/>
-{% if topic.topic_link %}
-    <a href = "{{ topic.topic_link }}">{{ topic.topic_link }}</a>
-    <br/>
-{% endif %}
-{{ topic.user.username }}:
-{{ topic.created }}<br/>
-{{ topic.topic_detail|markdown }}
-Tags:{% for tag in topic.tags.all %}
-  {{ tag.name }}
-{% endfor %}
+  <article class = 'post'>
+    <header>
+      <div class="title">
+        <h2><a href="#">{{ topic.topic_heading }}</a></h2>
+        <p><a href="{% url 'edit_topic' topic.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_topic' topic.id %}">Remove</a></p>
+      </div>
+      <div class="meta">
+        <time class="published">{{ topic.created }}</time>
+        <h2><a href="{% url 'user_profile' topic.user.id %}" class="author"><span class="name">{{ topic.user.username }}</span><img src="images/avatar.jpg" alt="Profile" /></a></h2>
+      </div>
+    </header>
+    <p>Last Edited:&nbsp;{{ topic.modified }}</p>
+    {% if topic.file.name %}
+    <p>Attached File:&nbsp;<a href = "/media/{{ topic.file.name }}">{{ topic.file.name }}</a></p>
+    {% endif %}
+    <p>{{ topic.topic_detail|markdown }}</p>
+  </article>
 <form name  = 'form' method='post'>
 {% csrf_token %}
 {{ form.as_p }}
 <input type='submit' name='comment' value ='Comment'/>
 </form>
 <hr/>
-<h1>Comments:</h1>
-{% for comment in comments %}
-    <P>{{ comment.comment_text|markdown }}</P>
-    {{ comment.id }}
-    {{ comment.user.username }}:
-    {{ comment.created }}
-  {% if comment.user.username == request.user.username %}
-    <a href = "{% url 'edit_topic_comment' comment.id %}">Edit</a>
-    <a href = "{% url 'remove_topic_comment' comment.id %}">Remove</a>
-  {% endif %}
-    <hr/>
-{% endfor %}
+{% if not comments %}
+  <p>No comments Yet!!!</p>
+{% else %}
+  <section>
+    <div class="mini-posts">
+      {% for comment in comments %}
+        <article class="mini-post">
+          <header>
+            <p>{{ comment.comment_text|markdown }}</p>
+            <time class="published">{{ comment.created }}</time>
+            <a href="{% url 'user_profile' comment.user.id %}" class="author">{{ comment.user.username }}<img src="images/avatar.jpg" alt="" /></a>
+            {% if comment.user.username == request.user.username %}
+              <h3><a href = "{% url 'edit_topic_comment' comment.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_topic_comment' comment.id %}">Remove</a></h3>
+            {% endif %}
+          </header>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
 </div>
 {% endblock %}

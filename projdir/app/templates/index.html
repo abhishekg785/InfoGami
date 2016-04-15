@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-<h1>Welcome</h1>
+<h1>Welcome <a href="{% url 'user_profile' user.id %}">"{{ user.username }}"</a></h1>
 <hr/>
-<a href = "{% url 'codehub' %}">Codehub</a>
+<h2><a href = "{% url 'codehub' %}">Codehub</a></h2>
 </div>
 {% endblock %}

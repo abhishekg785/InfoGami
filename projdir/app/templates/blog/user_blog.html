@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-  <img style ="border-radius:50% "src = "{{ user_gravatar_url }}" />
   <h1>Welcome to the blog of {{ user_info.username }}!!!</h1>
   {% if user_profile != False %}
     <h3><span>"</span>{{ user_profile.user_description }}<span>"</span></h3>

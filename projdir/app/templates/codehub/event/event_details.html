@@ -14,10 +14,10 @@
 {% if event.event_date %}
   {{ event.event_date }}
 {% else %}
-<p>No date yet</p>
+No date yet<br/>
 {% endif %}
-{{ event.event_venue }}<br/>
-{{ event.event_description }}<br/>
+Venue:{{ event.event_venue }}<br/>
+Description:{{ event.event_description }}<br/>
 {% if event.event_for != 'None' %}
 {{ event.event_for }}<br/>
 {% endif %}

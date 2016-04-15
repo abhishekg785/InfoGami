@@ -7,7 +7,7 @@ import hashlib
 import urllib
 import datetime
 
-
+from .models import UserProfileModel
 # Create your views here.
 
 #decorator for authenticating the user is logged in or not

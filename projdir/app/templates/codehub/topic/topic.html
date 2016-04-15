@@ -7,7 +7,7 @@
 <header>
   <div class = 'title'>
     <h2><a href="">Post Topic</a></h2>
-    <p>"Post any topic which can be helpful"</p>
+    <p>"Post topic which can be helpful"</p>
   </div>
 </header>
 <form method="post" enctype="multipart/form-data">
@@ -16,47 +16,13 @@
 <input type='submit'   name='submitTopic' value= 'Post Topic'/>
 </form>
 </article>
-<!-- <div id = 'main'>
-<h1>Topics:</h1>
-<article class = 'post'>
-<form align='center' method='POST' action = "{% url 'search_topic' %}">
-  {% csrf_token %}
-  {{ search_form.as_p }}
-<input type='submit' name='seachTopic' value = 'Search'/>
-</form>
-</article>
-<p style='color:red'>Click on topic to view comments ans discuss</p><br/>
-<hr/>
-<div id = 'topicDisplaySec'>
-{% for topic in topics.object_list %}
-    <h3><a href = "{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h3>
-    <a href = "{{ topic.topic_link }}">{{ topic.topic_link }}</a><br/>
-      <a target = "_blank" href = "/media/{{ topic.file }}">{{ topic.file }}</a><br/>
-      {% if topic.topic_type != 'None' %}
-        {{ topic.topic_type }}
-      {% endif %}
-      Tags:{% for tag in topic.tags.all %}
-      {{ tag.name }}
-      {% endfor %}
-      <br/>
-      by:<a href="{% url 'user_profile' topic.user.id %}">{{ topic.user.username }}</a>
-      <br/>
-      Created:{{ topic.created }}<br/>
-      Last Modified:{{ topic.modified }}<br/>
-    {% if topic.user.username == user.username %}
-    <a href = "{% url 'remove_topic' topic.id %}">Remove</a>
-    <a href = "{% url 'edit_topic' topic.id %}">Edit</a>
-    {% endif %}
-    <hr/>
-{% endfor %}
-</div>
-</div> -->
 </div>
 <section id = 'sidebar'>
   <section id="intro">
-    <a href="#" class="logo"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+    <!-- <a href="{% url 'user_profile' user.id %}" class="logo"><img src="/media/{{ user_profile.user_profile_pic }}" alt="" /></a> -->
     <header>
       <h2 style="font-size:20px">Recent Topics</h2>
+      <h3><a href =''>View all Topics({{ topics.count }})</a></h3>
       <p>"Click on Topic for more info"</a></p>
     </header>
   </section>
@@ -68,32 +34,17 @@
     <input type='submit' name='seachTopic' value = 'Search'/>
     </form>
     <div class = 'mini-posts'>
-      {% for topic in topics.object_list %}
+      {% for topic in topics %}
       <article class = 'mini-post'>
         <header>
           <h3><a href = "{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h3>
           <time class="published">{{ topic.created }}</time>
           <p>by:<a href ="{% url 'user_profile' topic.user.id %}">{{ topic.user.username }}</a></p>
-          <a href="{% url 'user_profile' topic.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+          <!-- <a href="{% url 'user_profile' topic.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a> -->
         </header>
       </article>
       {% endfor %}
-      <div class = "pagination">
-        {% if topics.has_previous %}
-          <li><a href = "?page={{ topics.previous_page_number }}">Previous</a></li>
-        {% endif %}
-        {% for pg in topics.paginator.page_range %}
-          {% if topics.number == pg %}
-            <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
-          {% else %}
-            <li><a href="?page={{ pg }}">{{ pg }}</a></li>
-          {% endif %}
-        {% endfor %}
-        {% if topics.has_next %}
-          <li><a href = "?page={{ topics.next_page_number }}">Next</a></li>
-        {% endif %}
-        </ul>
-      </div>
+      <h2><a href =''>View other topics  =></a></h2>
     </div>
   </section>
   <section id ='footer'>

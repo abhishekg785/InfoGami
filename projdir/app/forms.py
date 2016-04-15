@@ -10,14 +10,12 @@ from markitup.widgets import MarkItUpWidget
 
 #forms for posting a new topic
 class CodehubTopicForm(forms.ModelForm):
-    CHOICES = (('None','None'),('Basic', 'Basic'),('Advanced', 'Advanced'),)
+    CHOICES = (('','--Select Type--'),('Basic', 'Basic'),('Advanced', 'Advanced'),)
     topic_heading = forms.CharField(label = '',max_length = 100,widget = forms.TextInput(attrs = {'placeholder':'Topic heading goes here..'}))
-    topic_detail = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Topic Details goes here...','style':'height:20%;width:75%'}))
-    # topic_detail = forms.CharField(label = '',widget = forms.Textarea(attrs = {'rows':'2','cols':'32','placeholder':'Enter the details about topic'}),max_length = 200)
+    topic_detail = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Topic Details goes here...','style':'height:20%'}))
     topic_link = forms.URLField(label = '',max_length = 100,required = False,widget = forms.TextInput(attrs = {'placeholder':'Link to topic'}))
-    # tags = forms.CharField(label = 'Add tags',max_length = 100,required = True,widget = forms.TextInput(attrs = {'placeholder':'Add tags'}))
     tags = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Give some Tags(separated by commas)'}))
-    topic_type = forms.ChoiceField(choices = CHOICES,required = True)
+    topic_type = forms.ChoiceField(label = '',choices = CHOICES,required = True)
     file = forms.FileField(label = 'Upload a file:',required=False)
     class Meta:
         model = CodehubTopicModel
@@ -28,7 +26,7 @@ class CodehubTopicForm(forms.ModelForm):
 #form for commenting on a topic
 class CodehubTopicCommentForm(forms.ModelForm):
     #comment_text = forms.CharField(label = '',max_length = 500,widget = forms.Textarea(attrs = {'rows':'3','cols':'40'}))
-    comment_text = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Your comment...'}))
+    comment_text = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Your comment...','style':'height:15%'}))
     class Meta:
         model = CodehubTopicCommentModel
         fields = ['comment_text']
@@ -36,19 +34,20 @@ class CodehubTopicCommentForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    CHOICES = (('None','None'),('Programmer','Programmer'),('Developer','Developer'),('Not sure right now:)','Not sure right now:)'),('Both','Both'),)
+    CHOICES = (('','--Select Type--'),('Programmer','Programmer'),('Developer','Developer'),('Not sure right now:)','Not sure right now:)'),('Both','Both'),)
     user_description = forms.CharField(label = 'A line about yourself(max = 200 characters)',max_length = 200)
     # skills = forms.CharField(label = 'Skills you have',max_length = 200)
     skills = TagField()
     user_type_select = forms.ChoiceField(choices = CHOICES, required = True )
+    user_profile_pic = forms.FileField(label = 'Upload profile pic',required = False)
     class Meta:
         model = UserProfileModel
-        fields = ['user_description','skills','user_type_select']
+        fields = ['user_description','skills','user_type_select','user_profile_pic']
 
 
 
 class CodehubCreateEventForm(forms.ModelForm):
-    CHOICES = (('None','None'),('Basic', 'Basic'),('Advanced', 'Advanced'),)
+    CHOICES = (('','--Select Type--'),('Basic', 'Basic'),('Advanced', 'Advanced'),)
     event_heading = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Event Heading goes here...'}),max_length = 50)
     event_date = forms.DateTimeField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Date of Event(yy-mm-dd hh:mm)'}),required = False)
     event_description = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Event Details goes here...'}))
@@ -71,11 +70,11 @@ class CodehubEventQuestionForm(forms.ModelForm):
 
 
 class CodehubQuestionForm(forms.ModelForm):
-    CHOICES = (('Basic','Basic'),('Intermediate','Intermediate'),('Advanced','Advanced'))
+    CHOICES = (('','--Select Type--'),('Basic','Basic'),('Intermediate','Intermediate'),('Advanced','Advanced'))
     question_heading = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Question Heading'}),max_length = 200)
     question_description = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Question Details goes here...'}))
     question_link = forms.URLField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Question Link'}),max_length = 100,required = False)
-    question_tags = TagField()
+    question_tags = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Enter Tags'}))
     question_type = forms.ChoiceField(label = '',choices = CHOICES)
     class Meta:
         model = CodehubQuestionModel

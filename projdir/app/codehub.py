@@ -7,7 +7,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.core.paginator import Paginator,EmptyPage,InvalidPage
 
 from .forms import CodehubTopicForm,CodehubTopicCommentForm,SearchForm,CodehubQuestionForm,CodehubQuestionCommentForm,CodehubInnovationPostForm,CodehubInnovationCommentForm
-from .models import CodehubTopicModel,CodehubTopicCommentModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationPostModel,CodehubInnovationCommentModel
+from .models import CodehubTopicModel,CodehubTopicCommentModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationPostModel,CodehubInnovationCommentModel,UserProfileModel
 from .views import loginRequired
 
 from taggit.models import Tag
@@ -76,9 +76,10 @@ def codehub_topic(request):
     else:
         form = CodehubTopicForm()
     search_form = SearchForm()
-    topics_list = CodehubTopicModel.objects.all().order_by('-created')
-    topics = do_pagination(request,topics_list,5)  #it does the pagination stuff
-    return render(request,'codehub/topic/topic.html',{'form':form,'topics':topics,'search_form':search_form})
+    user_profile = UserProfileModel.objects.get(user_id = request.user.id)
+    topics = CodehubTopicModel.objects.all().order_by('-created')[:5]
+    # topics = do_pagination(request,topics_list,5)  #it does the pagination stuff
+    return render(request,'codehub/topic/topic.html',{'form':form,'topics':topics,'search_form':search_form,'user_profile':user_profile})
 
 
 
@@ -113,7 +114,7 @@ def edit_topic(request,id):
         tags = ",".join(tagArr)
         data = {'topic_heading':topic_details.topic_heading,'topic_detail':topic_details.topic_detail,'topic_link':topic_details.topic_link,'file':topic_details.file,'topic_type':topic_details.topic_type,'tags':tags}
         form = CodehubTopicForm(initial = data)
-    return render(request,'codehub/topic/edit_topic.html',{'form':form})
+    return render(request,'codehub/topic/edit_topic.html',{'form':form,'topic_heading':topic_details.topic_heading})
 
 
 

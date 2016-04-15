@@ -5,6 +5,8 @@
 {% csrf_token %}
 {{ form.as_p }}
 <input type='submit' name='search_user' value="search user"/>
+</form>
+<hr/>
 <h1>Search results for users "{{ search_str }}"</h1>
 {% if not result %}
 <h3>No results found!!!</h3>

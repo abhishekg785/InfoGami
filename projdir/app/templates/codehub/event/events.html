@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<div>
+<div id = 'main'>
 <h1>Upcoming Events<span>(</span>{{ events.count }}<span>)</span></h1>
 <h3>+Create your own event</h3><a href = "{% url 'create_codehub_event' %}" >Coding Event</a> OR <a href = "">Developer Event</a>
 <p style="color:red">Click on the event to see more details and ask questions about the event</p>
