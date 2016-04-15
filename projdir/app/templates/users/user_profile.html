@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block content %}
+<div id = 'main'>
 {% if user_info.username  == user.username %}
 <h2><a href = "{% url 'edit_user_profile' user.id %}">Edit Profile</a></h2>
 {% endif %}
@@ -36,4 +37,5 @@ Date Joined:{{ user_info.date_joined}}<br/>
 <a href = "{% url 'user_blog' user_info.id %}">Blog</a><br/>
 <a href = "">New way to solve problems</a><br/>
 <a href = "">Talks or Events by User</a>
+</div>
 {% endblock %}

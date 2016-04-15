@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<div id = 'main'>
   <h1>Register</h1>
   <hr/>
   <form method="post">{% csrf_token %}
@@ -10,4 +11,5 @@
       <input type='password' name='password' required placeholder = 'Create a Password'/><br/>
       <input type='submit' name='subButton'/><br/>
   </form>
+</div>
 {% endblock %}

@@ -9,27 +9,36 @@
     {% bootstrap_css %}
     {% bootstrap_javascript %}
     {{ form.media }}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
   </head>
   <body>
-  <div class = 'page-header'>
+  <div id = 'wrapper'>
+  <header id ='header'>
+    <h1><a href = '/'>Abuzilla</a></h1>
+    <nav class = 'links'>
     {% if user.is_authenticated %}
-    <img height = "50px" src ="{% static 'images/default_gravators/github.png' %}" alt ='No gravatar'/>
-    <a href="{% url 'logout_view' %}">Logout</a>
-    <a href="{% url 'index' %}">Home</a>
-    <a href = "{% url 'user_profile' user.id %}">Profile</a>
-    <a href = "{% url 'get_users' %}">Users</a>
-    <a href = "{% url 'user_blog' user.id %}">My Blog</a>
-    <a href = "">Notifications</a>
-    <a href = "">My activities</a>
-    <h3 align = 'right'>Welcome "<a href = "{% url 'user_profile' user.id %}">{{ user.username }}</a>"</h3>
+    <ul>
+      <li><a href="{% url 'index' %}">Home</a></li>
+      <li><a href = "{% url 'user_profile' user.id %}">Profile</a></li>
+      <li><a href = "{% url 'get_users' %}">Users</a></li>
+      <li><a href = "{% url 'user_blog' user.id %}">My Blog</a></li>
+      <li><a href = "">Notifications</a></li>
+      <li><a href = "">My activities</a></li>
+      <li><a href="{% url 'logout_view' %}">Logout</a></li>
+    </ul>
+    <!-- <h3 align = 'right'>Welcome "<a href = "{% url 'user_profile' user.id %}">{{ user.username }}</a>"</h3> -->
     {% else %}
-    <a href="{% url 'login_view' %}">Login</a>
-    <a href="{% url 'register_view' %}">Register</a>
+    <ul>
+      <li><a href="{% url 'login_view' %}">Login</a></li>
+      <li><a href="{% url 'register_view' %}">Register</a></li>
+    </ul>
     {% endif %}
-  </div>
-    <div class="container">
+    </nav>
+  </header>
     {% block content %}
     {% endblock %}
-    </div>
+    <!-- scripts -->
+  </div>
+    <script src ="{% static 'js/main.js' %}"></script>
   </body>
 </html>

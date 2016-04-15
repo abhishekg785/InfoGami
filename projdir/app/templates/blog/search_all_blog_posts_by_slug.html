@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<div id = 'main'>
   <h1>Posts or Articles under tag " {{tag_str}} "</h1>
   <hr/>
   {% for post in posts %}
@@ -11,4 +12,5 @@
     Modified:{{ post.modified }}
     <hr/>
   {% endfor %}
+</div>
 {% endblock %}

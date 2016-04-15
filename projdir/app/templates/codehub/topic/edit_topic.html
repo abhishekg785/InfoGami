@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<div id = 'main'>
 <h1>Edit Topic</h1>
 <hr/>
 <form method = 'post' enctype="multipart/form-data">
@@ -8,4 +9,5 @@
 <input type='submit' name='sub' value='submit'/>
 </form>
 <a href = "{% url 'codehub_topic' %}">Cancel</a>
+</div>
 {% endblock %}

@@ -1,6 +1,7 @@
 
 {% extends 'base.html' %}
 {% block content %}
+<div id = 'main'>
   <h1>Music List({{ music_list.count }})</h1>
   <hr/>
   {% for music in music_list %}
@@ -9,4 +10,5 @@
       {{ music.music_lang }}
     <hr/>
   {% endfor %}
+</div>
 {% endblock %}

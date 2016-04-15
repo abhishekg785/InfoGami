@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load django_markdown %}
 {% block content %}
+<div id = 'main'>
 <hr/>
 <h1>{{ post_details.title }}</h1>
 {% if post_details.image_file %}
@@ -38,4 +39,5 @@ Modified:{{ post_details.modified }}
   modified:{{ comment.modified }}
   <hr/>
 {% endfor %}
+</div>
 {% endblock %}

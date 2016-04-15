@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<div id = 'main'>
 <h1>Ask Question</h1>
 <hr/>
 <form method = "post">
@@ -48,5 +49,6 @@
     <li><a href = "?page={{ questions.next_page_number }}">Next</a></li>
   {% endif %}
   </ul>
+</div>
 </div>
 {% endblock %}

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<div id = 'main'>
 <h1>Edit Comment</h1>
 <hr/>
 <form method="POST">
@@ -7,4 +8,5 @@
   {{ form.as_p }}
   <input type='submit' name='edit_comment' value = 'Edit Comment' />
 </form>
+</div>
 {% endblock %}

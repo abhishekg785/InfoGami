@@ -1,19 +1,30 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
+<link href ="{% static 'css/codehub' %}" rel = 'stylesheets' type = 'text/css'/>
 {% block content %}
-<h1>Topics for Discussion</h1>
-<hr/>
+<div id = 'main'>
+<article class = 'post'>
+<header>
+  <div class = 'title'>
+    <h2><a href="">Post Topic</a></h2>
+    <p>"Post any topic which can be helpful"</p>
+  </div>
+</header>
 <form method="post" enctype="multipart/form-data">
 {% csrf_token %}
 {{ form.as_p }}
 <input type='submit'   name='submitTopic' value= 'Post Topic'/>
 </form>
-<hr/>
+</article>
+<!-- <div id = 'main'>
 <h1>Topics:</h1>
+<article class = 'post'>
 <form align='center' method='POST' action = "{% url 'search_topic' %}">
   {% csrf_token %}
   {{ search_form.as_p }}
 <input type='submit' name='seachTopic' value = 'Search'/>
 </form>
+</article>
 <p style='color:red'>Click on topic to view comments ans discuss</p><br/>
 <hr/>
 <div id = 'topicDisplaySec'>
@@ -38,21 +49,56 @@
     {% endif %}
     <hr/>
 {% endfor %}
-<div class = "pagination">
-  {% if topics.has_previous %}
-    <li><a href = "?page={{ topics.previous_page_number }}">Previous</a></li>
-  {% endif %}
-  {% for pg in topics.paginator.page_range %}
-    {% if topics.number == pg %}
-      <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
-    {% else %}
-      <li><a href="?page={{ pg }}">{{ pg }}</a></li>
-    {% endif %}
-  {% endfor %}
-  {% if topics.has_next %}
-    <li><a href = "?page={{ topics.next_page_number }}">Next</a></li>
-  {% endif %}
-  </ul>
 </div>
+</div> -->
+</div>
+<section id = 'sidebar'>
+  <section id="intro">
+    <a href="#" class="logo"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+    <header>
+      <h2 style="font-size:20px">Recent Topics</h2>
+      <p>"Click on Topic for more info"</a></p>
+    </header>
+  </section>
+  <!-- mini posts comes here -->
+  <section>
+    <form align='center' method='POST' action = "{% url 'search_topic' %}">
+      {% csrf_token %}
+      {{ search_form.as_p }}
+    <input type='submit' name='seachTopic' value = 'Search'/>
+    </form>
+    <div class = 'mini-posts'>
+      {% for topic in topics.object_list %}
+      <article class = 'mini-post'>
+        <header>
+          <h3><a href = "{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h3>
+          <time class="published">{{ topic.created }}</time>
+          <p>by:<a href ="{% url 'user_profile' topic.user.id %}">{{ topic.user.username }}</a></p>
+          <a href="{% url 'user_profile' topic.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+        </header>
+      </article>
+      {% endfor %}
+      <div class = "pagination">
+        {% if topics.has_previous %}
+          <li><a href = "?page={{ topics.previous_page_number }}">Previous</a></li>
+        {% endif %}
+        {% for pg in topics.paginator.page_range %}
+          {% if topics.number == pg %}
+            <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+          {% else %}
+            <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if topics.has_next %}
+          <li><a href = "?page={{ topics.next_page_number }}">Next</a></li>
+        {% endif %}
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section id ='footer'>
+    <p class ='copyright'>&copy; Untitled. Crafted: <a href="">Abhishek</a>.</p>
+  </section>
+</section>
+<script src = "{% static 'js/main.js' %}"></script>
 {% endblock %}
-</div>

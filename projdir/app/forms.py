@@ -16,7 +16,7 @@ class CodehubTopicForm(forms.ModelForm):
     # topic_detail = forms.CharField(label = '',widget = forms.Textarea(attrs = {'rows':'2','cols':'32','placeholder':'Enter the details about topic'}),max_length = 200)
     topic_link = forms.URLField(label = '',max_length = 100,required = False,widget = forms.TextInput(attrs = {'placeholder':'Link to topic'}))
     # tags = forms.CharField(label = 'Add tags',max_length = 100,required = True,widget = forms.TextInput(attrs = {'placeholder':'Add tags'}))
-    tags = TagField()
+    tags = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Give some Tags(separated by commas)'}))
     topic_type = forms.ChoiceField(choices = CHOICES,required = True)
     file = forms.FileField(label = 'Upload a file:',required=False)
     class Meta:

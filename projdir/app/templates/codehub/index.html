@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
+<div id = 'main'>
 <h1>Welcome {{ user }}!!! to Codehub</h1>
 <a href = "{% url 'codehub_topic' %}">Topics for Discussion</a><br/>
 <a href = "{% url 'codehub_question' %}" >Ask Questions</a><br/>
@@ -10,4 +11,5 @@
 <a href="{% url 'create_codehub_event' %}">Create a event</a><br/>
 <a href="{% url 'music_list' %}">Music</a><br/>
 <hr/>
+</div>
 {% endblock %}

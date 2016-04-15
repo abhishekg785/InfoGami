@@ -77,7 +77,7 @@ def codehub_topic(request):
         form = CodehubTopicForm()
     search_form = SearchForm()
     topics_list = CodehubTopicModel.objects.all().order_by('-created')
-    topics = do_pagination(request,topics_list,3)  #it does the pagination stuff
+    topics = do_pagination(request,topics_list,5)  #it does the pagination stuff
     return render(request,'codehub/topic/topic.html',{'form':form,'topics':topics,'search_form':search_form})
 
 

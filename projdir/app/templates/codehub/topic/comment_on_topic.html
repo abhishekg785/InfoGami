@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load django_markdown %}
 {% block content %}
+<div id = 'main'>
 <h1>{{ topic.topic_heading }}</h1>
 {% if topic.user.username == user.username %}
   <a href = "{% url 'edit_topic' topic.id %}">Edit</a>
@@ -35,4 +36,5 @@ Tags:{% for tag in topic.tags.all %}
   {% endif %}
     <hr/>
 {% endfor %}
+</div>
 {% endblock %}

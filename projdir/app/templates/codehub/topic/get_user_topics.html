@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<div id = 'main'>
   <h1>Topics of {{ topic_user }}</h1>
   <hr/>
   {% if not topics %}
@@ -16,4 +17,5 @@
       <hr/>
     {% endfor %}
   {% endif %}
+</div>
 {% endblock %}

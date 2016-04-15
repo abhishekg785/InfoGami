@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load django_markdown %}
 {% block content %}
+<div id = 'main'>
 <h2>{{ idea_details.title }}</h2>
 <hr/>
 by:{{ idea_details.user.username }}<br/>
@@ -32,4 +33,5 @@ Modified:{{ idea_details.modified }}
     modified:{{ comment.modified }}
     <hr/>
   {% endfor %}
+</div>
 {% endblock %}

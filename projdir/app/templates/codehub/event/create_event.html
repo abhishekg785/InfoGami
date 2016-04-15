@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<div id = 'main'>
 <h1>Create Event</h1>
 <form method="post">
 {% csrf_token %}
@@ -16,4 +17,5 @@
   {% endif %}
   Created on:{{ event.created }}
 {% endfor %}
+<div>
 {% endblock %}

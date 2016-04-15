@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load django_markdown %}
-{% load  %}
 {% block content %}
+<div id = 'main'>
   <h1>Question Details</h1>
   <hr/>
   <h2>{{ ques_details.question_heading }}</h2>
@@ -29,4 +29,5 @@
     {% endif %}
     <hr/>
   {% endfor %}
+</div>
 {% endblock %}

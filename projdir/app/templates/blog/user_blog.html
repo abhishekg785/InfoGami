@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<div id = 'main'>
   <img style ="border-radius:50% "src = "{{ user_gravatar_url }}" />
   <h1>Welcome to the blog of {{ user_info.username }}!!!</h1>
   {% if user_profile != False %}
@@ -29,4 +30,5 @@
       <hr/>
     {% endfor %}
   {% endif %}
+</div>
 {% endblock %}

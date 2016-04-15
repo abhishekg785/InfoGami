@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<div id = 'main'>
 <h1>{{ event.event_heading }}</h1>
 {% if event.user.is_superuser == 1 %}
   <p style = 'color:red'>Created by Admin</p>
@@ -40,4 +41,5 @@
   {{ question.created }}
   <hr/>
 {% endfor %}
+</div>
 {% endblock %}

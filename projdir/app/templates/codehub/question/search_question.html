@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<div id = 'main'>
 <h3>Search Questions</h3>
 <form method= "POST">
   {% csrf_token %}
@@ -18,4 +19,5 @@
     <hr/>
   {% endfor %}
 {% endif %}
+</div>
 {% endblock %}
