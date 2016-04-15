@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from app.views import login_view,register_view,logout_view,index
-from app.codehub import codehub_question,remove_codehub_question,edit_codehub_question,codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,codehub_question_details,remove_codehub_question_comment,edit_codehub_question_comment,search_question,codehub_innovation,codehub_innovation_details,edit_codehub_innovation_idea,remove_codehub_innovation_idea,edit_codehub_innovation_idea_comment,remove_codehub_innovation_idea_comment,search_codehub_innovation_post
+from app.codehub import codehub_question,remove_codehub_question,edit_codehub_question,codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,codehub_question_details,remove_codehub_question_comment,edit_codehub_question_comment,search_question,codehub_innovation,codehub_innovation_details,edit_codehub_innovation_idea,remove_codehub_innovation_idea,edit_codehub_innovation_idea_comment,remove_codehub_innovation_idea_comment,search_codehub_innovation_post,get_all_codehub_topics
 from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog
 from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question
 from app.music import music_list
@@ -40,8 +40,9 @@ urlpatterns = [
     url(r'^codehub/topic/remove/(?P<id>\d+)/$',remove_topic,name = 'remove_topic'),
     url(r'^codehub/topic/(?P<id>\d+)/comment/$',comment_on_topic,name = 'comment_on_topic'),
     url(r'^codehub/topic/search_topic/$',search_topic,name = 'search_topic'),
-    url(r'^codehub/topic/comment/(?P<id>\d+)/remove$',remove_topic_comment,name = 'remove_topic_comment'),
-    url(r'^codehub/topic/comment/(?P<id>\d+)/edit$',edit_topic_comment,name = 'edit_topic_comment'),
+    url(r'^codehub/topic/comment/(?P<id>\d+)/remove/$',remove_topic_comment,name = 'remove_topic_comment'),
+    url(r'^codehub/topic/comment/(?P<id>\d+)/edit/$',edit_topic_comment,name = 'edit_topic_comment'),
+    url(r'^codehub/all_topics/$',get_all_codehub_topics,name = 'get_all_codehub_topics'),
     url(r'^users/$',get_users,name='get_users'),
     url(r'^users/profile/(?P<user_id>\d+)/$',user_profile,name = 'user_profile'),
     url(r'^users/profile/(?P<user_id>\d+)/edit/$',edit_user_profile,name = 'edit_user_profile'),

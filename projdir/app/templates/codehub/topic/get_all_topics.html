@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h2>All Topics( {{ topic_count }} )</h2>
+  <form method="POST" action="{% url 'search_topic' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' name='search_topic' value = 'Go'/>
+  </form>
+  <hr/>
+  <section>
+    {% if not topics %}
+      <h3>No Topics Yet!!!</h3>
+    {% else %}
+    <ul class = 'posts'>
+      {% for topic in topics.object_list %}
+        <li>
+          <article>
+            <header>
+              <h3><a href="{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h3>
+              <time class="published">{{ topic.created }}</time>
+              <p class="published">by:<a href = "{% url 'user_profile' topic.user.id %}">{{ topic.user.username }}</a></p>
+            </header>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+  <div class = "pagination">
+    {% if topics.has_previous %}
+      <li><a href = "?page={{ topics.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    {% for pg in topics.paginator.page_range %}
+      {% if topics.number == pg %}
+        <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% else %}
+        <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if topics.has_next %}
+      <li><a href = "?page={{ topics.next_page_number }}">Next</a></li>
+    {% endif %}
+    </ul>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

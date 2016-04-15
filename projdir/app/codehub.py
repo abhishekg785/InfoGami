@@ -169,6 +169,16 @@ def search_topic(request):
 
 
 
+
+def get_all_codehub_topics(request):
+    topics_list = CodehubTopicModel.objects.all().order_by('-created')
+    topic_count = topics_list.count()
+    topics = do_pagination(request,topics_list,5)
+    form = SearchForm()
+    return render(request,'codehub/topic/get_all_topics.html',{'topics':topics,'form':form,'topic_count':topic_count})
+
+
+
 #COMMENT ROUTES START here
 def check_user_access_for_comment_edit(func):
     def wrapper(request,id,*args,**kwargs):

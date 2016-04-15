@@ -22,7 +22,7 @@
     <!-- <a href="{% url 'user_profile' user.id %}" class="logo"><img src="/media/{{ user_profile.user_profile_pic }}" alt="" /></a> -->
     <header>
       <h2 style="font-size:20px">Recent Topics</h2>
-      <h3><a href =''>View all Topics({{ topics.count }})</a></h3>
+      <h3><a href ="{% url 'get_all_codehub_topics' %}">View all Topics({{ topics.count }})</a></h3>
       <p>"Click on Topic for more info"</a></p>
     </header>
   </section>
@@ -44,7 +44,7 @@
         </header>
       </article>
       {% endfor %}
-      <h2><a href =''>View other topics  =></a></h2>
+      <h2><a href ="{% url 'get_all_codehub_topics' %}">View all other topics</a></h2>
     </div>
   </section>
   <section id ='footer'>
