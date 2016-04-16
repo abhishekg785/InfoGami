@@ -316,7 +316,7 @@ def edit_codehub_question(request,ques_id):
         tags = ",".join(tagArr)
         ques_data = {'question_heading':ques_details.question_heading,'question_description':ques_details.question_description,'question_link':ques_details.question_link,'question_type':ques_details.question_type,'question_tags':tags}
         form = CodehubQuestionForm(initial = ques_data)
-    return render(request,'codehub/question/edit_question.html',{'form':form})
+    return render(request,'codehub/question/edit_question.html',{'form':form,'ques_heading':ques_details.question_heading})
 
 
 @loginRequired

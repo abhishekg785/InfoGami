@@ -2,32 +2,47 @@
 {% load django_markdown %}
 {% block content %}
 <div id = 'main'>
-  <h1>Question Details</h1>
-  <hr/>
-  <h2>{{ ques_details.question_heading }}</h2>
-  {% if ques_details.user.username  == user.username %}
-    <a href = "{% url 'remove_codehub_question' ques_details.id %}">Remove</a>
-    <a href = "{% url 'edit_codehub_question' ques_details.id %}">Edit</a>
-  {% endif %}
-  <br/>
-  {{ ques_details.question_description|markdown }}<br/>
-  by:{{ ques_details.user.username }}<br/>
-  {{ ques_details.created }}
-  <hr/>
-  <h2>Answer here:</h2>
+  <article class = 'post'>
+    <header>
+      <div class = 'title'>
+        <h2><a href="#">{{ ques_details.question_heading }}</a></h2>
+        <h3><a href="{% url 'edit_codehub_question' ques_details.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_codehub_question' ques_details.id %}">Remove</a></h3>
+      </div>
+      <div class = 'meta'>
+        <time class="published">{{ ques_details.created }}</time>
+        <h2><a href="{% url 'user_profile' ques_details.user.id %}" class="author"><span class="name">{{ ques_details.user.username }}</span><img src="images/avatar.jpg" alt="" /></a></h2>
+      </div>
+    </header>
+    <div class ='make_sober'>
+      <p>Last Edited:&nbsp;{{ ques_details.modified }}</p>
+      <p>{{ ques_details.question_description|markdown }}</p>
+    </div>
+  </article>
   <form method = 'POST'>
     {% csrf_token %}
     {{ form.as_p }}
-  <input type = 'submit' name = 'answer_ques' value = 'Post Answer'/>
+    <input type = 'submit' name = 'answer_ques' value = 'Post Answer'/>
+  </form>
   <hr/>
-  <h1>Previous Answers</h1>
-  {% for ans in ques_answers %}
-    {{ ans.comment_text }}<br/>
-    {% if ans.user.username == user.username %}
-      <a href = "{% url 'edit_codehub_question_comment' ans.id %}">Edit</a>
-      <a href = "{% url 'remove_codehub_question_comment' ans.id %}">Remove</a>
-    {% endif %}
-    <hr/>
-  {% endfor %}
+  {% if not ques_answers %}
+    <h3>No Answers Yet!!!</h3>
+  {% else %}
+    <section>
+      <div class = 'mini-posts'>
+        {% for answer in ques_answers %}
+          <article class = 'mini-post'>
+            <header>
+              <p>{{ answer.comment_text|markdown }}</p>
+              <time class="published">{{ answer.created }}</time>
+              <a href="{% url 'user_profile' answer.user.id %}" class="author">{{ answer.user.username }}<img src="images/avatar.jpg" alt="" /></a>
+              {% if answer.user.username == request.user.username %}
+                <h3><a href = "{% url 'edit_codehub_question_comment' answer.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_codehub_question_comment' answer.id %}">Remove</a></h3>
+              {% endif %}
+            </header>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
 </div>
 {% endblock %}

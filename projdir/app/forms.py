@@ -82,7 +82,7 @@ class CodehubQuestionForm(forms.ModelForm):
 
 
 class CodehubQuestionCommentForm(forms.ModelForm):
-    comment_text = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Enter your answer or suggestions here...'}))
+    comment_text = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Enter your answer or suggestions here...','style':'height:20%'}))
 
     class Meta:
         model = CodehubQuestionCommentModel
