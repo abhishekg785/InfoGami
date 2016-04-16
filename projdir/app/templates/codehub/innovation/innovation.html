@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block content %}
 <div id = 'main'>
   <article class="post">
@@ -35,7 +36,11 @@
           <header>
             <h3><a href = "{% url 'codehub_innovation_details' idea.id %}">{{ idea.title }}</a></h3>
             <time class="published">{{ idea.created }}</time>
-            <a href="#" class="author"><img src="/media/{{ idea.user_profile.user_profile_pic }}" alt="" /></a>
+            {% if idea.user_profile.user_profile_pic.name %}
+              <a href="{% url 'user_profile' idea.user.id %}" class="author"><img src="/media/{{ idea.user_profile.user_profile_pic }}" alt="" /></a>
+            {% else %}
+              <a href="{% url 'user_profile' idea.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+            {% endif %}
             <p>by:<a href ="{% url 'user_profile' idea.user.id %}">{{ idea.user.username }}</a></p>
           </header>
         </article>

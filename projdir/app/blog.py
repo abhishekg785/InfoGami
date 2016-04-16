@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 
 from .forms import BlogPostForm
-from .models import BlogPostModel,BlogPostCommentModel
+from .models import BlogPostModel,BlogPostCommentModel,UserProfileModel
 from .views import loginRequired
 
 from django.utils.datastructures import MultiValueDictKeyError
@@ -41,6 +41,7 @@ def blog(request):
                 file = ''
             new_blog = BlogPostModel(
                 user = request.user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
                 title = form.cleaned_data['title'],
                 body = form.cleaned_data['body'],
                 image_file = file,
@@ -105,6 +106,7 @@ def blog_post_details(request,post_id):
             blog_post = get_object_or_404(BlogPostModel,id = post_id)
             new_comment = BlogPostCommentModel(
                 user = request.user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
                 blog_post = blog_post,
                 comment_text = form.cleaned_data['comment_text']
             )

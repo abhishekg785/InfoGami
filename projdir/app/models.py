@@ -10,8 +10,26 @@ from os.path import join as isfile
 from django.conf import settings
 import os
 
+
+#this will store the extra profile details of the user
+class UserProfileModel(models.Model):
+    user = models.ForeignKey(User)
+    user_description = MarkdownField()
+    skills = TaggableManager()
+    user_type_select = models.CharField(max_length = 50,default = 'None')   #developer or programmer
+    user_profile_pic = models.FileField(upload_to = 'profile_pics/',blank = True)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.user.username
+
+
+
+
 class CodehubTopicModel(models.Model):
     user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
     topic_heading = models.CharField(max_length = 100)
     topic_detail = MarkdownField()
     topic_link = models.CharField(max_length = 100,blank = True)
@@ -38,6 +56,7 @@ class CodehubTopicModel(models.Model):
 
 class CodehubTopicCommentModel(models.Model):
     user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
     topic = models.ForeignKey('CodehubTopicModel')
     comment_text = MarkdownField()
     created = models.DateTimeField(auto_now_add = True)
@@ -49,24 +68,9 @@ class CodehubTopicCommentModel(models.Model):
 
 
 
-#this will store the extra profile details of the user
-class UserProfileModel(models.Model):
-    user = models.ForeignKey(User)
-    user_description = MarkdownField()
-    skills = TaggableManager()
-    user_type_select = models.CharField(max_length = 50,default = 'None')   #developer or programmer
-    user_profile_pic = models.FileField(upload_to = 'profile_pics/',blank = True)
-    created = models.DateTimeField(auto_now_add = True)
-    modified = models.DateTimeField(auto_now = True)
-
-    def __str__(self):
-        return self.user.username
-
-
-
-
 class CodehubCreateEventModel(models.Model):
     user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
     event_heading = models.CharField(max_length = 100)
     event_date = models.DateTimeField(null = True,blank = True)
     event_venue = models.CharField(max_length = 100)
@@ -82,6 +86,7 @@ class CodehubCreateEventModel(models.Model):
 
 class CodehubEventQuestionModel(models.Model):
     user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
     event = models.ForeignKey(CodehubCreateEventModel)
     question_text = MarkdownField()
     created = models.DateTimeField(auto_now_add = True)
@@ -90,6 +95,7 @@ class CodehubEventQuestionModel(models.Model):
 
 class MusicModel(models.Model):
     user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
     music_name = models.CharField(max_length = 100)
     music_file = models.FileField(upload_to = 'music/')
     music_lang = models.CharField(max_length = 20)
@@ -103,6 +109,7 @@ class MusicModel(models.Model):
 
 class CodehubQuestionModel(models.Model):
     user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
     question_heading = models.CharField(max_length = 200)
     question_description = MarkdownField()
     question_link = models.CharField(max_length = 100,blank = True)
@@ -116,6 +123,7 @@ class CodehubQuestionModel(models.Model):
 
 class CodehubQuestionCommentModel(models.Model):
     user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
     question = models.ForeignKey(CodehubQuestionModel)
     comment_text = MarkdownField()
     created = models.DateTimeField(auto_now_add = True)
@@ -127,6 +135,7 @@ class CodehubQuestionCommentModel(models.Model):
 
 class BlogPostModel(models.Model):
     user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
     title = models.CharField(max_length = 200)
     body = MarkdownField()
     tags = TaggableManager()
@@ -149,6 +158,7 @@ class BlogPostModel(models.Model):
 
 class BlogPostCommentModel(models.Model):
     user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
     blog_post = models.ForeignKey(BlogPostModel)
     comment_text = MarkdownField()
     created = models.DateTimeField(auto_now_add = True)
@@ -174,6 +184,7 @@ class CodehubInnovationPostModel(models.Model):
 
 class CodehubInnovationCommentModel(models.Model):
     user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
     innovation_post = models.ForeignKey(CodehubInnovationPostModel)
     comment_text = MarkdownField()
     created = models.DateTimeField(auto_now_add = True)

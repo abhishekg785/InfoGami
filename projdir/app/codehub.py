@@ -63,6 +63,7 @@ def codehub_topic(request):
                 file = ''
             new_topic = CodehubTopicModel(
                 user = request.user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
                 topic_heading = form.cleaned_data['topic_heading'],
                 topic_detail = form.cleaned_data['topic_detail'],
                 topic_link = form.cleaned_data['topic_link'],
@@ -136,6 +137,7 @@ def comment_on_topic(request,id):
         if form.is_valid():
             new_comment = CodehubTopicCommentModel(
                 user = User.objects.get(username = request.user.username),
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
                 topic = CodehubTopicModel.objects.get(id = id),
                 comment_text = form.cleaned_data['comment_text'],
             )
@@ -241,6 +243,7 @@ def codehub_question(request):
             tags = form.cleaned_data['question_tags']
             new_ques = CodehubQuestionModel(
                 user = request.user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
                 question_heading = form.cleaned_data['question_heading'],
                 question_description = form.cleaned_data['question_description'],
                 question_link = form.cleaned_data['question_link'],
@@ -275,6 +278,7 @@ def codehub_question_details(request,ques_id):
         if form.is_valid():
             new_answer = CodehubQuestionCommentModel(
                 user = request.user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
                 question = get_object_or_404(CodehubQuestionModel,id = ques_id),
                 comment_text = form.cleaned_data['comment_text']
             )
@@ -393,6 +397,7 @@ def codehub_innovation_details(request,idea_id):
         if form.is_valid():
             new_comment = CodehubInnovationCommentModel(
                 user = request.user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
                 innovation_post = get_object_or_404(CodehubInnovationPostModel,id = idea_id),
                 comment_text = form.cleaned_data['comment_text']
             )

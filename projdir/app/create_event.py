@@ -32,6 +32,7 @@ def codehub_event_details(request,event_id):
             event = get_object_or_404(CodehubCreateEventModel,id = event_id)
             new_question = CodehubEventQuestionModel(
                 user = user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
                 event = event,
                 question_text = form.cleaned_data['question_text'],
             )
@@ -54,6 +55,7 @@ def create_codehub_event(request):
             user = User.objects.get(username = request.user.username)
             new_event = CodehubCreateEventModel(
                 user = user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
                 event_heading = form.cleaned_data['event_heading'],
                 event_date = form.cleaned_data['event_date'],
                 event_venue = form.cleaned_data['event_venue'],

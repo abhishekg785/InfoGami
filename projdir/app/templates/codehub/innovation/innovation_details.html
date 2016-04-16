@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load django_markdown %}
+{% load staticfiles %}
 {% block content %}
 <div id = 'main'>
   <article class = 'post'>
@@ -12,7 +13,11 @@
       </div>
       <div class="meta">
         <time class="published">{{ idea_details.created }}</time>
-        <h2><a href="{% url 'user_profile' idea_details.user.id %}" class="author"><span class="name">{{ idea_details.user.username }}</span><img src="/media/{{ idea_details.user_profile.user_profile_pic }}" alt="Profile pic" /></a></h2>
+        {% if idea_details.user_profile.user_profile_pic.name %}
+          <h2><a href="{% url 'user_profile' idea_details.user.id %}" class="author"><span class="name">{{ idea_details.user.username }}</span><img src="/media/{{ idea_details.user_profile.user_profile_pic }}" alt="Profile pic" /></a></h2>
+        {% else %}
+          <h2><a href="{% url 'user_profile' idea_details.user.id %}" class="author"><span class="name">{{ idea_details.user.username }}</span><img src = "{% static 'images/default_gravators/github.png' %}" /></a></h2>
+        {% endif %}
       </div>
     </header>
     <div class = 'make_sober'>
@@ -36,8 +41,9 @@
           <header>
             <p>{{ comment.comment_text|markdown }}</p>
             <time class="published">{{ comment.created }}</time>
-            <a href="{% url 'user_profile' comment.user.id %}" class="author">{{ comment.user.username }}<img src="images/avatar.jpg" alt="" /></a>
+            <h2><a style = "top:0.5em" href="{% url 'user_profile' comment.user.id %}" class="author">{{ comment.user.username }}<img src="/media/{{ comment.user_profile.user_profile_pic }}" alt="" /></a></h2>
             {% if comment.user.username == request.user.username %}
+            <hr/>
               <h3><a href = "{% url 'edit_codehub_innovation_idea_comment' idea_details.id comment.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_codehub_innovation_idea_comment' idea_details.id comment.id %}">Remove</a></h3>
             {% endif %}
           </header>
