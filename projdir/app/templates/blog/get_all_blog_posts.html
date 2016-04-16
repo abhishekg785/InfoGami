@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <!-- {{ blog_posts }} -->
+  <h2>All posts/articles({{ blog_posts.count }})</h2>
+  <form method="POST" action="{% url 'search_blog_post' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' name='search_blog_post' value = 'Go'/>
+  </form>
+  <hr/>
+  <section>
+    {% if not blog_posts %}
+      <h3>No posts/articles yet!!!</h3>
+    {% else %}
+    <ul class = 'posts'>
+      {% for post in blog_posts.object_list %}
+        <li>
+          <article>
+            <header>
+              <h2><a href="{% url 'blog_post_details' post.id %}">{{ post.title }}</a></h2>
+              <time class="published">{{ post.created }}</time>
+              <p class="published">by:<a href = "{% url 'user_profile' post.user.id %}">{{ post.user.username }}</a></p>
+            </header>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class = "pagination">
+      {% if blog_posts.has_previous %}
+        <li><a href = "?page={{ blog_posts.previous_page_number }}">Previous</a></li>
+      {% endif %}
+      {% for pg in blog_posts.paginator.page_range %}
+        {% if blog_posts.number == pg %}
+          <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+        {% else %}
+          <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if blog_posts.has_next %}
+        <li><a href = "?page={{ blog_posts.next_page_number }}">Next</a></li>
+      {% endif %}
+      </ul>
+    </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

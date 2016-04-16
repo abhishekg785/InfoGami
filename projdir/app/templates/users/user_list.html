@@ -1,32 +1,45 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-  <h1>Users</h1>
+  <h2>Users</h2>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" name="search_user" value ='Search User' />
   </form>
   <hr/>
-  {% for user in users %}
-    <a href = "{% url 'user_profile' user.id %}">{{ user.username }}</a>
-    <hr/>
-  {% endfor %}
-  <div class = "pagination">
-    {% if users.has_previous %}
-      <li><a href = "?page={{ users.previous_page_number }}">Previous</a></li>
+  <section>
+    {% if not users %}
+      <h3>No users yet!!!</h3>
+    {% else %}
+      <ul class = 'posts'>
+        {% for user in users %}
+          <li>
+            <article>
+              <header>
+                <h2><a href = "{% url 'user_profile' user.id %}">{{ user.username }}</a></h2>
+              </header>
+            </article>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class = "pagination">
+        {% if users.has_previous %}
+          <li><a href = "?page={{ users.previous_page_number }}">Previous</a></li>
+        {% endif %}
+        {% for pg in users.paginator.page_range %}
+          {% if users.number == pg %}
+            <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+          {% else %}
+            <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if users.has_next %}
+          <li><a href = "?page={{ users.next_page_number }}">Next</a></li>
+        {% endif %}
+        </ul>
+      </div>
     {% endif %}
-    {% for pg in users.paginator.page_range %}
-      {% if users.number == pg %}
-        <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
-      {% else %}
-        <li><a href="?page={{ pg }}">{{ pg }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if users.has_next %}
-      <li><a href = "?page={{ users.next_page_number }}">Next</a></li>
-    {% endif %}
-    </ul>
-  </div>
+  </section>
 </div>
 {% endblock %}

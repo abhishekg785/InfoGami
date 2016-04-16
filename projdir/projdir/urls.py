@@ -23,7 +23,7 @@ from app.codehub import codehub_question,remove_codehub_question,edit_codehub_qu
 from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog
 from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question
 from app.music import music_list
-from app.blog import blog,blog_post_edit,blog_post_remove,blog_post_details,search_user_blog_post_by_slug,search_all_blog_posts_by_slug,edit_blog_post_comment,remove_blog_post_comment,search_blog_post
+from app.blog import blog,blog_post_edit,blog_post_remove,blog_post_details,search_user_blog_post_by_slug,search_all_blog_posts_by_slug,edit_blog_post_comment,remove_blog_post_comment,search_blog_post,get_all_blog_posts
 
 
 urlpatterns = [
@@ -74,6 +74,7 @@ urlpatterns = [
     url(r'^blog/post/(?P<post_id>\d+)/comment/(?P<com_id>\d+)/edit/$',edit_blog_post_comment,name = 'edit_blog_post_comment'),
     url(r'^blog/post/(?P<post_id>\d+)/comment/(?P<com_id>\d+)/remove/$',remove_blog_post_comment,name = 'remove_blog_post_comment'),
     url(r'^blog/search_post/$',search_blog_post,name = 'search_blog_post'),
+    url(r'^blog/get_all_blog_posts/$',get_all_blog_posts,name = 'get_all_blog_posts'),
     #codehub innovation routes here
     url(r'^codehub/innovation/$',codehub_innovation,name = 'codehub_innovation'),
     url(r'^codehub/innovation/(?P<idea_id>\d+)/details/$',codehub_innovation_details,name = 'codehub_innovation_details'),

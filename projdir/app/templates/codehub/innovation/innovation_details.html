@@ -6,6 +6,9 @@
 <hr/>
 by:{{ idea_details.user.username }}<br/>
 {{ idea_details.description|markdown }}<br/>
+user_profile:
+{{ idea_details.user_profile.user_profile_pic }}
+<br/>
 Tags:
 {% for tag in idea_details.tags.all %}
   {{ tag.name }}

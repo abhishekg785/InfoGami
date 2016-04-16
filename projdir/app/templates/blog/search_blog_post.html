@@ -1,23 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-<h3>Search here</h3>
-<form method="POST">
-  {% csrf_token %}
-  {{ search_form.as_p }}
-<input type='submit' name='search_post' value='GO'/>
-</form>
-<hr/>
-<h3>Results</h3>
-{% if not results %}
-<h3>No results yet!!!</h3>
-{% else %}
-  {% for result in results %}
-    <a href ="{% url 'blog_post_details' result.id %}">{{ result }}</a><br/>
-    by:{{ result.user.username }}<br/>
-    Created:{{ result.created }}
-    <hr/>
-  {% endfor %}
-{% endif %}
+  <h3>Search blog posts/articles</h3>
+  <form method="POST">
+    {% csrf_token %}
+    {{ search_form.as_p }}
+  <input type='submit' name='search_post' value='GO'/>
+  </form>
+  <hr/>
+  {% if not results %}
+    <h3>NO results Yet!!!</h3>
+  {% else %}
+  <section>
+    <h3>Results for "{{ search_str }}"</h3>
+    <ul class ='posts'>
+      {% for result in results %}
+        <li>
+          <article>
+            <header>
+              <h2><a href ="{% url 'blog_post_details' result.id %}">{{ result.title }}</a></h2>
+              <time class="published">{{ result.created }}</time>
+              <p class="published">by:<a href = "{% url 'user_profile' result.user.id %}">{{ result.user.username }}</a></p>
+            </header>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
 </div>
 {% endblock %}

@@ -20,6 +20,7 @@ def loginRequired(func):
 
 
 #route for login the user
+@loginRequired
 def index(request):
     return render(request,'index.html')
 
@@ -49,7 +50,9 @@ def register_view(request):
        username = request.POST['username']
        email = request.POST['email']
        password = request.POST['password']
-       User.objects.create_user(first_name = fname,last_name = lname,username = username,email = email,password = password)
+       user = User.objects.create_user(first_name = fname,last_name = lname,username = username,email = email,password = password)
+       new_user_profile = UserProfileModel(user = user)
+       new_user_profile.save()
        return HttpResponse('Successfully registered');
     return render(request,'auth/register.html')
 

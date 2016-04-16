@@ -6,7 +6,9 @@
     <header>
       <div class="title">
         <h2><a href="#">{{ topic.topic_heading }}</a></h2>
-        <h3><a href="{% url 'edit_topic' topic.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_topic' topic.id %}">Remove</a></h3>
+        {% if topic.user.username == user.username %}
+          <h3><a href="{% url 'edit_topic' topic.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_topic' topic.id %}">Remove</a></h3>
+        {% endif %}
       </div>
       <div class="meta">
         <time class="published">{{ topic.created }}</time>

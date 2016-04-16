@@ -1,16 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-  <h1>Posts or Articles under tag " {{tag_str}} "</h1>
-  <hr/>
-  {% for post in posts %}
-    <a href ="{% url 'blog_post_details' post.id %}">{{ post }}</a>
-    <br/>
-    by:{{ post.user.username }}
-    <br/>
-    Created:{{ post.created }}
-    Modified:{{ post.modified }}
+<section>
+  {% if not posts %}
+    <h3>No posts/articles yet under tag "{{ tag_str }}"</h3>
     <hr/>
-  {% endfor %}
+  {% else %}
+    <h3>List of posts/articles under tag "{{ tag_str }}" </h3>
+    <hr/>
+    <ul>
+      {% for post in posts %}
+        <li>
+          <article>
+            <header>
+              <h2><a href ="{% url 'blog_post_details' post.id %}">{{ post }}</a></h2>
+              <time class="published">{{ post.created }}</time>
+              <p class="published">by:<a href = "{% url 'user_profile' post.user.id %}">{{ post.user.username }}</a></p>
+            </header>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</section>
 </div>
 {% endblock %}

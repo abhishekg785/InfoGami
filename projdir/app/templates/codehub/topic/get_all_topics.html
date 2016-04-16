@@ -25,7 +25,6 @@
         </li>
       {% endfor %}
     </ul>
-  </section>
   <div class = "pagination">
     {% if topics.has_previous %}
       <li><a href = "?page={{ topics.previous_page_number }}">Previous</a></li>
@@ -43,5 +42,6 @@
     </ul>
   </div>
   {% endif %}
+</section>
 </div>
 {% endblock %}

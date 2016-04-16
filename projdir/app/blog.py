@@ -52,10 +52,10 @@ def blog(request):
     else:
         form = BlogPostForm()
     search_form = SearchForm()
-    all_tags = BlogPostModel.tags.all().distinct()
-    blog_posts_list = BlogPostModel.objects.all().order_by('-created')
-    blog_posts = do_pagination(request,blog_posts_list,3)
-    return render(request,'blog/index.html',{'form':form,'blog_posts':blog_posts,'all_tags':all_tags,'search_form':search_form})
+    # all_tags = BlogPostModel.tags.all().distinct()
+    blog_posts = BlogPostModel.objects.all().order_by('-created')[:3]
+    # blog_posts = do_pagination(request,blog_posts_list,3)
+    return render(request,'blog/index.html',{'form':form,'blog_posts':blog_posts,'search_form':search_form})
 
 
 @loginRequired
@@ -86,7 +86,7 @@ def blog_post_edit(request,post_id):
         tags = ",".join(tagArr)
         blog_post_data = {'title':post_details.title,'body':post_details.body,'tags':tags,'image_file':post_details.image_file}
         form = BlogPostForm(initial = blog_post_data)
-    return render(request,'blog/edit_blog_post.html',{'form':form})
+    return render(request,'blog/edit_blog_post.html',{'form':form,'blog_post_title':post_details.title})
 
 
 @loginRequired
@@ -183,3 +183,11 @@ def search_blog_post(request):
     else:
         search_form = SearchForm()
     return render(request,'blog/search_blog_post.html',{'search_form':search_form})
+
+
+
+def get_all_blog_posts(request):
+    blog_post_list = BlogPostModel.objects.all().order_by('-created')
+    form = SearchForm()
+    blog_posts = do_pagination(request,blog_post_list,4)
+    return render(request,'blog/get_all_blog_posts.html',{'blog_posts':blog_posts,'form':SearchForm})

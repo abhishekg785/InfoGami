@@ -160,6 +160,7 @@ class BlogPostCommentModel(models.Model):
 
 class CodehubInnovationPostModel(models.Model):
     user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
     title = models.CharField(max_length = 200)
     description = MarkdownField()
     tags = TaggableManager()

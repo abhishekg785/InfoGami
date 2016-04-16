@@ -6,7 +6,9 @@
     <header>
       <div class = 'title'>
         <h2><a href="#">{{ ques_details.question_heading }}</a></h2>
-        <h3><a href="{% url 'edit_codehub_question' ques_details.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_codehub_question' ques_details.id %}">Remove</a></h3>
+        {% if ques_details.user.username == user.username %}
+          <h3><a href="{% url 'edit_codehub_question' ques_details.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_codehub_question' ques_details.id %}">Remove</a></h3>
+        {% endif %}
       </div>
       <div class = 'meta'>
         <time class="published">{{ ques_details.created }}</time>
@@ -33,8 +35,9 @@
           <article class = 'mini-post'>
             <header>
               <p>{{ answer.comment_text|markdown }}</p>
-              <time class="published">{{ answer.created }}</time>
-              <a href="{% url 'user_profile' answer.user.id %}" class="author">{{ answer.user.username }}<img src="images/avatar.jpg" alt="" /></a>
+              <time class="published">Created:{{ answer.created }}</time>
+              <time class="published">LLast Edited:{{ answer.modified }}</time>
+              <h1><a href="{% url 'user_profile' answer.user.id %}" class="author">{{ answer.user.username }}<img src="images/avatar.jpg" alt="" /></a></h1>
               {% if answer.user.username == request.user.username %}
                 <h3><a href = "{% url 'edit_codehub_question_comment' answer.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_codehub_question_comment' answer.id %}">Remove</a></h3>
               {% endif %}

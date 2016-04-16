@@ -76,7 +76,7 @@ def codehub_topic(request):
     else:
         form = CodehubTopicForm()
     search_form = SearchForm()
-    user_profile = UserProfileModel.objects.get(user_id = request.user.id)
+    user_profile = UserProfileModel(user = request.user)
     topics = CodehubTopicModel.objects.all().order_by('-created')[:5]
     # topics = do_pagination(request,topics_list,5)  #it does the pagination stuff
     return render(request,'codehub/topic/topic.html',{'form':form,'topics':topics,'search_form':search_form,'user_profile':user_profile})
@@ -371,6 +371,7 @@ def codehub_innovation(request):
             tags = form.cleaned_data['tags']
             new_idea = CodehubInnovationPostModel(
                 user = request.user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
                 title = form.cleaned_data['title'],
                 description = form.cleaned_data['description'],
             )

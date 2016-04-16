@@ -1,57 +1,49 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-  <h1>Write an article or Blog here</h1>
-  <hr/>
+  <article class = 'post'>
+  <header>
+    <div class = 'title'>
+      <h2><a href="">Write an Article or Blog</a></h2>
+      <p>"Share your experiences or any other exciting stuff here"</p>
+    </div>
+  </header>
   <form method="POST" enctype="multipart/form-data">
-  {% csrf_token %}
-  <p style = 'color:red'>  Note:Atleast add 2 tags</p>
-  {{ form.as_p }}
-  <input type='submit' value='Post' name='post_blog' />
-  </form>
-  <hr/>
-  <h3>Search by Tags:</h3>
-  {% if not all_tags %}
-  <h3>No tags yet!!!</h3>
-  {% else %}
-  {% for tag in all_tags %}
-    <a href = "{% url 'search_all_blog_posts_by_slug' tag.slug %}">{{ tag.name }}</a><br/>
-  {% endfor %}
-  {% endif %}
-  <hr/>
-  <h3>Recent Posts or Articles:</h3>
-  <form method="POST" action="{% url 'search_blog_post' %}">
     {% csrf_token %}
-    {{ search_form }}
-    <input type='submit' name='search_ques' value='Go'/>
+    {{ form.as_p }}
+    <input type='submit' value='Post' name='post_blog' />
   </form>
-  {% for post in blog_posts.object_list %}
-    <a href = "{% url 'blog_post_details' post.id %}"><h3>{{ post.title }}</h3></a>
-    by:<a href = "{% url 'user_profile' post.user.id %}">{{ post.user.username }}</a><br/>
-    Image:<a href = "/media/{{ post.image_file }}">{{ post.image_file }}</a><br/>
-    Created on:{{ post.created }}<br/>
-    Last Modified:{{ post.modified }}<br/>
-    {% if post.user.username == user.username %}
-      <a href ="{% url 'edit_blog_post' post.id  %}">Edit</a>
-      <a href ="{% url 'remove_blog_post' post.id  %}">Remove</a>
-    {% endif %}
-    <hr/>
-  {% endfor %}
-  <div class = "pagination">
-    {% if blog_posts.has_previous %}
-      <li><a href = "?page={{ blog_posts.previous_page_number }}">Previous</a></li>
-    {% endif %}
-    {% for pg in blog_posts.paginator.page_range %}
-      {% if blog_posts.number == pg %}
-        <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
-      {% else %}
-        <li><a href="?page={{ pg }}">{{ pg }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if blog_posts.has_next %}
-      <li><a href = "?page={{ blog_posts.next_page_number }}">Next</a></li>
-    {% endif %}
-    </ul>
-  </div>
+  </article>
 </div>
+<section id = 'sidebar'>
+  <section id = 'intro'>
+    <header>
+      <h2 style="font-size:20px">Recent Posts and Articles</h2>
+      <h3><a href ="{% url 'get_all_blog_posts' %}">View all posts/articles</a></h3>
+      <p style="font-size:10px">"Click on post/article for more info"</a></p>
+    </header>
+  </section>
+  <section>
+    <form method="POST" action="{% url 'search_blog_post' %}">
+      {% csrf_token %}
+      {{ search_form }}
+      <input type='submit' name='search_blog_post' value='Go'/>
+    </form>
+    <div class = 'mini-posts'>
+      {% for post in blog_posts %}
+        <article class='mini-post'>
+          <header>
+            <h3><a href = "{% url 'blog_post_details' post.id %}">{{ post.title }}</a></h3>
+            <time class="published">{{ post.created }}</time>
+            <p>by:<a href ="{% url 'user_profile' post.user.id %}">{{ post.user.username }}</a></p>
+          </header>
+          {% if post.image_file.name %}
+          <a href="{% url 'blog_post_details' post.id %}" class="image"><img src="/media/{{post.image_file}}" alt="" /></a>
+          {% endif %}
+        </article>
+      {% endfor %}
+      <h2><a href ="{% url 'get_all_blog_posts' %}">View all other posts/articles</a></h2>
+    </div>
+  </section>
+</section>
 {% endblock %}

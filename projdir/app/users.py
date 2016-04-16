@@ -129,7 +129,7 @@ def get_user_talks_or_events(request,user_id):
 def get_user_articles_or_blogs(request,user_id):
     return HttpResponse('user questions')
 
-
+@loginRequired
 def user_blog(request,user_id):
     user_details = get_object_or_404(User,id = user_id)
     # user_profile = get_object_or_404(UserProfileModel,user_id = user_id)

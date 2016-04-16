@@ -1,15 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-{% if not posts %}
-  <h3>NO posts yet!!!</h3>
-{% else %}
-  <h3>List of posts and articles by {{user}} under tag "{{ tag_str }}" </h3>
-  {% for post in posts %}
-    <a href = "{% url 'blog_post_details' post.id %}">{{ post.title }}</a><br/>
-    by:{{ post.user.username }}
+  <section>
+    {% if not posts %}
+      <h3>No posts yet under tag {{ tags_str }}</h3>
+      <hr/>
+    {% else %}
+    <h3>List of posts and articles by {{user}} under tag "{{ tag_str }}" </h3>
     <hr/>
-  {% endfor %}
-{% endif %}
+    <ul class = 'posts'>
+      {% for post in posts %}
+        <li>
+          <article>
+            <header>
+              <h2><a href = "{% url 'blog_post_details' post.id %}">{{ post.title }}</a></h2>
+              <time class="published">{{ post.created }}</time>
+              <p class="published">by:<a href = "{% url 'user_profile' post.user.id %}">{{ post.user.username }}</a></p>
+            </header>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </section>
 </div>
 {% endblock %}

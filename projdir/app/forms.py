@@ -102,7 +102,7 @@ class BlogPostForm(forms.ModelForm):
 
 
 class BlogPostCommentForm(forms.ModelForm):
-    comment_text = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Your comment...'}))
+    comment_text = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Your comment...','style':'height:20%'}))
 
     class Meta:
         model = BlogPostCommentModel
