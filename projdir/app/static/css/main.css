@@ -1688,7 +1688,8 @@ form select {
 		.author img {
 			border-radius: 100%;
 			display: block;
-			width: 4em;
+			width: 6.5em;
+			height: 6.5em;
 		}
 
 		.author:hover .name {

@@ -111,7 +111,7 @@ class BlogPostCommentForm(forms.ModelForm):
 
 class CodehubInnovationPostForm(forms.ModelForm):
     title = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Title here'}))
-    description = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Description here'}))
+    description = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Description here','style':'height:20%'}))
     tags = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Enter Tags here'}))
 
     class Meta:
@@ -120,7 +120,7 @@ class CodehubInnovationPostForm(forms.ModelForm):
 
 
 class CodehubInnovationCommentForm(forms.ModelForm):
-    comment_text = forms.CharField(label ='',widget = MarkItUpWidget(attrs = {'placeholder':'Comment'}))
+    comment_text = forms.CharField(label ='',widget = MarkItUpWidget(attrs = {'placeholder':'Comment','style':'height:20%'}))
 
     class Meta:
         model = CodehubInnovationCommentModel

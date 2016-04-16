@@ -382,7 +382,7 @@ def codehub_innovation(request):
     else:
         form = CodehubInnovationPostForm()
     search_form = SearchForm()
-    ideas = CodehubInnovationPostModel.objects.all().order_by('-created')
+    ideas = CodehubInnovationPostModel.objects.all().order_by('-created')[:4]
     return render(request,'codehub/innovation/innovation.html',{'form':form,'ideas':ideas,'search_form':search_form})
 
 

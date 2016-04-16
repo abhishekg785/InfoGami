@@ -1,22 +1,51 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-<h2>Got a new way to solve a "problem"</h2>
-<hr>
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-<input type='submit' name='post_idea' value = 'Innovate!!!'/>
-</form>
-<hr/>
-<h3>Recent posted Ideas:</h3>
+  <article class="post">
+    <header>
+      <div class="title">
+        <h2><a href="">Post a new way to solve a "problem"</a></h2>
+        <p>"Think out of the box"</p>
+      </div>
+    </header>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+    <input type='submit' name='post_idea' value = 'Innovate!!!'/>
+    </form>
+  </article>
+</div>
+<section id = 'sidebar'>
+  <section id = 'intro'>
+    <header>
+      <h2 style="font-size:16px">Recent Posted new Ideas</h2>
+      <h3><a href ="{% url 'get_all_codehub_topics' %}">View all posts</a></h3>
+      <p>"Click on post for more info"</a></p>
+    </header>
+  </section>
+  <section>
+    <form method = 'POST' action = "{% url 'search_codehub_innovation_post' %}">
+      {% csrf_token %}
+      {{ search_form.as_p }}
+      <input type="submit" name='search_idea' value='Go'/>
+    </form>
+    <div class = 'mini-posts'>
+      {% for idea in ideas %}
+        <article class = 'mini-post'>
+          <header>
+            <h3><a href = "{% url 'codehub_innovation_details' idea.id %}">{{ idea.title }}</a></h3>
+            <time class="published">{{ idea.created }}</time>
+            <a href="#" class="author"><img src="/media/{{ idea.user_profile.user_profile_pic }}" alt="" /></a>
+            <p>by:<a href ="{% url 'user_profile' idea.user.id %}">{{ idea.user.username }}</a></p>
+          </header>
+        </article>
+      {% endfor %}
+      <h2><a href ="{% url 'get_all_codehub_topics' %}">View all other posts</a></h2>
+    </div>
+  </section>
+</section>
+<!--
 
-<!-- search form -->
-<form method = 'POST' action = "{% url 'search_codehub_innovation_post' %}">
-  {% csrf_token %}
-  {{ search_form.as_p }}
-  <input type="submit" name='search_idea' value='Go'/>
-</form>
 
   {% for idea in ideas %}
     <h3><a href = "{% url 'codehub_innovation_details' idea.id %}">{{ idea.title }}</a></h3><br/>
@@ -31,6 +60,5 @@
       <a href = "{% url 'remove_codehub_innovation_idea' idea.id %}">Remove</a>
     {% endif %}
     <hr/>
-  {% endfor %}
-</div>
+  {% endfor %} -->
 {% endblock %}

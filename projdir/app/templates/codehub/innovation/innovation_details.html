@@ -2,39 +2,49 @@
 {% load django_markdown %}
 {% block content %}
 <div id = 'main'>
-<h2>{{ idea_details.title }}</h2>
-<hr/>
-by:{{ idea_details.user.username }}<br/>
-{{ idea_details.description|markdown }}<br/>
-user_profile:
-{{ idea_details.user_profile.user_profile_pic }}
-<br/>
-Tags:
-{% for tag in idea_details.tags.all %}
-  {{ tag.name }}
-{% endfor %}
-<br/>
-Created:{{ idea_details.created }}<br/>
-Modified:{{ idea_details.modified }}
-<hr/>
-<h3>Comment:</h3>
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type='submit' name='post-comment' value='Post' />
-</form>
-<h3>Previous Comments</h3>
-  {% for comment in comments %}
-    {{ comment.comment_text|markdown }}<br/>
-    by:{{ comment.user.username }}<br/>
-    {% if comment.user.username == user.username %}
-      <a href = "{% url 'edit_codehub_innovation_idea_comment' idea_details.id comment.id %}">Edit</a>
-      <a href ="{% url 'remove_codehub_innovation_idea_comment' idea_details.id comment.id %}">Remove</a>
-    {% endif %}
-    <br/>
-    created:{{ comment.created }}<br/>
-    modified:{{ comment.modified }}
-    <hr/>
-  {% endfor %}
+  <article class = 'post'>
+    <header>
+      <div class="title">
+        <h2><a href="#">{{ idea_details.title }}</a></h2>
+        {% if idea_details.user.username == user.username %}
+          <h3><a href="{% url 'edit_codehub_innovation_idea' idea_details.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_codehub_innovation_idea' idea_details.id %}">Remove</a></h3>
+        {% endif %}
+      </div>
+      <div class="meta">
+        <time class="published">{{ idea_details.created }}</time>
+        <h2><a href="{% url 'user_profile' idea_details.user.id %}" class="author"><span class="name">{{ idea_details.user.username }}</span><img src="/media/{{ idea_details.user_profile.user_profile_pic }}" alt="Profile pic" /></a></h2>
+      </div>
+    </header>
+    <div class = 'make_sober'>
+      <p>Last Edited:&nbsp;{{ idea_details.modified }}</p>
+      <p>{{ idea_details.description|markdown }}</p>
+    </div>
+  </article>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' name='post-comment' value='Post' />
+  </form>
+  <hr/>
+  {% if not comments %}
+    <h3>No comments yet</h3>
+  {% else %}
+  <section>
+    <div class="mini-posts">
+      {% for comment in comments %}
+        <article class="mini-post">
+          <header>
+            <p>{{ comment.comment_text|markdown }}</p>
+            <time class="published">{{ comment.created }}</time>
+            <a href="{% url 'user_profile' comment.user.id %}" class="author">{{ comment.user.username }}<img src="images/avatar.jpg" alt="" /></a>
+            {% if comment.user.username == request.user.username %}
+              <h3><a href = "{% url 'edit_codehub_innovation_idea_comment' idea_details.id comment.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_codehub_innovation_idea_comment' idea_details.id comment.id %}">Remove</a></h3>
+            {% endif %}
+          </header>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
 </div>
 {% endblock %}
