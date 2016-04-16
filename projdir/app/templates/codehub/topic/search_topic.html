@@ -18,7 +18,7 @@
     <li>
       <article>
         <header>
-          <h3><a href="{% url 'comment_on_topic' result.id %}">{{ result.topic_heading }}</a></h3>
+          <h2><a href="{% url 'comment_on_topic' result.id %}">{{ result.topic_heading }}</a></h2>
           <time class="published">{{ result.created }}</time>
           <p class="published">by:<a href = "{% url 'user_profile' result.user.id %}">{{ result.user.username }}</a></p>
         </header>

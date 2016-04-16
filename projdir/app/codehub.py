@@ -252,9 +252,19 @@ def codehub_question(request):
     else:
         form = CodehubQuestionForm()
     search_form = SearchForm()
-    codehub_questions_list = CodehubQuestionModel.objects.all().order_by("-created")
-    codehub_questions = do_pagination(request,codehub_questions_list,2)
+    codehub_questions = CodehubQuestionModel.objects.all().order_by("-created")[:5]
+    # codehub_questions = do_pagination(request,codehub_questions_list,2)
     return render(request,'codehub/question/question.html',{'form':form,'questions':codehub_questions,'search_form':search_form})
+
+
+
+@loginRequired
+def get_all_codehub_questions(request):
+    form = SearchForm()
+    questions_list = CodehubQuestionModel.objects.all().order_by('-created')
+    question_count = questions_list.count()
+    questions = do_pagination(request,questions_list,5)
+    return render(request,'codehub/question/get_all_questions.html',{'questions':questions,'form':form,'question_count':question_count})
 
 
 

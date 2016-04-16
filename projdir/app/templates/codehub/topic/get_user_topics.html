@@ -12,7 +12,7 @@
         <li>
           <article>
             <header>
-              <h3><a href="{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h3>
+              <h2><a href="{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h2>
               <time class="published">{{ topic.created }}</time>
               <p class="published">by:<a href = "{% url 'user_profile' topic.user.id %}">{{ topic.user.username }}</a></p>
               {% if topic.user.username  == user.username %}

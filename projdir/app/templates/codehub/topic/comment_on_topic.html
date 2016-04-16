@@ -13,11 +13,13 @@
         <h2><a href="{% url 'user_profile' topic.user.id %}" class="author"><span class="name">{{ topic.user.username }}</span><img src="images/avatar.jpg" alt="Profile" /></a></h2>
       </div>
     </header>
+    <div class = 'make_sober'>
     <p>Last Edited:&nbsp;{{ topic.modified }}</p>
     {% if topic.file.name %}
     <p>Attached File:&nbsp;<a href = "/media/{{ topic.file.name }}">{{ topic.file.name }}</a></p>
     {% endif %}
     <p>{{ topic.topic_detail|markdown }}</p>
+  </div>
   </article>
 <form name  = 'form' method='post'>
 {% csrf_token %}
@@ -26,7 +28,7 @@
 </form>
 <hr/>
 {% if not comments %}
-  <p>No comments Yet!!!</p>
+  <h3>No comments Yet!!!</h3>
 {% else %}
   <section>
     <div class="mini-posts">

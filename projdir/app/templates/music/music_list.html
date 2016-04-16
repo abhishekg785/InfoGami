@@ -4,11 +4,30 @@
 <div id = 'main'>
   <h1>Music List({{ music_list.count }})</h1>
   <hr/>
-  {% for music in music_list %}
+  <section>
+    {% if not music_list %}
+      <h3>NO Music yet!!!</h3>
+    {% else %}
+      <ul class='posts'>
+        {% for music in music_list %}
+          <li>
+            <article>
+              <header>
+                <h2><a target = '_blank'  href = "/media/{{ music.music_file }}">{{ music.music_name }}</a></h2>
+                <p class="published">by:{{ music.music_artist }}</p>
+                <p class = 'published'>{{ music.music_lang }}</p>
+              </header>
+            </article>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </section>
+  <!-- {% for music in music_list %}
     <h2><a target = '_blank'  href = "/media/{{ music.music_file }}">{{ music.music_name }}</a></h2>
       by:{{ music.music_artist }}<br/>
       {{ music.music_lang }}
     <hr/>
-  {% endfor %}
+  {% endfor %} -->
 </div>
 {% endblock %}
