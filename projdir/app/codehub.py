@@ -436,7 +436,7 @@ def edit_codehub_innovation_idea(request,idea_id):
         tags = ",".join(tagArr)
         idea_data = {'title':idea_details.title,'description':idea_details.description,'tags':tags}
         form = CodehubInnovationPostForm(initial = idea_data)
-    return render(request,'codehub/innovation/edit_innovation_idea.html',{'form':form})
+    return render(request,'codehub/innovation/edit_innovation_idea.html',{'form':form,'idea_title':idea_details.title})
 
 
 @loginRequired
