@@ -49,21 +49,4 @@
     </div>
   </section>
 </section>
-<!--
-
-
-  {% for idea in ideas %}
-    <h3><a href = "{% url 'codehub_innovation_details' idea.id %}">{{ idea.title }}</a></h3><br/>
-    by:<a href ="{% url 'user_profile' idea.user.id %}">{{ idea.user.username }}</a><br/>
-    Created:{{ idea.created }}<br/>
-    Tagged:
-    {% for tag in idea.tags.all %}
-    {{ tag }}
-    {% endfor %}<br/>
-    {% if idea.user.username == user.username %}
-      <a href ="{% url 'edit_codehub_innovation_idea' idea.id %}">Edit</a>
-      <a href = "{% url 'remove_codehub_innovation_idea' idea.id %}">Remove</a>
-    {% endif %}
-    <hr/>
-  {% endfor %} -->
 {% endblock %}

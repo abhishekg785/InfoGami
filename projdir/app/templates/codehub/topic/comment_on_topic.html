@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load django_markdown %}
+{% load staticfiles %}
 {% block content %}
 <div id = 'main'>
   <article class = 'post'>
@@ -12,7 +13,11 @@
       </div>
       <div class="meta">
         <time class="published">{{ topic.created }}</time>
-        <h2><a href="{% url 'user_profile' topic.user.id %}" class="author"><span class="name">{{ topic.user.username }}</span><img src="images/avatar.jpg" alt="Profile pic" /></a></h2>
+        {% if topic.user_profile.user_profile_pic.name %}
+          <h2><a href="{% url 'user_profile' topic.user.id %}" class="author"><span class="name">{{ topic.user.username }}</span><img src="/media/{{ topic.user_profile.user_profile_pic }}" alt="Profile pic" /></a></h2>
+        {% else %}
+          <h2><a href="{% url 'user_profile' topic.user.id %}" class="author"><span class="name">{{ topic.user.username }}</span><img src="{% static 'images/default_gravators/github.png' %}" alt="Profile pic" /></a></h2>
+        {% endif %}
       </div>
     </header>
     <div class = 'make_sober'>
@@ -39,7 +44,11 @@
           <header>
             <p>{{ comment.comment_text|markdown }}</p>
             <time class="published">{{ comment.created }}</time>
-            <a href="{% url 'user_profile' comment.user.id %}" class="author">{{ comment.user.username }}<img src="images/avatar.jpg" alt="" /></a>
+            {% if comment.user_profile.user_profile_pic.name %}
+              <a href="{% url 'user_profile' comment.user.id %}" class="author">{{ comment.user.username }}<img src="/media/{{ comment.user_profile.user_profile_pic.name }}" alt="" /></a>
+            {% else %}
+              <a href="{% url 'user_profile' comment.user.id %}" class="author">{{ comment.user.username }}<img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+            {% endif %}
             {% if comment.user.username == request.user.username %}
               <h3><a href = "{% url 'edit_topic_comment' comment.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_topic_comment' comment.id %}">Remove</a></h3>
             {% endif %}

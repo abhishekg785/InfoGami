@@ -39,7 +39,11 @@
           <h3><a href = "{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h3>
           <time class="published">{{ topic.created }}</time>
           <p>by:<a href ="{% url 'user_profile' topic.user.id %}">{{ topic.user.username }}</a></p>
-          <!-- <a href="{% url 'user_profile' topic.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a> -->
+          {% if topic.user_profile.user_profile_pic.name %}
+            <a href="{% url 'user_profile' topic.user.id %}" class="author"><img src="/media/{{ topic.user_profile.user_profile_pic }}" alt="" /></a>
+          {% else %}
+            <a href="{% url 'user_profile' topic.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+          {% endif %}
         </header>
       </article>
       {% endfor %}
