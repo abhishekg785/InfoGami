@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id ='main'>
+  <h3>Search Events:</h3>
+  <form method="post">
+    {% csrf_token %}
+    {{ search_form.as_p }}
+    <input type='submit' name='search_event' />
+  </form>
+  <hr/>
+  {% if not result %}
+    <h3>No results yet!!!</h3>
+  {% else %}
+  <h3>Search results for " {{ search_str }} "</h3>
+  <section>
+    <ul class ='posts'>
+      {% for event in result %}
+        <li>
+          <article>
+            <header>
+              <h2><a href="{% url 'codehub_event_details' event.id %}">{{ event.event_heading }}</a></h2>
+              <time class="published">{{ event.created }}</time>
+              <p class="published">by:<a href = "{% url 'user_profile' event.user.id %}">{{ event.user.username }}</a></p>
+            </header>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

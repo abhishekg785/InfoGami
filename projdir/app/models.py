@@ -76,6 +76,7 @@ class CodehubCreateEventModel(models.Model):
     event_venue = models.CharField(max_length = 100)
     event_description = MarkdownField()
     event_for  = models.CharField(max_length = 25)#basic or advanced
+    tags = TaggableManager()
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)
 

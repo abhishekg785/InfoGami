@@ -1,9 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-<input type="submit" name='edit_question' value = "Edit Question"/>
+  <article class = 'post'>
+  <header>
+    <div class = 'title'>
+      <h2><a href="">Edit Event Comment</a></h2>
+    </div>
+  </header>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name='edit_question' value = "Edit Question"/>
+  </form>
+  </article>
+  <h2><a href = "{% url 'codehub_events' %}">Cancel</a></h2>
 </div>
 {% endblock %}

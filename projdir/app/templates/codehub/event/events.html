@@ -1,9 +1,52 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-<h1>Upcoming Events<span>(</span>{{ events.count }}<span>)</span></h1>
-<h3>+Create your own event</h3><a href = "{% url 'create_codehub_event' %}" >Coding Event</a> OR <a href = "">Developer Event</a>
-<p style="color:red">Click on the event to see more details and ask questions about the event</p>
+  <h2>Upcoming events</h2>
+  <h3>Create your own event:&nbsp;&nbsp;&nbsp;<a href = "{% url 'create_codehub_event' %}" >Coding Event</a> OR <a href = "">Developer Event</a></h3>
+  <p style="color:red">Click on the event to see more details and ask questions about the event</p>
+  <form method="post" action="{% url 'search_codehub_event' %}">
+    {% csrf_token %}
+    {{ search_form.as_p }}
+    <input type='submit' name='search_event' value="Go"/>
+  </form>
+  <hr/>
+  <section>
+    {% if not events %}
+      <h3>No events Yet!!!</h3>
+    {% else %}
+    <ul class = 'posts'>
+      {% for event in events.object_list %}
+        <li>
+          <article>
+            <header>
+              <h2><a href = "{% url 'codehub_event_details' event.id %}">{{ event.event_heading }}</a></h2>
+              <time class="published">{{ event.created }}</time>
+              <p class="published">by:<a href = "{% url 'user_profile' event.user.id %}">{{ event.user.username }}</a></p>
+            </header>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+  <div class = "pagination">
+    {% if events.has_previous %}
+      <li><a href = "?page={{ events.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    {% for pg in events.paginator.page_range %}
+      {% if events.number == pg %}
+        <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% else %}
+        <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if events.has_next %}
+      <li><a href = "?page={{ events.next_page_number }}">Next</a></li>
+    {% endif %}
+    </ul>
+  </div>
+  {% endif %}
+</section>
+<!-- <h1>Upcoming Events<span>(</span>{{ events.count }}<span>)</span></h1>
+
 <hr/>
 {% for event in events %}
   <h3><a href = "{% url 'codehub_event_details' event.id %}">{{ event.event_heading }}</a></h3>
@@ -17,6 +60,6 @@
     <a href = "{% url 'edit_codehub_event' event.id%}">Edit</a>
   {% endif %}
   <hr/>
-{% endfor %}
+{% endfor %} -->
 </div>
 {% endblock %}

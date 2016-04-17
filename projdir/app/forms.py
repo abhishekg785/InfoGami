@@ -53,6 +53,8 @@ class CodehubCreateEventForm(forms.ModelForm):
     event_description = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Event Details goes here...'}))
     event_venue = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Event Venue'}),max_length = 100,required = False)
     event_for = forms.ChoiceField(label = 'Event For:',choices = CHOICES,required =True)
+    tags = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Give some Tags(separated by commas)'}))
+
     class Meta:
         model = CodehubCreateEventModel
         fields = ['event_heading','event_date','event_venue','event_description','event_for']

@@ -1,45 +1,70 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load staticfiles %}
 <div id = 'main'>
-<h1>{{ event.event_heading }}</h1>
-{% if event.user.is_superuser == 1 %}
-  <p style = 'color:red'>Created by Admin</p>
-{% endif %}
-{% if event.user.username == user.username %}
-<a href = "{% url 'edit_codehub_event' event.id %}">Edit</a>
-<a href = "{% url 'remove_codehub_event' event.id %}">Remove</a>
-{% endif %}
-<hr/>
-{{ event.user.username }}<br/>
-{% if event.event_date %}
-  {{ event.event_date }}
-{% else %}
-No date yet<br/>
-{% endif %}
-Venue:{{ event.event_venue }}<br/>
-Description:{{ event.event_description }}<br/>
-{% if event.event_for != 'None' %}
-{{ event.event_for }}<br/>
-{% endif %}
-<hr/>
-<h2>Ask Questions:</h2>
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type='submit' name='post_question' value = 'Post Question' />
-</form>
-<h2>Previous Questions:</h2>
-{% for question in event_questions %}
-  {{ question.question_text }}<br/>
-{% if question.user.username  == user.username %}
-  <a href = "{% url 'edit_codehub_event_question' question.id %}" >Edit</a>
-  <a href = "{% url 'remove_codehub_event_question' question.id %}">Remove</a>
-{% endif %}
-  <br/>
-  {{ question.user.username }}
-  {{ question.id }}
-  {{ question.created }}
+  <article class = 'post'>
+    <header>
+      <div class="title">
+        <h2><a href="#">{{ event.event_heading }}</a></h2>
+        {% if event.user.is_superuser == 1 %}
+          <p style = 'color:red'>Created by Admin</p>
+        {% endif %}
+        {% if event.user.username == user.username %}
+          <h3><a href="{% url 'edit_codehub_event' event.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_codehub_event' event.id %}">Remove</a></h3>
+        {% endif %}
+      </div>
+      <div class="meta">
+        <time class="published">{{ event.created }}</time>
+        {% if event.user_profile.user_profile_pic.name %}
+          <h2><a href="{% url 'user_profile' event.user.id %}" class="author"><span class="name">{{ event.user.username }}</span><img src="/media/{{ event.user_profile.user_profile_pic }}" alt="Profile pic" /></a></h2>
+        {% else %}
+          <h2><a href="{% url 'user_profile' event.user.id %}" class="author"><span class="name">{{ event.user.username }}</span><img src = "{% static 'images/default_gravators/github.png' %}" /></a></h2>
+        {% endif %}
+      </div>
+    </header>
+    <div class = 'make_sober'>
+      <p>Last Edited:&nbsp;{{ event.modified }}</p>
+      <p>Venue:&nbsp;{{ event.event_venue }}</p>
+      {% if event.event_date %}
+        <p>Event on:{{ event.event_date }}</p>
+      {% else %}
+      <p>Event on:&nbsp;&nbsp;No date yet</p>
+      {% endif %}
+      {% if event.event_for != 'None' %}
+        <p>Event for:{{ event.event_for }}</p>
+      {% endif %}
+      <p>{{ event.event_description }}</p>
+    </div>
+  </article>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' name='post_question' value = 'Post Question' />
+  </form>
   <hr/>
-{% endfor %}
+  {% if not event_questions %}
+    <h3>No questions yet!!!</h3>
+  {% else %}
+    <section>
+      <div class ='mini-posts'>
+        {% for question in event_questions %}
+          <article class = 'mini-post'>
+            <header>
+              <p>{{ question.question_text }}</p>
+              <time class="published">{{ question.created }}</time>
+              {% if question.user_profile.user_profile_pic.name %}
+                <h2><a style = "top:0.5em" href="{% url 'user_profile' question.user.id %}" class="author">{{ question.user.username }}<img src="/media/{{ question.user_profile.user_profile_pic }}" alt="" /></a></h2>
+              {% else %}
+              <h2><a style = "top:0.5em" href="{% url 'user_profile' question.user.id %}" class="author">{{ question.user.username }}<img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a></h2>
+              {% endif %}
+              {% if question.user.username == request.user.username %}
+                <h3><a href = "{% url 'edit_codehub_event_question'  question.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_codehub_event_question'  question.id %}">Remove</a></h3>
+              {% endif %}
+            </header>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
 </div>
 {% endblock %}

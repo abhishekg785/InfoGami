@@ -1,12 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-<h1>Edit Event</h1>
+  <article class = 'post'>
+  <header>
+    <div class = 'title'>
+      <h2><a href="">Edit Event</a></h2>
+      <p>{{ event_title }}</p>
+    </div>
+  </header>
+  <form method = 'POST'>
+    {% csrf_token %}
+    {{ form.as_p }}
+  <input type="submit" name='edit_event' value = 'Save changes'/>
+  </form>
+  </article>
+  <h2><a href = "{% url 'codehub_events' %}">Cancel</a></h2>
+<!-- <h1>Edit Event</h1>
 <hr/>
 <form method = 'POST'>
   {% csrf_token %}
   {{ form.as_p }}
 <input type="submit" name='edit_event' />
-</form>
+</form> -->
 </div>
 {% endblock %}
