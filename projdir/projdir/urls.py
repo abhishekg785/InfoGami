@@ -24,7 +24,7 @@ from app.users import get_users,user_profile,edit_user_profile,get_user_question
 from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question,search_codehub_event
 from app.music import music_list
 from app.blog import blog,blog_post_edit,blog_post_remove,blog_post_details,search_user_blog_post_by_slug,search_all_blog_posts_by_slug,edit_blog_post_comment,remove_blog_post_comment,search_blog_post,get_all_blog_posts
-from app.match_skill import match_user_skills,search_users_by_skill
+from app.match_skill import match_user_skills,search_users_by_skill,get_all_skills_stat
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -87,4 +87,5 @@ urlpatterns = [
     #skill matchinng routes comes here
     url(r'^match-user-skills/$',match_user_skills,name = 'match_user_skills'),
     url(r'^match-user-skills/(?P<skill_slug_str>[\w\-]+)/users/$',search_users_by_skill,name = 'search_users_by_skill'),
+    url(r'^match-user-skills/skills-stat/$',get_all_skills_stat,name = 'get_all_skills_stat'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h2>Get All Skills Statistics</h2>
+  <hr/>
+  {% for key,value in skill_count_dict.items %}
+    <a href = "{% url 'search_users_by_skill' key.slug %}">{{ key }}</a>:{{ value }}<br/>
+  {% endfor %}
+  <hr/>
+  <h2>Percentile of skills:</h2>
+  {% for key,value in skill_per_dict.items %}
+    <a href = "{% url 'search_users_by_skill' key.slug %}">{{ key }}</a>:{{ value }}<br/>
+  {% endfor %}
+</div>
+{% endblock %}

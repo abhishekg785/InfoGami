@@ -2,6 +2,7 @@
 {% block content %}
 <div id = 'main'>
   <h2>Skill Matcher</h2>
+  <h3><a href = "{% url 'get_all_skills_stat' %}">Get all skills statistics</a></h3>
   <hr/>
   {% if not logged_user_skills %}
     <h2>No Skills Added</h2>
