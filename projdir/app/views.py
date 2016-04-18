@@ -19,10 +19,25 @@ def loginRequired(func):
     return wrapper
 
 
+
+def check_if_user_profile_exists(func):
+    def wrapper(request,*args,**kwargs):
+        try:
+            user_profile = UserProfileModel.objects.get(user_id = request.user.id)
+        except:
+            return redirect('/users/profile/'+str(request.user.id)+'/edit')
+        return func(request,*args,**kwargs)
+    return wrapper
+
+
+
 #route for login the user
 @loginRequired
+@check_if_user_profile_exists
 def index(request):
     return render(request,'index.html')
+
+
 
 def login_view(request):
     if request.method == 'POST':
