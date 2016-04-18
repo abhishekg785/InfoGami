@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h2>Skill Matcher</h2>
+  <hr/>
+  {% if not logged_user_skills %}
+    <h2>No Skills Added</h2>
+    <h3><a href = "{% url 'user_profile' user.id %}">Add here</a></h3>
+  {% else %}
+  <h2>Matched user list</h2>
+  {% for user in matched_users_list %}
+    <h3><a href = "{% url 'user_profile' user.id %}">{{ user }}</a></h3>
+    <p>Skills:
+      {% for skill in user.skills.all %}
+        {{ skill  }}
+      {% endfor %}
+    </p>
+  {% endfor %}
+  <h3>Skills statistics</h3>
+  <hr/>
+{% for key,value in skill_stat_dict.items %}
+  <h3><a href = "{% url 'search_users_by_skill' key %}">{{ key }}</a></h3>:
+  {% for val in value %}
+    {{ val }}
+  {% endfor %}
+  <br/>
+{% endfor %}
+{% endif %}
+</div>
+{% endblock %}
