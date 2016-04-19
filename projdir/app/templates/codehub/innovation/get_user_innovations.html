@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h1>New Ideas by {{ username }}</h1>
+  <hr/>
+  {% if not innovations %}
+    <h3>No posts yet!!!</h3>
+  {% else %}
+    {% for innovation in innovations.object_list %}
+      <h2><a href ="{% url 'codehub_innovation_details' innovation.id %}">{{ innovation.title }}</a></h2>
+      {{ innovation.created }}
+      <hr/>
+    {% endfor %}
+    <div class = "pagination">
+      {% if innovations.has_previous %}
+        <li><a href = "?page={{ innovations.previous_page_number }}">Previous</a></li>
+      {% endif %}
+      {% for pg in innovations.paginator.page_range %}
+        {% if innovations.number == pg %}
+          <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+        {% else %}
+          <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if innovations.has_next %}
+        <li><a href = "?page={{ innovations.next_page_number }}">Next</a></li>
+      {% endif %}
+      </ul>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

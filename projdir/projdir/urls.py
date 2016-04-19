@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 
 from app.views import login_view,register_view,logout_view,index
 from app.codehub import codehub_question,remove_codehub_question,edit_codehub_question,codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,codehub_question_details,remove_codehub_question_comment,edit_codehub_question_comment,search_question,codehub_innovation,codehub_innovation_details,edit_codehub_innovation_idea,remove_codehub_innovation_idea,edit_codehub_innovation_idea_comment,remove_codehub_innovation_idea_comment,search_codehub_innovation_post,get_all_codehub_topics,get_all_codehub_questions
-from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog,follow_user_profile
+from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog,follow_user_profile,get_user_new_ideas,get_codehub_user_events
 from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question,search_codehub_event
 from app.music import music_list
 from app.blog import blog,blog_post_edit,blog_post_remove,blog_post_details,search_user_blog_post_by_slug,search_all_blog_posts_by_slug,edit_blog_post_comment,remove_blog_post_comment,search_blog_post,get_all_blog_posts
@@ -68,6 +68,8 @@ urlpatterns = [
     url(r'^user/(?P<user_id>\d+)/topics/$',get_user_topics,name = 'get_user_topics'),
     url(r'^user/(?P<user_id>\d+)/questions/$',get_user_questions,name = 'get_user_questions'),
     url(r'^user/(?P<user_id>\d+)/blog/$',user_blog,name = 'user_blog'),
+    url(r'^user/(?P<user_id>\d+)/new-ideas/$',get_user_new_ideas,name = 'get_user_new_ideas'),
+    url(r'^user/(?P<user_id>\d+)/codehub-events/$',get_codehub_user_events,name = 'get_codehub_user_events'),
     url(r'^blog/$',blog,name = 'write_blog'),
     url(r'^blog/search/(?P<slug_str>[\w\-]+)/posts$',search_all_blog_posts_by_slug,name = 'search_all_blog_posts_by_slug'),
     url(r'^user/(?P<user_id>\d+)/blog/slug/(?P<slug_str>[\w\-]+)/posts/$',search_user_blog_post_by_slug,name = 'search_user_blog_post_by_slug'),

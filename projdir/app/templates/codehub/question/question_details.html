@@ -22,6 +22,9 @@
     </header>
     <div class ='make_sober'>
       <p>Last Edited:&nbsp;{{ ques_details.modified }}</p>
+      {% if ques_details.link %}
+        <p>Link:&nbsp;{{ ques_details.link }}</p>
+      {% endif %}
       <p>{{ ques_details.question_description|markdown }}</p>
     </div>
   </article>

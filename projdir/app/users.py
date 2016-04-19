@@ -10,7 +10,7 @@ from sets import Set
 
 from .views import loginRequired
 from .forms import UserProfileForm,SearchForm
-from .models import UserProfileModel,CodehubTopicModel,CodehubQuestionModel,BlogPostModel
+from .models import UserProfileModel,CodehubTopicModel,CodehubQuestionModel,BlogPostModel,CodehubInnovationPostModel,CodehubCreateEventModel
 import datetime
 
 #pagination stuff
@@ -104,26 +104,43 @@ def edit_user_profile(request,user_id):
     return render(request,'users/edit_user_profile.html',{'form':form})
 
 
+def get_username(request,user_id):
+    username = get_object_or_404(User,id = user_id).username
+    return username
+
+
 @loginRequired
 def get_user_topics(request,user_id):
     topics_list = CodehubTopicModel.objects.filter(user_id = user_id).order_by("-created")
     topics = do_pagination(request,topics_list,5)
-    topic_user = get_object_or_404(User,id = user_id).username
+    topic_user = get_username(request,user_id)
     return render(request,'codehub/topic/get_user_topics.html',{'topics':topics,'topic_user':topic_user})
 
 @loginRequired
 def get_user_questions(request,user_id):
-    questions = CodehubQuestionModel.objects.filter(user_id = user_id).order_by("-created")
-    question_user = get_object_or_404(User,id = user_id).username
+    questions_list = CodehubQuestionModel.objects.filter(user_id = user_id).order_by("-created")
+    questions = do_pagination(request,questions_list,5)
+    question_user = get_username(request,user_id)
     return render(request,'codehub/question/get_user_questions.html',{'questions':questions,'question_user':question_user})
 
 @loginRequired
 def get_user_new_ideas(request,user_id):
-    return HttpResponse('user questions')
+    innovation_list = CodehubInnovationPostModel.objects.filter(user_id = user_id).order_by("-created")
+    innovations = do_pagination(request,innovation_list,5)
+    username = get_username(request,user_id)
+    return render(request,'codehub/innovation/get_user_innovations.html',{'innovations':innovations,'username':username})
+
+
 
 @loginRequired
-def get_user_talks_or_events(request,user_id):
-    return HttpResponse('user questions')
+def get_codehub_user_events(request,user_id):
+    event_list = CodehubCreateEventModel.objects.filter(user_id = user_id).order_by('-created')
+    print event_list
+    events = do_pagination(request,event_list,5)
+    username = get_username(request,user_id)
+    return render(request,'codehub/event/get_user_events.html',{'events':events,'username':username})
+
+
 
 @loginRequired
 def get_user_articles_or_blogs(request,user_id):
