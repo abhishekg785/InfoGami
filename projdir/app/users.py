@@ -42,7 +42,7 @@ def get_users(request):
             return render(request,'users/search_user.html',{'form':form,'result':users,'search_str':user_str})
     else:
         form = SearchForm()
-    users_list = User.objects.values('id','username')
+    users_list = User.objects.values('id','username').exclude(id = request.user.id)
     users = do_pagination(request,users_list,5)
     return render(request,'users/user_list.html',{'users':users,'form':form})
 
@@ -84,7 +84,7 @@ def edit_user_profile(request,user_id):
                 profile_details.user_profile_pic = file
             form = UserProfileForm(request.POST,instance = profile_details)
             form.save()
-            return redirect('/users/profile/'+str(user_id))
+            return redirect('/user/profile/'+str(user_id))
     else:
         try:
             profile_details = UserProfileModel.objects.get(user_id = user_id)
@@ -146,6 +146,18 @@ def user_blog(request,user_id):
     tagArr = Set(tagArr)
     return render(request,'blog/user_blog.html',{'user_info':user_details,'user_profile':user_profile,'blog_posts':blog_posts,'tagArr':tagArr})
 
-    #
-    # def search_post_by_slug(request,slug):
-    #     return HttpResponse(slug)
+
+
+def check_user_access_to_follow(func):
+    def wrapper(request,user_id,*args,**kwargs):
+        if str(request.user.id) == str(user_id):
+            return redirect('/')
+        return func(request,user_id,*args,**kwargs)
+    return wrapper
+
+
+
+#decorator for not following himsel again
+@check_user_access_to_follow
+def follow_user_profile(request,user_id):
+    return HttpResponse(user_id)

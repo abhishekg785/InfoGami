@@ -12,6 +12,12 @@
 {% endif %}
 <br/>
 <h1>{{ user_info.username }}</h1><br/>
+{% if user_profile.user.id != user.id %}
+  <form method="post" action="/user/profile/{{ user_profile.user.id }}/follow">
+    {% csrf_token %}
+    <input type="submit" name = 'follow_user' value="Follow" />
+  </form>
+{% endif %}
 {% if user_info.is_superuser == 1 %}
   <img src = "{% static 'images/default_gravators/admin.png' %}" alt ='No avatar available' style="height:150px"/><br/>
 {% endif %}
