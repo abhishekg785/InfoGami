@@ -197,4 +197,8 @@ class CodehubInnovationCommentModel(models.Model):
 
 
 class FollowUserModel(models.Model):
-     pass
+    # following_user = models.CharField(max_length = 10)                                             #user who is following
+    following_user = models.ForeignKey(User,related_name = 'following_user')
+    followed_user = models.ForeignKey(User,related_name = 'followed_user')                            #user being followed
+    following_user_profile = models.ForeignKey(UserProfileModel,related_name = 'following_user_profile')
+    followed_user_profile = models.ForeignKey(UserProfileModel,related_name = 'followed_user_profile')

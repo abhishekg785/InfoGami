@@ -174,7 +174,7 @@ def remove_codehub_event_question(request,ques_id):
     return redirect('/codehub/event/'+str(event_id)+'/details/')
 
 
-
+@loginRequired
 def search_codehub_event(request):
     if request.method == 'POST':
         form = SearchForm(request.POST)
@@ -184,8 +184,8 @@ def search_codehub_event(request):
             event_by_tag_list = CodehubCreateEventModel.objects.filter(tags__name__in = [search_str])
             result_list = list(chain(event_by_name_list,event_by_tag_list))
             result_list = Set(result_list)
-            search_form = SearchForm()
-            return render(request,'codehub/event/search_event.html',{'search_form':search_form,'result':result_list,'search_str':search_str})
+            form = SearchForm()
+            return render(request,'codehub/event/search_event.html',{'search_form':form,'result':result_list,'search_str':search_str})
     else:
-        search_form = SearchForm()
-    return render(request,'codehub/event/search_event.html',{'search_form':search_form})
+        form = SearchForm()
+    return render(request,'codehub/event/search_event.html',{'search_form':form})

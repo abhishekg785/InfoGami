@@ -10,7 +10,7 @@ from sets import Set
 
 from .views import loginRequired
 from .forms import UserProfileForm,SearchForm
-from .models import UserProfileModel,CodehubTopicModel,CodehubQuestionModel,BlogPostModel,CodehubInnovationPostModel,CodehubCreateEventModel
+from .models import UserProfileModel,CodehubTopicModel,CodehubQuestionModel,BlogPostModel,CodehubInnovationPostModel,CodehubCreateEventModel,FollowUserModel
 import datetime
 
 #pagination stuff
@@ -55,7 +55,13 @@ def user_profile(request,user_id):
         user_profile = UserProfileModel.objects.get(user_id = user_id)
     except:
         user_profile = False
-    return render(request,'users/user_profile.html',{'user_info':info,'user_profile':user_profile})
+    #getting user following data
+    try:
+        follow_result = FollowUserModel.objects.get(following_user_id = request.user.id,followed_user_id = user_id)
+        is_following = follow_result
+    except:
+        is_following = False
+    return render(request,'users/user_profile.html',{'user_info':info,'user_profile':user_profile,'is_following':is_following})
 
 
 @loginRequired
@@ -174,7 +180,46 @@ def check_user_access_to_follow(func):
 
 
 
+def check_if_user_followed(func):
+    def wrapper(request,user_id,*args,**kwargs):
+        try:
+            result = FollowUserModel.objects.get(following_user_id = request.user.id,followed_user_id = user_id)
+            return redirect('/')
+        except:
+            print 'no record'
+        return func(request,user_id,*args,**kwargs)
+    return wrapper
+
+
+
 #decorator for not following himsel again
+#decorator for not following twice
+@loginRequired
 @check_user_access_to_follow
-def follow_user_profile(request,user_id):
-    return HttpResponse(user_id)
+@check_if_user_followed
+def follow_user_profile(request,user_id):           #user_id is the id of the user being followed
+    followed_user = get_object_or_404(User,id = user_id)
+    following_user_profile = get_object_or_404(UserProfileModel,user_id = request.user.id)
+    followed_user_profile = get_object_or_404(UserProfileModel,user_id = user_id)
+    new_user = FollowUserModel(
+        following_user = request.user,
+        followed_user = followed_user,
+        following_user_profile = following_user_profile,
+        followed_user_profile = followed_user_profile
+    )
+    new_user.save()
+    return redirect('/user/profile/'+str(user_id))
+    return HttpResponse('saved')
+
+
+@loginRequired
+@check_user_access_to_follow
+def unfollow_user_profile(request,user_id):
+    result = get_object_or_404(FollowUserModel,following_user_id = request.user.id,followed_user_id = user_id)
+    result.delete()
+    return redirect('/user/profile/'+str(user_id))
+
+
+def get_user_notifications(request):
+    followed_users = FollowUserModel.objects.filter(following_user_id = request.user.id)
+    return render(request,'users/notifications.html',{'notifications':followed_users})

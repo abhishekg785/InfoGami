@@ -22,8 +22,7 @@
       <li><a href = "{% url 'user_profile' user.id %}">Profile</a></li>
       <li><a href = "{% url 'get_users' %}">Users</a></li>
       <li><a href = "{% url 'user_blog' user.id %}">My Blog</a></li>
-      <li><a href = "">Notifications</a></li>
-      <li><a href = "">My activities</a></li>
+      <li><a href = "{% url 'notifications' %}">Notifications</a></li>
       <li><a href="{% url 'logout_view' %}">Logout</a></li>
     </ul>
     <!-- <h3 align = 'right'>Welcome "<a href = "{% url 'user_profile' user.id %}">{{ user.username }}</a>"</h3> -->
