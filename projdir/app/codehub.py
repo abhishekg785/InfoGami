@@ -47,8 +47,7 @@ def do_pagination(request,list,num_of_pages):
 
 @loginRequired
 def codehub(request):
-    form = CodehubTopicForm()
-    return render(request,'codehub/index.html',{'form':form})
+    return render(request,'codehub/index.html')
 
 
 @loginRequired

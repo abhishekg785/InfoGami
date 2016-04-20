@@ -26,6 +26,8 @@ from app.music import music_list
 from app.blog import blog,blog_post_edit,blog_post_remove,blog_post_details,search_user_blog_post_by_slug,search_all_blog_posts_by_slug,edit_blog_post_comment,remove_blog_post_comment,search_blog_post,get_all_blog_posts
 from app.match_skill import match_user_skills,search_users_by_skill,get_all_skills_stat
 
+from app.devhub import devhub
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^markitup/', include('markitup.urls')),
@@ -94,4 +96,6 @@ urlpatterns = [
     url(r'^match-user-skills/$',match_user_skills,name = 'match_user_skills'),
     url(r'^match-user-skills/(?P<skill_slug_str>[\w\-]+)/users/$',search_users_by_skill,name = 'search_users_by_skill'),
     url(r'^match-user-skills/skills-stat/$',get_all_skills_stat,name = 'get_all_skills_stat'),
+    #developers out there
+    url(r'^developer-section/$',devhub,name = 'devhub'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

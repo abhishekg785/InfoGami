@@ -4,8 +4,8 @@
 <div id = 'main'>
 <h2>Welcome <a href = "{% url 'user_profile' user.id %}">"{{ user }}"</a> to Codehub</h2>
 <hr/>
-<h2><a href = "{% url 'codehub_topic' %}">Topics for Discussion</a></h2>
 <h2><a href = "{% url 'codehub_question' %}" >Ask Questions</a></h2>
+<h2><a href = "{% url 'codehub_topic' %}">Post Topics(Study Material Stuff)</a></h2>
 <h2><a href = "{% url 'write_blog' %}">Write Blog</a></h2>
 <h2><a href = "{% url 'codehub_innovation' %}">Got a new way to solve a problem!!!Share here...</a></h2>
 <h2><a href="{% url 'codehub_events' %}">Upcoming Classes/Events/Talks</a></h2>

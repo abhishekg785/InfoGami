@@ -38,7 +38,7 @@ def get_users(request):
         form = SearchForm(request.POST)
         if form.is_valid():
             user_str = form.cleaned_data['search_str']
-            users = User.objects.filter(username__contains = user_str)
+            users =  User.objects.filter(username__contains = user_str)
             return render(request,'users/search_user.html',{'form':form,'result':users,'search_str':user_str})
     else:
         form = SearchForm()
@@ -221,5 +221,14 @@ def unfollow_user_profile(request,user_id):
 
 
 def get_user_notifications(request):
+    followed_user_arr = []
     followed_users = FollowUserModel.objects.filter(following_user_id = request.user.id)
-    return render(request,'users/notifications.html',{'notifications':followed_users})
+    for user_obj in followed_users:
+        followed_user_arr.append(user_obj.followed_user.username)
+    print followed_user_arr
+    #get the blog_posts
+    #get_user_questions
+    #get user_topics
+    #get user_ideas
+    #return render(request,'users/notifications.html',{'notifications':followed_users})
+    return HttpResponse(followed_user_arr)
