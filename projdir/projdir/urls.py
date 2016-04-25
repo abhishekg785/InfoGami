@@ -21,12 +21,12 @@ from django.conf.urls.static import static
 from app.views import login_view,register_view,logout_view,index
 from app.codehub import codehub_question,remove_codehub_question,edit_codehub_question,codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,codehub_question_details,remove_codehub_question_comment,edit_codehub_question_comment,search_question,codehub_innovation,codehub_innovation_details,edit_codehub_innovation_idea,remove_codehub_innovation_idea,edit_codehub_innovation_idea_comment,remove_codehub_innovation_idea_comment,search_codehub_innovation_post,get_all_codehub_topics,get_all_codehub_questions
 from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog,follow_user_profile,get_user_new_ideas,get_codehub_user_events,unfollow_user_profile,get_user_notifications
-from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question,search_codehub_event
+from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question,search_codehub_event,propose_event,propose_event_details,upVote_propose_event,downVote_propose_event
 from app.music import music_list
 from app.blog import blog,blog_post_edit,blog_post_remove,blog_post_details,search_user_blog_post_by_slug,search_all_blog_posts_by_slug,edit_blog_post_comment,remove_blog_post_comment,search_blog_post,get_all_blog_posts
 from app.match_skill import match_user_skills,search_users_by_skill,get_all_skills_stat
-
-from app.devhub import devhub
+from app.tags import tags
+from app.devhub import devhub,devhub_question,devhub_question_details,edit_devhub_question,remove_devhub_question,get_all_devhub_questions,search_devhub_question
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -46,6 +46,7 @@ urlpatterns = [
     url(r'^codehub/topic/comment/(?P<id>\d+)/edit/$',edit_topic_comment,name = 'edit_topic_comment'),
     url(r'^codehub/all_topics/$',get_all_codehub_topics,name = 'get_all_codehub_topics'),
     url(r'^users/$',get_users,name='get_users'),
+    url(r'^tags/$',tags,name = 'tags'),
     #user profile
     url(r'^user/profile/(?P<user_id>\d+)/$',user_profile,name = 'user_profile'),
     url(r'^user/profile/(?P<user_id>\d+)/edit/$',edit_user_profile,name = 'edit_user_profile'),
@@ -98,4 +99,16 @@ urlpatterns = [
     url(r'^match-user-skills/skills-stat/$',get_all_skills_stat,name = 'get_all_skills_stat'),
     #developers out there
     url(r'^developer-section/$',devhub,name = 'devhub'),
+    url(r'^developer-section/ask-question/$',devhub_question,name = 'devhub_question'),
+    url(r'^developer-section/question/(?P<ques_id>\d+)/details/$',devhub_question_details,name = 'devhub_question_details'),
+    url(r'^developer-section/question/(?P<ques_id>\d+)/edit/$',edit_devhub_question,name = 'edit_devhub_question'),
+    url(r'^developer-section/question/(?P<ques_id>\d+)/edit/$',remove_devhub_question,name = 'remove_devhub_question'),
+    url(r'^developer-section/all-questions/$',get_all_devhub_questions,name = 'get_all_devhub_questions'),
+    url(r'^developer-section/search-question/$',search_devhub_question,name = 'search_devhub_question'),
+    #propose event routtes
+    url(r'^event/propose-event/$',propose_event,name = 'propose_event'),
+    url(r'^event/propose-event/(?P<event_id>\d+)/details/$',propose_event_details,name = 'propose_event_details'),
+    url(r'^event/propose-event/(?P<event_id>\d+)/upVote/$',upVote_propose_event,name = 'upVote_propose_event'),
+    url(r'^event/propose-event/(?P<event_id>\d+)/downVote/$',downVote_propose_event,name = 'downVote_propose_event'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

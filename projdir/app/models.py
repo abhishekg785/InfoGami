@@ -195,6 +195,22 @@ class CodehubInnovationCommentModel(models.Model):
         return self.comment_text
 
 
+class DevhubQuestionModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    question_heading = models.CharField(max_length = 200)
+    question_description = MarkdownField()
+    question_link = models.CharField(max_length = 100,blank = True)
+    question_tags = TaggableManager()
+    question_type = models.CharField(max_length = 20)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.question_heading
+
+
+
 
 class FollowUserModel(models.Model):
     # following_user = models.CharField(max_length = 10)                                             #user who is following
@@ -202,3 +218,22 @@ class FollowUserModel(models.Model):
     followed_user = models.ForeignKey(User,related_name = 'followed_user')                            #user being followed
     following_user_profile = models.ForeignKey(UserProfileModel,related_name = 'following_user_profile')
     followed_user_profile = models.ForeignKey(UserProfileModel,related_name = 'followed_user_profile')
+
+
+
+class ProposeEventModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    event_heading = models.CharField(max_length = 200)
+    event_description = MarkdownField()
+    tags = TaggableManager()
+    event_type = models.CharField(max_length = 30)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now_add = True)
+
+
+class ProposeEventVoteModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    event = models.ForeignKey(ProposeEventModel)
+    vote = models.CharField(max_length = 10)

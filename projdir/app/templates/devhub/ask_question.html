@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<div id = 'main'>
+  <article class = 'post'>
+    <header>
+      <div class = 'title'>
+        <h2><a href="">Ask Question</a></h2>
+        <p>"Ask any Question related to development and we might find an answer for you"</p>
+      </div>
+    </header>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type='submit' name = 'ask_question' value = 'Ask' />
+    </form>
+  </article>
+</div>
+<section id = 'sidebar'>
+  <section id = 'intro'>
+    <header>
+      <h2 style="font-size:20px">Recent Questions</h2>
+      <h3><a href ="{% url 'get_all_devhub_questions' %}">View all Questions</a></h3>
+      <p>"Click on Question for more info"</a></p>
+    </header>
+  </section>
+  <section>
+    <form method= "post" align = 'center' action = "{% url 'search_devhub_question' %}" />
+      {% csrf_token %}
+      {{ search_form.as_p }}
+      <input type = 'submit' value = 'Search' name='search_question' />
+    </form>
+    <div class = 'mini-posts'>
+      {% for question in questions %}
+      <article class = 'mini-post'>
+        <header>
+          <h3><a href="{% url 'devhub_question_details' question.id %}">{{ question.question_heading }}</a></h3>
+          <time class="published">{{ question.created }}</time>
+          {% if question.user_profile.user_profile_pic.name %}
+            <a href="{% url 'user_profile' question.user.id %}" class="author"><img src="/media/{{ question.user_profile.user_profile_pic }}" alt="" /></a>
+          {% else %}
+            <a href="{% url 'user_profile' question.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+          {% endif %}
+          <p>by:<a href ="{% url 'user_profile' question.user.id %}">{{ question.user.username }}</a></p>
+        </header>
+       </article>
+      {% endfor %}
+      <h2><a href ="{% url 'get_all_devhub_questions' %}">View all other questions</a></h2>
+    </div>
+  </section>
+</section>
+{% endblock %}

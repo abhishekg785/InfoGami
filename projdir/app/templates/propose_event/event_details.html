@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load django_markdown %}
+{% block content %}
+<div id = 'main'>
+  <article class = 'post'>
+    <header>
+      <div class="title">
+        <h2><a href="#">{{ event.event_heading }}</a></h2>
+        {% if event.user.is_superuser == 1 %}
+          <p style = 'color:red'>Created by Admin</p>
+        {% endif %}
+        {% if event.user.username == user.username %}
+          <h3><a href="">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="">Remove</a></h3>
+        {% endif %}
+      </div>
+      <div class="meta">
+        <time class="published">{{ event.created }}</time>
+        {% if event.user_profile.user_profile_pic.name %}
+          <h2><a href="{% url 'user_profile' event.user.id %}" class="author"><span class="name">{{ event.user.username }}</span><img src="/media/{{ event.user_profile.user_profile_pic }}" alt="Profile pic" /></a></h2>
+        {% else %}
+          <h2><a href="{% url 'user_profile' event.user.id %}" class="author"><span class="name">{{ event.user.username }}</span><img src = "{% static 'images/default_gravators/github.png' %}" /></a></h2>
+        {% endif %}
+      </div>
+    </header>
+    <div class = 'make_sober'>
+      <p>Last Edited:&nbsp;{{ event.modified }}</p>
+      <p>
+        Tags:
+        {% for tag in event.tags.all %}
+          {{ tag.name }}
+        {% endfor %}
+      </p>
+      <p>{{ event.event_description|markdown }}</p>
+    </div>
+    <h3><a href = "{% url 'upVote_propose_event' event.id %}">UpVote</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href = "{% url 'downVote_propose_event' event.id %}">DownVote</a></h3>
+  </article>
+</div>
+{% endblock %}

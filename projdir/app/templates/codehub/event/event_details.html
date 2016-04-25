@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load django_markdown %}
 {% load staticfiles %}
 <div id = 'main'>
   <article class = 'post'>
@@ -33,7 +34,7 @@
       {% if event.event_for != 'None' %}
         <p>Event for:{{ event.event_for }}</p>
       {% endif %}
-      <p>{{ event.event_description }}</p>
+      <p>{{ event.event_description|markdown }}</p>
     </div>
   </article>
   <form method="POST">

@@ -1,6 +1,5 @@
 from django import forms
-from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel
-
+from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel
 from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
 
@@ -127,3 +126,30 @@ class CodehubInnovationCommentForm(forms.ModelForm):
     class Meta:
         model = CodehubInnovationCommentModel
         fields = ['comment_text']
+
+
+
+#devhub starts here
+class DevhubQuestionForm(forms.ModelForm):
+    CHOICES = (('','--Select Type--'),('Basic','Basic'),('Intermediate','Intermediate'),('Advanced','Advanced'))
+    question_heading = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Question Heading'}),max_length = 200)
+    question_description = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Question Details goes here...'}))
+    question_link = forms.URLField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Question Link'}),max_length = 100,required = False)
+    question_tags = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Enter Tags'}))
+    question_type = forms.ChoiceField(label = '',choices = CHOICES)
+    class Meta:
+        model = DevhubQuestionModel
+        fields = ['question_heading','question_description','question_link','question_tags','question_type']
+
+
+
+class ProposeEventForm(forms.ModelForm):
+    CHOICES = (('','--Select Type--'),('Coding','Coding'),('Development','Development'),('Graphics','Graphics'),('Electronics','Electronics'))
+    event_heading = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Event Heading goes here'}))
+    event_description = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Event Description goes here'}))
+    tags = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Tags related to event'}))
+    event_type = forms.ChoiceField(label = '',choices = CHOICES)
+
+    class Meta:
+        model = ProposeEventModel
+        fields = ['event_heading','event_description','tags','event_type']

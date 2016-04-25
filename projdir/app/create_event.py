@@ -2,8 +2,8 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 
-from .forms import CodehubCreateEventForm,CodehubEventQuestionForm,SearchForm
-from .models import CodehubCreateEventModel,CodehubEventQuestionModel,UserProfileModel
+from .forms import CodehubCreateEventForm,CodehubEventQuestionForm,SearchForm,ProposeEventForm
+from .models import CodehubCreateEventModel,CodehubEventQuestionModel,UserProfileModel,ProposeEventModel,ProposeEventVoteModel
 from .views import loginRequired
 import datetime
 
@@ -189,3 +189,90 @@ def search_codehub_event(request):
     else:
         form = SearchForm()
     return render(request,'codehub/event/search_event.html',{'search_form':form})
+
+
+
+@loginRequired
+def propose_event(request):
+    if request.method == 'POST':
+        form = ProposeEventForm(request.POST)
+        if form.is_valid():
+            tags = form.cleaned_data['tags']
+            new_event = ProposeEventModel(
+                user = request.user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
+                event_heading = form.cleaned_data['event_heading'],
+                event_description = form.cleaned_data['event_description'],
+                event_type = form.cleaned_data['event_type']
+            )
+            new_event.save()
+            new_event.tags.add(*tags)
+            return redirect('/event/propose-event')
+    else:
+        form = ProposeEventForm()
+    search_form = SearchForm()
+    events = ProposeEventModel.objects.all().order_by('-created')[:5]
+    return render(request,'propose_event/propose_event.html',{'form':form,'search_form':search_form,'events':events})
+
+
+@loginRequired
+def propose_event_details(request,event_id):
+    event_details = ProposeEventModel.objects.get(id = event_id)
+    return render(request,'propose_event/event_details.html',{'event':event_details})
+
+
+def check_downVoted_or_not(func):
+    def wrapper(request,event_id,*args,**kwargs):
+        try:
+            ProposeEventVoteModel.objects.get(event_id = event_id,vote = 'downVote')
+            return redirect('/')
+        except:
+            return func(request,event_id,*args,**kwargs)
+    return wrapper
+
+def check_upVoted_or_not(func):
+    def wrapper(request,event_id,*args,**kwargs):
+        try:
+            ProposeEventVoteModel.objects.get(event_id = event_id,vote = 'upVote')
+            return redirect('/')
+        except:
+            return func(request,event_id,*args,**kwargs)
+    return wrapper
+
+
+@loginRequired
+@check_upVoted_or_not
+def upVote_propose_event(request,event_id):
+    try:
+        down_vote_exists_or_not = ProposeEventVoteModel.objects.get(event_id = event_id,vote = 'downVote')
+        down_vote_exists_or_not.delete()
+    except:
+        print 'no downvote'
+    event = get_object_or_404(ProposeEventModel,id = event_id)
+    new_vote = ProposeEventVoteModel(
+        user = request.user,
+        user_profile = UserProfileModel.objects.get(user_id = request.user.id),
+        event = event,
+        vote = 'upVote'
+    )
+    new_vote.save()
+    return redirect('/event/propose-event/'+str(event_id)+'/details')
+
+
+@loginRequired
+@check_downVoted_or_not
+def downVote_propose_event(request,event_id):
+    try:
+        up_vote_exists_or_not = ProposeEventVoteModel.objects.get(event_id = event_id,vote = 'upVote')
+        up_vote_exists_or_not.delete()
+    except:
+        print 'no upVote'
+    event = get_object_or_404(ProposeEventModel,id = event_id)
+    new_vote = ProposeEventVoteModel(
+        user = request.user,
+        user_profile = UserProfileModel.objects.get(user_id = request.user.id),
+        event = event,
+        vote = 'downVote'
+    )
+    new_vote.save()
+    return redirect('/event/propose-event/'+str(event_id)+'/details')
