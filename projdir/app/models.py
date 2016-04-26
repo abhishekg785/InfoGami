@@ -232,6 +232,8 @@ class ProposeEventModel(models.Model):
     modified = models.DateTimeField(auto_now_add = True)
 
 
+
+
 class ProposeEventVoteModel(models.Model):
     user = models.ForeignKey(User)
     user_profile = models.ForeignKey(UserProfileModel)

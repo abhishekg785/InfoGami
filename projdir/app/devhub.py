@@ -43,7 +43,6 @@ def devhub_question_details(request,ques_id):
     ques_details = get_object_or_404(DevhubQuestionModel,id = ques_id)
     return render(request,'devhub/ques_details.html',{'ques_details':ques_details})
 
-
 #decorator for checking user access for question edit and remove
 def check_user_access_for_question_edit():
     def wrapper(request,ques_id,*args,**kwargs):

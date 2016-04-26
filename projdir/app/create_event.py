@@ -218,13 +218,19 @@ def propose_event(request):
 @loginRequired
 def propose_event_details(request,event_id):
     event_details = ProposeEventModel.objects.get(id = event_id)
-    return render(request,'propose_event/event_details.html',{'event':event_details})
+    try:
+        voteStatus = ProposeEventVoteModel.objects.get(event_id = event_id,user_id = request.user.id)
+    except:
+        voteStatus = "none"
+    up_vote_count = ProposeEventVoteModel.objects.filter(event_id = event_id,vote = 'upVote').count()
+    down_vote_count = ProposeEventVoteModel.objects.filter(event_id = event_id,vote = 'downVote').count()
+    return render(request,'propose_event/event_details.html',{'event':event_details,'voteStatus':voteStatus,'up_vote_count':up_vote_count,'down_vote_count':down_vote_count})
 
 
 def check_downVoted_or_not(func):
     def wrapper(request,event_id,*args,**kwargs):
         try:
-            ProposeEventVoteModel.objects.get(event_id = event_id,vote = 'downVote')
+            ProposeEventVoteModel.objects.get(event_id = event_id,user_id = request.user.id,vote = 'downVote')
             return redirect('/')
         except:
             return func(request,event_id,*args,**kwargs)
@@ -233,7 +239,7 @@ def check_downVoted_or_not(func):
 def check_upVoted_or_not(func):
     def wrapper(request,event_id,*args,**kwargs):
         try:
-            ProposeEventVoteModel.objects.get(event_id = event_id,vote = 'upVote')
+            ProposeEventVoteModel.objects.get(event_id = event_id,user_id = request.user.id,vote = 'upVote')
             return redirect('/')
         except:
             return func(request,event_id,*args,**kwargs)
@@ -244,7 +250,7 @@ def check_upVoted_or_not(func):
 @check_upVoted_or_not
 def upVote_propose_event(request,event_id):
     try:
-        down_vote_exists_or_not = ProposeEventVoteModel.objects.get(event_id = event_id,vote = 'downVote')
+        down_vote_exists_or_not = ProposeEventVoteModel.objects.get(event_id = event_id,user_id = request.user.id ,vote = 'downVote')
         down_vote_exists_or_not.delete()
     except:
         print 'no downvote'
@@ -259,11 +265,12 @@ def upVote_propose_event(request,event_id):
     return redirect('/event/propose-event/'+str(event_id)+'/details')
 
 
+
 @loginRequired
 @check_downVoted_or_not
 def downVote_propose_event(request,event_id):
     try:
-        up_vote_exists_or_not = ProposeEventVoteModel.objects.get(event_id = event_id,vote = 'upVote')
+        up_vote_exists_or_not = ProposeEventVoteModel.objects.get(event_id = event_id,user_id = request.user.id,vote = 'upVote')
         up_vote_exists_or_not.delete()
     except:
         print 'no upVote'
@@ -276,3 +283,12 @@ def downVote_propose_event(request,event_id):
     )
     new_vote.save()
     return redirect('/event/propose-event/'+str(event_id)+'/details')
+
+
+def propose_event_users_upvoted(request,event_id):
+    event_details = get_object_or_404(ProposeEventModel,id = event_id)
+    up_vote_users = ProposeEventVoteModel.objects.filter(event_id = event_id,vote = 'upVote').distinct()
+    return render(request,'propose_event/up_vote_users.html',{'users':up_vote_users,'event_details':event_details})
+
+def propose_event_users_downvoted(request,event_id):
+    pass

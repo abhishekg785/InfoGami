@@ -6,7 +6,7 @@
   <article class = 'post'>
     <header>
       <div class="title">
-        <h2><a href="#">{{ event.event_heading }}</a></h2>
+        <h2><a href="">{{ event.event_heading }}</a></h2>
         {% if event.user.is_superuser == 1 %}
           <p style = 'color:red'>Created by Admin</p>
         {% endif %}
@@ -24,8 +24,8 @@
       </div>
     </header>
     <div class = 'make_sober'>
-      <p>Last Edited:&nbsp;{{ event.modified }}</p>
       <p>
+        Last Edited:&nbsp;{{ event.modified }}<br/>
         Tags:
         {% for tag in event.tags.all %}
           {{ tag.name }}
@@ -33,7 +33,25 @@
       </p>
       <p>{{ event.event_description|markdown }}</p>
     </div>
-    <h3><a href = "{% url 'upVote_propose_event' event.id %}">UpVote</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href = "{% url 'downVote_propose_event' event.id %}">DownVote</a></h3>
+    <footer>
+      <ul class="actions">
+        {% if voteStatus != 'none' %}
+          {% if voteStatus.vote == 'upVote' %}
+            <li><a class = 'button' href = "{% url 'downVote_propose_event' event.id %}">DownVote</a></li>
+          {% else %}
+            <li><a class = 'button' href = "{% url 'upVote_propose_event' event.id %}">UpVote</a></li>
+          {% endif %}
+        {% else %}
+            <!-- <li><a href = "{% url 'upVote_propose_event' event.id %}">UpVote</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href = "{% url 'downVote_propose_event' event.id %}">DownVote</a> -->
+            <li><a href="{% url 'upVote_propose_event' event.id %}" class="button ">up Vote</a></li>
+            <li><a href="{% url 'downVote_propose_event' event.id %}" class="button ">Down Vote</a></li>
+        {% endif %}
+      </ul>
+      <ul class = 'stats'>
+        <li><a href ="{% url 'propose_event_users_upvoted' event.id %}" class="icon fa-heart">{{ up_vote_count }}</a></li>
+        <li><a href ="" class="icon fa-comment"></a></li>
+      </ul>
+    </footer>
   </article>
 </div>
 {% endblock %}
