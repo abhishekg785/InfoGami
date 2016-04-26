@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type = 'submit' name = 'edit_proposal' value = 'Save Changes' />
+  </form>
+</div>
+{% endblock %}

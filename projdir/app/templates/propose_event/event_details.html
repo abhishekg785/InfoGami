@@ -11,7 +11,10 @@
           <p style = 'color:red'>Created by Admin</p>
         {% endif %}
         {% if event.user.username == user.username %}
-          <h3><a href="">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="">Remove</a></h3>
+        <ul class="actions">
+          <li><a class= 'button' href="{% url 'edit_propose_event' event.id %}">Edit</a></li>
+          <li><a class = 'button' href ="{% url 'remove_propose_event' event.id %}">Remove</a></li>
+        </ul>
         {% endif %}
       </div>
       <div class="meta">

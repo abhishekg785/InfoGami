@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 from app.views import login_view,register_view,logout_view,index
 from app.codehub import codehub_question,remove_codehub_question,edit_codehub_question,codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,codehub_question_details,remove_codehub_question_comment,edit_codehub_question_comment,search_question,codehub_innovation,codehub_innovation_details,edit_codehub_innovation_idea,remove_codehub_innovation_idea,edit_codehub_innovation_idea_comment,remove_codehub_innovation_idea_comment,search_codehub_innovation_post,get_all_codehub_topics,get_all_codehub_questions
 from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog,follow_user_profile,get_user_new_ideas,get_codehub_user_events,unfollow_user_profile,get_user_notifications
-from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question,search_codehub_event,propose_event,propose_event_details,upVote_propose_event,downVote_propose_event,propose_event_users_upvoted,propose_event_users_downvoted
+from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question,search_codehub_event,propose_event,propose_event_details,upVote_propose_event,downVote_propose_event,propose_event_users_upvoted,propose_event_users_downvoted,edit_propose_event,remove_propose_event
 from app.music import music_list
 from app.blog import blog,blog_post_edit,blog_post_remove,blog_post_details,search_user_blog_post_by_slug,search_all_blog_posts_by_slug,edit_blog_post_comment,remove_blog_post_comment,search_blog_post,get_all_blog_posts
 from app.match_skill import match_user_skills,search_users_by_skill,get_all_skills_stat
@@ -112,4 +112,6 @@ urlpatterns = [
     url(r'^event/propose-event/(?P<event_id>\d+)/downVote/$',downVote_propose_event,name = 'downVote_propose_event'),
     url(r'^event/propose-event/(?P<event_id>\d+)/users-upvoted/$',propose_event_users_upvoted,name = 'propose_event_users_upvoted'),
     url(r'^event/propose-event/(?P<event_id>\d+)/users-downvoted/$',propose_event_users_downvoted,name = 'propose_event_users_downvoted'),
+    url(r'^event/propose-event/(?P<event_id>\d+)/edit/$',edit_propose_event,name = 'edit_propose_event'),
+    url(r'^event/propose-event/(?P<event_id>\d+)/remove/$',remove_propose_event,name = 'remove_propose_event'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

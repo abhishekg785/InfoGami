@@ -285,10 +285,55 @@ def downVote_propose_event(request,event_id):
     return redirect('/event/propose-event/'+str(event_id)+'/details')
 
 
+
+@loginRequired
 def propose_event_users_upvoted(request,event_id):
     event_details = get_object_or_404(ProposeEventModel,id = event_id)
     up_vote_users = ProposeEventVoteModel.objects.filter(event_id = event_id,vote = 'upVote').distinct()
     return render(request,'propose_event/up_vote_users.html',{'users':up_vote_users,'event_details':event_details})
 
+
+
+@loginRequired
 def propose_event_users_downvoted(request,event_id):
     pass
+
+
+
+def check_user_acess_for_propose_event_edit(func):
+    def wrapper(request,event_id,*args,**kwargs):
+        event_details = get_object_or_404(ProposeEventModel,id = event_id)
+        if event_details.user.id != request.user.id:
+            return redirect('/')
+        return func(request,event_id,*args,**kwargs)
+    return wrapper
+
+
+
+@loginRequired
+@check_user_acess_for_propose_event_edit
+def edit_propose_event(request,event_id):
+    if request.method == 'POST':
+        form = ProposeEventForm(request.POST)
+        if form.is_valid():
+            event_details = ProposeEventModel.objects.get(id = event_id)
+            form = ProposeEventForm(request.POST,instance = event_details)
+            form.save()
+            print 'saved'
+    else:
+        tagArr = []
+        event_details = ProposeEventModel.objects.get(id = event_id)
+        for tag in event_details.tags.all():
+            tagArr.append(tag.name)
+        tags = ",".join(tagArr)
+        event_data = {'event_heading':event_details.event_heading,'event_description':event_details.event_heading,'event_description':event_details.event_description,'tags':tags,'event_type':event_details.event_type}
+        form = ProposeEventForm(initial = event_data)
+    return render(request,'propose_event/edit_propose_event.html',{'form':form})
+
+
+
+
+@loginRequired
+@check_user_acess_for_propose_event_edit
+def remove_propose_event(request,event_id):
+    return HttpResponse(event_id)
