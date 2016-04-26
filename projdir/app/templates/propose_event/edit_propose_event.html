@@ -1,10 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type = 'submit' name = 'edit_proposal' value = 'Save Changes' />
-  </form>
+  <article class="post">
+    <header>
+      <div class="title">
+        <h2><a href ="">Edit Proposed Event</a></h2>
+        <p>"{{ event_heading }}"</p>
+      </div>
+    </header>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type = 'submit' name = 'edit_proposal' value = 'Save Changes' />
+    </form>
+  </article>
+  <h2><a href = "{% url 'propose_event' %}">Cancel</a></h2>
 </div>
 {% endblock %}

@@ -19,13 +19,13 @@
 <section id = 'sidebar'>
   <section id = 'intro'>
     <header>
-      <h2 style="font-size:20px">Recent Proposed Events</h2>
-      <h3><a href ="">View all Proposed Events</a></h3>
+      <h2 style="font-size:20px"><a href ="">Recent Proposed Events</a></h2>
+      <h3><a href ="{% url 'get_all_proposed_events' %}">View all Proposed Events</a></h3>
       <p>"Click on event for more info"</a></p>
     </header>
   </section>
   <section>
-    <form method= "post" align = 'center' action = "" />
+    <form method= "post" align = 'center' action = "{% url 'search_propose_event' %}" />
       {% csrf_token %}
       {{ search_form.as_p }}
       <input type = 'submit' value = 'Search' name='search_event' />
@@ -45,7 +45,7 @@
         </header>
        </article>
       {% endfor %}
-      <h2><a href ="">View all other events</a></h2>
+      <h2><a href ="{% url 'get_all_proposed_events' %}">View all other events</a></h2>
     </div>
   </section>
 </section>

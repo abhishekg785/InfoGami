@@ -229,7 +229,7 @@ class ProposeEventModel(models.Model):
     tags = TaggableManager()
     event_type = models.CharField(max_length = 30)
     created = models.DateTimeField(auto_now_add = True)
-    modified = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
 
 
 
@@ -239,3 +239,12 @@ class ProposeEventVoteModel(models.Model):
     user_profile = models.ForeignKey(UserProfileModel)
     event = models.ForeignKey(ProposeEventModel)
     vote = models.CharField(max_length = 10)
+
+
+
+class ProposeEventSuggestionModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    sugg_text = models.CharField(max_length = 500)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)

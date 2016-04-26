@@ -8,7 +8,11 @@
       <div class = 'title'>
         <h2><a href="">{{ ques_details.question_heading }}</a></h2>
         {% if ques_details.user.username == user.username %}
-          <h3><a href="{% url 'edit_codehub_question' ques_details.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_codehub_question' ques_details.id %}">Remove</a></h3>
+          <!-- <h3><a href="{% url 'edit_codehub_question' ques_details.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_codehub_question' ques_details.id %}">Remove</a></h3> -->
+          <ul class="actions">
+            <li><a class= 'button' href="{% url 'edit_codehub_question' ques_details.id %}">Edit</a></li>
+            <li><a class = 'button' href ="{% url 'remove_codehub_question' ques_details.id %}">Remove</a></li>
+          </ul>
         {% endif %}
       </div>
       <div class = 'meta'>

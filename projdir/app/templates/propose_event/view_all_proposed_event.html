@@ -1,19 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-  <h2>Upcoming events</h2>
-  <ul class = 'actions'>
-    <li><h3>Create your own Event:</h3></li>
-    <li><a class = 'button' href = "{% url 'create_codehub_event' %}" >Coding Event</a></li>
-    <li>Or</li>
-    <li><a class = 'button' href = "">Developer Event</a></li>
-  </ul>
-  <!-- <h3>Create your own event:&nbsp;&nbsp;&nbsp;<a href = "{% url 'create_codehub_event' %}" >Coding Event</a> OR <a href = "">Developer Event</a></h3> -->
-  <p style="color:red">Click on the event to see more details and ask questions about the event</p>
-  <form method="post" action="{% url 'search_codehub_event' %}">
+  <h2>All Proposed Events</h2>
+  <form method="POST" action="{% url 'search_propose_event' %}">
     {% csrf_token %}
-    {{ search_form.as_p }}
-    <input type='submit' name='search_event' value="Go"/>
+    {{ form.as_p }}
+    <input type = 'submit' value = 'Search' name='search_event' />
   </form>
   <hr/>
   <section>
@@ -25,7 +17,12 @@
         <li>
           <article>
             <header>
-              <h2><a href = "{% url 'codehub_event_details' event.id %}">{{ event.event_heading }}</a></h2>
+              <h2><a href="{% url 'propose_event_details' event.id %}">{{ event.event_heading }}</a></h2>
+              <h3>Tags:
+                {% for tag in event.tags.all %}
+                  "{{ tag.name }}"
+                {% endfor %}
+              </h3>
               <time class="published">{{ event.created }}</time>
               <p class="published">by:<a href = "{% url 'user_profile' event.user.id %}">{{ event.user.username }}</a></p>
             </header>
@@ -50,6 +47,6 @@
     </ul>
   </div>
   {% endif %}
-</section>
+  </section>
 </div>
 {% endblock %}

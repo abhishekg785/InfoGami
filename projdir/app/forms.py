@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel
+from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel
 from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
 
@@ -153,3 +153,10 @@ class ProposeEventForm(forms.ModelForm):
     class Meta:
         model = ProposeEventModel
         fields = ['event_heading','event_description','tags','event_type']
+
+
+class ProposeEventSuggestionForm(forms.ModelForm):
+    sugg_text = forms.CharField(label = '',widget = forms.Textarea(attrs = {'placeholder':'Give suggestions here...','cols':'2','rows':'2'}))
+    class Meta:
+        model = ProposeEventSuggestionModel
+        fields = ['sugg_text']

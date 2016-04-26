@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h3>Edit Proposed Event Suggestion</h3>
+  <form method = 'post'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' name = 'edit_sugg' value = 'Save Changes'/>
+  </form>
+</div>
+{% endblock %}

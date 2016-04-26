@@ -2,8 +2,8 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 
-from .forms import CodehubCreateEventForm,CodehubEventQuestionForm,SearchForm,ProposeEventForm
-from .models import CodehubCreateEventModel,CodehubEventQuestionModel,UserProfileModel,ProposeEventModel,ProposeEventVoteModel
+from .forms import CodehubCreateEventForm,CodehubEventQuestionForm,SearchForm,ProposeEventForm,ProposeEventSuggestionForm
+from .models import CodehubCreateEventModel,CodehubEventQuestionModel,UserProfileModel,ProposeEventModel,ProposeEventVoteModel,ProposeEventSuggestionModel
 from .views import loginRequired
 import datetime
 
@@ -217,6 +217,19 @@ def propose_event(request):
 
 @loginRequired
 def propose_event_details(request,event_id):
+    if request.method == 'POST':
+        form = ProposeEventSuggestionForm(request.POST)
+        if form.is_valid():
+            print 'cdchdvcj'
+            new_sugg = ProposeEventSuggestionModel(
+                user = request.user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
+                sugg_text = form.cleaned_data['sugg_text'],
+            )
+            new_sugg.save()
+            return redirect('/event/propose-event/'+str(event_id)+'/details')
+    else:
+        form = ProposeEventSuggestionForm()
     event_details = ProposeEventModel.objects.get(id = event_id)
     try:
         voteStatus = ProposeEventVoteModel.objects.get(event_id = event_id,user_id = request.user.id)
@@ -224,7 +237,8 @@ def propose_event_details(request,event_id):
         voteStatus = "none"
     up_vote_count = ProposeEventVoteModel.objects.filter(event_id = event_id,vote = 'upVote').count()
     down_vote_count = ProposeEventVoteModel.objects.filter(event_id = event_id,vote = 'downVote').count()
-    return render(request,'propose_event/event_details.html',{'event':event_details,'voteStatus':voteStatus,'up_vote_count':up_vote_count,'down_vote_count':down_vote_count})
+    suggestions = ProposeEventSuggestionModel.objects.all().order_by('-created')
+    return render(request,'propose_event/event_details.html',{'event':event_details,'voteStatus':voteStatus,'up_vote_count':up_vote_count,'down_vote_count':down_vote_count,'sugg_form':form,'suggestions':suggestions})
 
 
 def check_downVoted_or_not(func):
@@ -319,7 +333,7 @@ def edit_propose_event(request,event_id):
             event_details = ProposeEventModel.objects.get(id = event_id)
             form = ProposeEventForm(request.POST,instance = event_details)
             form.save()
-            print 'saved'
+            return redirect('/event/propose-event/'+str(event_id)+'/details')
     else:
         tagArr = []
         event_details = ProposeEventModel.objects.get(id = event_id)
@@ -328,7 +342,7 @@ def edit_propose_event(request,event_id):
         tags = ",".join(tagArr)
         event_data = {'event_heading':event_details.event_heading,'event_description':event_details.event_heading,'event_description':event_details.event_description,'tags':tags,'event_type':event_details.event_type}
         form = ProposeEventForm(initial = event_data)
-    return render(request,'propose_event/edit_propose_event.html',{'form':form})
+    return render(request,'propose_event/edit_propose_event.html',{'form':form,'event_heading':event_details.event_heading})
 
 
 
@@ -336,4 +350,69 @@ def edit_propose_event(request,event_id):
 @loginRequired
 @check_user_acess_for_propose_event_edit
 def remove_propose_event(request,event_id):
-    return HttpResponse(event_id)
+    event_details = get_object_or_404(ProposeEventModel,id = event_id)
+    event_details.delete()
+    return redirect('/event/propose-event')
+
+
+
+@loginRequired
+def search_propose_event(request):
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search_str = form.cleaned_data['search_str']
+            list_by_title = ProposeEventModel.objects.filter(event_heading__contains = search_str)
+            list_by_tags = ProposeEventModel.objects.filter(tags__name__in = [search_str])
+            result_list = list(chain(list_by_title,list_by_tags))
+            result_list = Set(result_list)
+            print result_list
+            search_form = SearchForm()
+            return render(request,'propose_event/search_event.html',{'form':search_form,'results':result_list,'search_str':search_str})
+    else:
+        form = SearchForm()
+    return render(request,'propose_event/search_event.html',{'form':form})
+
+
+
+@loginRequired
+def get_all_proposed_events(request):
+    proposed_events_list = ProposeEventModel.objects.all().order_by('-created')
+    form = SearchForm()
+    events = do_pagination(request,proposed_events_list,5)
+    return render(request,'propose_event/view_all_proposed_event.html',{'form':form,'events':events})
+
+def check_user_acess_for_propose_sugg_edit(func):
+    def wrapper(request,event_id,sugg_id,*args,**kwargs):
+        sugg_details = get_object_or_404(ProposeEventSuggestionModel,id = sugg_id)
+        if sugg_details.user.id != request.user.id:
+            return redirect('/')
+        return func(request,event_id,sugg_id,*args,**kwargs)
+    return wrapper
+
+
+@loginRequired
+@check_user_acess_for_propose_sugg_edit
+def edit_suggestion_to_propose_event(request,event_id,sugg_id):
+    if request.method == 'POST':
+        form = ProposeEventSuggestionForm(request.POST)
+        if form.is_valid():
+            sugg_details = get_object_or_404(ProposeEventSuggestionModel,id = sugg_id)
+            form = ProposeEventSuggestionForm(request.POST,instance = sugg_details)
+            form.save()
+            return redirect('/event/propose-event/'+str(event_id)+'/details')
+    else:
+        sugg_details = get_object_or_404(ProposeEventSuggestionModel,id = sugg_id)
+        sugg_data = {'sugg_text':sugg_details.sugg_text}
+        form = ProposeEventSuggestionForm(initial = sugg_data)
+    return render(request,'propose_event/edit_suggestion.html',{'form':form})
+
+
+
+
+@loginRequired
+@check_user_acess_for_propose_sugg_edit
+def remove_suggestion_to_propose_event(request,event_id,sugg_id):
+    sugg_obj = get_object_or_404(ProposeEventSuggestionModel,id = sugg_id)
+    sugg_obj.delete()
+    return redirect('/event/propose-event/'+str(event_id)+'/details')

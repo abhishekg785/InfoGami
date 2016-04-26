@@ -56,5 +56,41 @@
       </ul>
     </footer>
   </article>
+  <h3>Give Suggestions</h3>
+  <form method="post">
+    {% csrf_token %}
+    {{ sugg_form.as_p }}
+    <input type = 'submit'  name = 'post_sugg' value = 'Suggest' />
+  </form>
+  <hr/>
+  {% if not suggestions %}
+    <h3>No suggestions Yet!!!</h3>
+  {% else %}
+  <section>
+    <div class = 'mini-posts'>
+      {% for suggestion in suggestions %}
+        <article class = 'mini-post'>
+          <header>
+            <p>{{ suggestion.sugg_text }}</p>
+            <time class="published">Created:{{ suggestion.created }}</time>
+            <time class="published">LLast Edited:{{ suggestion.modified }}</time>
+            {% if suggestion.user_profile.user_profile_pic.name %}
+              <h2><a style = "top:0.5em" href="{% url 'user_profile' suggestion.user.id %}" class="author">{{ suggestion.user.username }}<img src="/media/{{ suggestion.user_profile.user_profile_pic }}" alt="" /></a></h2>
+            {% else %}
+            <h2><a style = "top:0.5em" href="{% url 'user_profile' suggestion.user.id %}" class="author">{{ suggestion.user.username }}<img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a></h2>
+            {% endif %}
+            {% if suggestion.user.username == request.user.username %}
+              <!-- <h3><a href = "{% url 'edit_codehub_question_comment' suggestion.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_codehub_question_comment' suggestion.id %}">Remove</a></h3> -->
+              <ul class = 'actions'>
+                <li><a class = 'button' href = "{% url 'edit_suggestion_to_propose_event' event.id suggestion.id %}">Edit</a></li>
+                <li><a class = 'button' href = "{% url 'remove_suggestion_to_propose_event' event.id suggestion.id %}">Remove</a></li>
+              </ul>
+            {% endif %}
+          </header>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
 </div>
 {% endblock %}
