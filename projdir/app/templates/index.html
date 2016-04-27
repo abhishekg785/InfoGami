@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-<h1>Welcome <a href="{% url 'user_profile' user.id %}">"{{ user.username }}"</a></h1>
+<h2>Welcome <a href="{% url 'user_profile' user.id %}">"{{ user.username }}"</a></h2>
 <hr/>
 <h2><a href = "{% url 'codehub' %}">Coders out there!!!</a></h2>
 <h2><a href ="{% url 'devhub' %}">Developers out there!!!</a></h2>
