@@ -105,7 +105,7 @@ def edit_topic(request,id):
             form.save()
             #flash message for edit data
             print 'data edited'
-            return redirect('/codehub/topic')
+            return redirect('/codehub/topic/'+str(id)+'/comment')
     else:
         topic_details = CodehubTopicModel.objects.get(id = id)
         tagArr = []
@@ -282,7 +282,7 @@ def codehub_question_details(request,ques_id):
                 comment_text = form.cleaned_data['comment_text']
             )
             new_answer.save()
-            print 'saved'
+            return redirect('/codehub/question/'+str(ques_id)+'/details')
     else:
         form = CodehubQuestionCommentForm()
     ques_details = get_object_or_404(CodehubQuestionModel,id = ques_id)

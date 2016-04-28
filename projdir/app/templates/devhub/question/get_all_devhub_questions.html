@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h2>All questions( {{ question_count }} )</h2>
+  <form method="POST" action="{% url 'search_devhub_question' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' name='search_question' value = 'Go'/>
+  </form>
+  <hr/>
+  <section>
+    {% if not questions %}
+      <h3>No questions Yet!!!</h3>
+    {% else %}
+    <ul class = 'posts'>
+      {% for question in questions.object_list %}
+        <li>
+          <article>
+            <header>
+              <h2><a href="{% url 'devhub_question_details' question.id %}">{{ question.question_heading }}</a></h2>
+              <time class="published">{{ question.created }}</time>
+              <p class="published">by:<a href = "{% url 'user_profile' question.user.id %}">{{ question.user.username }}</a></p>
+            </header>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+  <div class = "pagination">
+    {% if questions.has_previous %}
+      <li><a href = "?page={{ questions.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    {% for pg in questions.paginator.page_range %}
+      {% if questions.number == pg %}
+        <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% else %}
+        <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if questions.has_next %}
+      <li><a href = "?page={{ questions.next_page_number }}">Next</a></li>
+    {% endif %}
+    </ul>
+  </div>
+  {% endif %}
+  </section>
+</div>
+{% endblock %}

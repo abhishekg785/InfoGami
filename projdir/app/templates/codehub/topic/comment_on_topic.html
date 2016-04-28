@@ -25,6 +25,12 @@
       </div>
     </header>
     <div class = 'make_sober'>
+      <h3>
+        Tags:
+        {% for tag in topic.tags.all %}
+          <a href = "">"{{ tag.name }}"&nbsp;</a>
+        {% endfor %}
+      </h3>
       <p>Last Edited:&nbsp;{{ topic.modified }}</p>
       {% if topic.file.name %}
         <p>Attached File:&nbsp;<a href = "/media/{{ topic.file.name }}">{{ topic.file.name }}</a></p>
@@ -54,7 +60,11 @@
               <a href="{% url 'user_profile' comment.user.id %}" class="author">{{ comment.user.username }}<img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
             {% endif %}
             {% if comment.user.username == request.user.username %}
-              <h3><a href = "{% url 'edit_topic_comment' comment.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_topic_comment' comment.id %}">Remove</a></h3>
+            <ul class="actions">
+              <li><a class= 'button' href="{% url 'edit_topic_comment' comment.id %}">Edit</a></li>
+              <li><a class = 'button' href ="{% url 'remove_topic_comment' comment.id %}">Remove</a></li>
+            </ul>
+              <!-- <h3><a href = "{% url 'edit_topic_comment' comment.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_topic_comment' comment.id %}">Remove</a></h3> -->
             {% endif %}
           </header>
         </article>

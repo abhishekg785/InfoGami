@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel
+from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel
 from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
 
@@ -11,7 +11,7 @@ from markitup.widgets import MarkItUpWidget
 class CodehubTopicForm(forms.ModelForm):
     CHOICES = (('','--Select Type--'),('Basic', 'Basic'),('Advanced', 'Advanced'),)
     topic_heading = forms.CharField(label = '',max_length = 100,widget = forms.TextInput(attrs = {'placeholder':'Topic heading goes here..'}))
-    topic_detail = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Topic details goes here','style':'height:20%'}))
+    topic_detail = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Topic details goes here','style':'height:10%'}))
     topic_link = forms.URLField(label = '',max_length = 100,required = False,widget = forms.TextInput(attrs = {'placeholder':'Link to topic'}))
     tags = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Give some Tags(separated by commas)'}))
     topic_type = forms.ChoiceField(label = '',choices = CHOICES,required = True)
@@ -83,7 +83,7 @@ class CodehubQuestionForm(forms.ModelForm):
 
 
 class CodehubQuestionCommentForm(forms.ModelForm):
-    comment_text = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Enter your answer or suggestions here...','style':'height:20%'}))
+    comment_text = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Enter your answer or suggestions here...','style':'height:10%'}))
 
     class Meta:
         model = CodehubQuestionCommentModel
@@ -103,7 +103,7 @@ class BlogPostForm(forms.ModelForm):
 
 
 class BlogPostCommentForm(forms.ModelForm):
-    comment_text = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Your comment...','style':'height:20%'}))
+    comment_text = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Your comment...','style':'height:10%'}))
 
     class Meta:
         model = BlogPostCommentModel
@@ -112,7 +112,7 @@ class BlogPostCommentForm(forms.ModelForm):
 
 class CodehubInnovationPostForm(forms.ModelForm):
     title = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Title here'}))
-    description = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Description here','style':'height:20%'}))
+    description = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Description here','style':'height:10%'}))
     tags = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Enter Tags here'}))
 
     class Meta:
@@ -121,7 +121,7 @@ class CodehubInnovationPostForm(forms.ModelForm):
 
 
 class CodehubInnovationCommentForm(forms.ModelForm):
-    comment_text = forms.CharField(label ='',widget = MarkItUpWidget(attrs = {'placeholder':'Comment','style':'height:20%'}))
+    comment_text = forms.CharField(label ='',widget = MarkItUpWidget(attrs = {'placeholder':'Comment','style':'height:10%'}))
 
     class Meta:
         model = CodehubInnovationCommentModel
@@ -142,6 +142,22 @@ class DevhubQuestionForm(forms.ModelForm):
         fields = ['question_heading','question_description','question_link','question_tags','question_type']
 
 
+
+
+class DevhubQuestionAnswerForm(forms.ModelForm):
+    answer_text = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Enter your answer  here...','style':'height:10%'}))
+
+    class Meta:
+        model = DevhubQuestionAnswerModel
+        fields = ['answer_text']
+
+
+
+# class DevhubProjectForm(forms.ModelForm):
+#     project_heading = forms.CharField(label = '')
+#     project_description =
+#     project_link =
+#     tags =
 
 class ProposeEventForm(forms.ModelForm):
     CHOICES = (('','--Select Type--'),('Coding','Coding'),('Development','Development'),('Graphics','Graphics'),('Electronics','Electronics'))

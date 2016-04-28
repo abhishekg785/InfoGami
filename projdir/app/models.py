@@ -211,6 +211,27 @@ class DevhubQuestionModel(models.Model):
 
 
 
+class DevhubQuestionAnswerModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    question = models.ForeignKey(DevhubQuestionModel)
+    answer_text = MarkdownField()
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+
+
+
+class DevhubProjectModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    project_heading = models.CharField(max_length = 200)
+    project_description = MarkdownField()
+    project_link = models.CharField(max_length = 100,blank = True)
+    tags = TaggableManager()
+
+
+
 
 class FollowUserModel(models.Model):
     # following_user = models.CharField(max_length = 10)                                             #user who is following

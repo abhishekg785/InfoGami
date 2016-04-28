@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-<h3>Search Codehub Questions</h3>
+<h3>Search Devhub Questions</h3>
 <form method= "POST">
   {% csrf_token %}
   {{ form.as_p }}
@@ -18,7 +18,7 @@
       <li>
         <article>
           <header>
-            <h2><a href="{% url 'codehub_question_details' result.id %}">{{ result.question_heading }}</a></h2>
+            <h2><a href="{% url 'devhub_question_details' result.id %}">{{ result.question_heading }}</a></h2>
             <time class="published">{{ result.created }}</time>
             <p class="published">by:<a href = "{% url 'user_profile' result.user.id %}">{{ result.user.username }}</a></p>
           </header>

@@ -25,10 +25,12 @@
     <hr/>
     {% endif %}
     <div class ='make_sober'>
-      <!-- Tags:
-      {% for tag in post_details.tags.all %}
-        <p>{{ tag }}</p>
-      {% endfor %} -->
+      <h3>
+        Tags:
+        {% for tag in post_details.tags.all %}
+          <a href = "{% url 'search_all_blog_posts_by_slug' tag.slug %}">{{ tag }}</a>
+        {% endfor %}
+      </h3>
       <p>Last Edited:&nbsp;{{ post_details.modified }}</p>
       <p>{{ post_details.body|markdown }}</p>
     </div>

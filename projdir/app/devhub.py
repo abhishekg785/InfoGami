@@ -4,10 +4,14 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,logout,login
 import datetime
 
-from app.codehub import  loginRequired
+from taggit.models import Tag
+from itertools import chain
+from sets import Set
 
-from app.forms import DevhubQuestionForm,SearchForm
-from app.models import DevhubQuestionModel,UserProfileModel
+from app.codehub import  loginRequired,do_pagination
+
+from app.forms import DevhubQuestionForm,SearchForm,DevhubQuestionAnswerForm
+from app.models import DevhubQuestionModel,UserProfileModel,DevhubQuestionAnswerModel
 def devhub(request):
     return render(request,'devhub/index.html')
 
@@ -34,22 +38,45 @@ def devhub_question(request):
         form = DevhubQuestionForm()
     search_form = SearchForm()
     questions = DevhubQuestionModel.objects.all().order_by('-created')[:5]
-    return render(request,'devhub/ask_question.html',{'form':form,'questions':questions,'search_form':search_form})
+    return render(request,'devhub/question/ask_question.html',{'form':form,'questions':questions,'search_form':search_form})
 
 
 
 @loginRequired
 def devhub_question_details(request,ques_id):
+    if request.method == 'POST':
+        form = DevhubQuestionAnswerForm(request.POST)
+        if form.is_valid():
+            new_ans = DevhubQuestionAnswerModel(
+                user = request.user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
+                question = DevhubQuestionModel.objects.get(id = ques_id),
+                answer_text = form.cleaned_data['answer_text']
+            )
+            new_ans.save()
+            return redirect('/developer-section/question/'+str(ques_id)+'/details')
+    else:
+        form = DevhubQuestionAnswerForm()
     ques_details = get_object_or_404(DevhubQuestionModel,id = ques_id)
-    return render(request,'devhub/ques_details.html',{'ques_details':ques_details})
+    ques_answers = DevhubQuestionAnswerModel.objects.all().order_by('-created')
+    print ques_answers
+    return render(request,'devhub/question/ques_details.html',{'ques_details':ques_details,'form':form,'ques_answers':ques_answers})
+
+
+
 
 #decorator for checking user access for question edit and remove
-def check_user_access_for_question_edit():
+def check_user_access_for_question_edit(func):
     def wrapper(request,ques_id,*args,**kwargs):
-        DevhubQuestionModel.objects.get(id = ques_id)
+        ques_details = get_object_or_404(DevhubQuestionModel,id = ques_id)
+        if ques_details.user.id != request.user.id:
+            return redirect('/')
+        return func(request,ques_id,*args,**kwargs)
+    return wrapper
 
 
 @loginRequired
+@check_user_access_for_question_edit
 def edit_devhub_question(request,ques_id):
     if request.method == 'POST':
         form = DevhubQuestionForm(request.POST)
@@ -67,20 +94,66 @@ def edit_devhub_question(request,ques_id):
         ques_data = {'question_heading':ques_details.question_heading,'question_description':ques_details.question_description,'question_link':ques_details.question_link,'question_type':ques_details.question_type,'question_tags':tags}
         form = DevhubQuestionForm(initial = ques_data)
     ques_details = DevhubQuestionModel.objects.get(id = ques_id)
-    return render(request,'devhub/edit_question.html',{'form':form,'ques_heading':ques_details.question_heading})
+    return render(request,'devhub/question/edit_question.html',{'form':form,'ques_heading':ques_details.question_heading})
 
 
 @loginRequired
+@check_user_access_for_question_edit
 def remove_devhub_question(request,ques_id):
     ques_details = DevhubQuestionModel.objects.get(id = ques_id)
     ques_details.delete()
-    print 'deleted'
+    return redirect('/developer-section/ask-question/')
+
+
+
+
 
 @loginRequired
 def get_all_devhub_questions(request):
-    pass
+    question_list = DevhubQuestionModel.objects.all().order_by('-created')
+    question_count = question_list.count()
+    questions = do_pagination(request,question_list,5)
+    form = SearchForm()
+    return render(request,'devhub/question/get_all_devhub_questions.html',{'form':form,'questions':questions,'question_count':question_count})
 
 
 
+
+@loginRequired
 def search_devhub_question(request):
-    pass
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search_str = form.cleaned_data['search_str']
+            list_by_title = DevhubQuestionModel.objects.filter(question_heading__contains = search_str).order_by('-created')
+            list_by_tags = DevhubQuestionModel.objects.filter(question_tags__name__in = [search_str]).order_by('-created')
+            result = list(chain(list_by_title,list_by_tags))
+            return render(request,'devhub/question/search_question.html',{'form':form,'results':result})
+    else:
+        form = SearchForm()
+    return render(request,'devhub/question/search_question.html',{'form':form})
+
+
+
+@loginRequired
+def edit_devhub_question_answer(request,ques_id,ans_id):
+    if request.method == 'POST':
+        form = DevhubQuestionAnswerForm(request.POST)
+        if form.is_valid():
+            ans_details = get_object_or_404(DevhubQuestionAnswerModel,id = ans_id)
+            form = DevhubQuestionAnswerForm(request.POST,instance = ans_details)
+            form.save()
+            return redirect('/developer-section/question/'+str(ques_id)+'/details')
+    else:
+        ans_details = get_object_or_404(DevhubQuestionAnswerModel,id = ans_id)
+        ans_data = {'answer_text':ans_details.answer_text}
+        form = DevhubQuestionAnswerForm(initial = ans_data)
+    return render(request,'devhub/question/edit_devhub_question_answer.html',{'form':form})
+
+
+
+@loginRequired
+def remove_devhub_question_answer(request,ques_id,ans_id):
+    answer = DevhubQuestionAnswerModel.objects.get(id = ans_id)
+    answer.delete()
+    return redirect('/developer-section/question/'+str(ques_id)+'/details')

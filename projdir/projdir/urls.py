@@ -26,7 +26,7 @@ from app.music import music_list
 from app.blog import blog,blog_post_edit,blog_post_remove,blog_post_details,search_user_blog_post_by_slug,search_all_blog_posts_by_slug,edit_blog_post_comment,remove_blog_post_comment,search_blog_post,get_all_blog_posts
 from app.match_skill import match_user_skills,search_users_by_skill,get_all_skills_stat
 from app.tags import tags
-from app.devhub import devhub,devhub_question,devhub_question_details,edit_devhub_question,remove_devhub_question,get_all_devhub_questions,search_devhub_question
+from app.devhub import devhub,devhub_question,devhub_question_details,edit_devhub_question,remove_devhub_question,get_all_devhub_questions,search_devhub_question,edit_devhub_question_answer,remove_devhub_question_answer
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -102,7 +102,9 @@ urlpatterns = [
     url(r'^developer-section/ask-question/$',devhub_question,name = 'devhub_question'),
     url(r'^developer-section/question/(?P<ques_id>\d+)/details/$',devhub_question_details,name = 'devhub_question_details'),
     url(r'^developer-section/question/(?P<ques_id>\d+)/edit/$',edit_devhub_question,name = 'edit_devhub_question'),
-    url(r'^developer-section/question/(?P<ques_id>\d+)/edit/$',remove_devhub_question,name = 'remove_devhub_question'),
+    url(r'^developer-section/question/(?P<ques_id>\d+)/remove/$',remove_devhub_question,name = 'remove_devhub_question'),
+    url(r'^developer-section/question/(?P<ques_id>\d+)/answer/(?P<ans_id>\d+)/edit/$',edit_devhub_question_answer,name = 'edit_devhub_question_answer'),
+    url(r'^developer-section/question/(?P<ques_id>\d+)/answer/(?P<ans_id>\d+)/remove/$',remove_devhub_question_answer,name = 'remove_devhub_question_answer'),
     url(r'^developer-section/all-questions/$',get_all_devhub_questions,name = 'get_all_devhub_questions'),
     url(r'^developer-section/search-question/$',search_devhub_question,name = 'search_devhub_question'),
     #propose event routtes
