@@ -176,8 +176,8 @@ def search_blog_post(request):
         search_form = SearchForm(request.POST)
         if search_form.is_valid():
             search_str = search_form.cleaned_data['search_str']
-            blog_post_list = BlogPostModel.objects.filter(title__contains = search_str)
-            blog_post_slug = BlogPostModel.objects.filter(tags__name__in = [search_str])
+            blog_post_list = BlogPostModel.objects.filter(title__contains = search_str).order_by('-created')
+            blog_post_slug = BlogPostModel.objects.filter(tags__name__in = [search_str]).order_by('-created')
             result_list = list(chain(blog_post_list,blog_post_slug))
             result_list = Set(result_list)
             search_form = SearchForm()
@@ -185,6 +185,7 @@ def search_blog_post(request):
     else:
         search_form = SearchForm()
     return render(request,'blog/search_blog_post.html',{'search_form':search_form})
+
 
 
 

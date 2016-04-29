@@ -221,6 +221,44 @@ class DevhubQuestionAnswerModel(models.Model):
 
 
 
+class DevhubTopicModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    topic_heading = models.CharField(max_length = 100)
+    topic_detail = MarkdownField()
+    topic_link = models.CharField(max_length = 100,blank = True)
+    tags = TaggableManager()
+    file = models.FileField(upload_to = 'devhub/',blank = True)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.topic_heading
+
+    def delete(self,*args,**kwargs):
+        print 'in the delete function of devhub model'
+        if self.file:
+            file_path = os.path.join(settings.MEDIA_ROOT,self.file.name)
+            print file_path
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        super(DevhubTopicModel,self).delete(*args,**kwargs)
+
+
+
+
+class DevhubTopicCommentModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    topic = models.ForeignKey(DevhubTopicModel)
+    comment_text = MarkdownField()
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.topic.topic_heading
+
+
 
 class DevhubProjectModel(models.Model):
     user = models.ForeignKey(User)

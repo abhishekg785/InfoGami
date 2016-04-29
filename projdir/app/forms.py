@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel
+from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel
 from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
 
@@ -151,6 +151,27 @@ class DevhubQuestionAnswerForm(forms.ModelForm):
         model = DevhubQuestionAnswerModel
         fields = ['answer_text']
 
+
+
+
+class DevhubTopicForm(forms.ModelForm):
+    topic_heading = forms.CharField(label = '',max_length = 100,widget = forms.TextInput(attrs = {'placeholder':'Topic heading goes here..'}))
+    topic_detail = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Topic details goes here','style':''}))
+    topic_link = forms.URLField(label = '',max_length = 100,required = False,widget = forms.TextInput(attrs = {'placeholder':'Link to topic'}))
+    tags = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Give some Tags(separated by commas)'}))
+    file = forms.FileField(label = 'Upload a file:',required=False)
+    class Meta:
+        model = DevhubTopicModel
+        fields = ['topic_heading','topic_detail','topic_link','tags','file']
+
+
+
+class DevhubTopicCommentForm(forms.ModelForm):
+    #comment_text = forms.CharField(label = '',max_length = 500,widget = forms.Textarea(attrs = {'rows':'3','cols':'40'}))
+    comment_text = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Your comment...','style':'height:15%'}))
+    class Meta:
+        model = DevhubTopicCommentModel
+        fields = ['comment_text']
 
 
 # class DevhubProjectForm(forms.ModelForm):
