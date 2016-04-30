@@ -266,6 +266,7 @@ def check_user_acess_for_devhub_topic_edit(func):
 @loginRequired
 @check_user_acess_for_devhub_topic_edit
 def edit_devhub_topic(request,topic_id):
+    topic_details = get_object_or_404(DevhubTopicModel,id = topic_id)
     if request.method == 'POST':
         form = DevhubTopicForm(request.POST)
         if form.is_valid():

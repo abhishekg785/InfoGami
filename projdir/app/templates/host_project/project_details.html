@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load django_markdown %}
+{% block content %}
+<div id = 'main'>
+  <article class = 'post'>
+    <header>
+      <div class = 'title'>
+        <h2><a href="">{{ project_details.project_name }}</a></h2>
+        {% if project_details.user.username == user.username %}
+          <ul class="actions">
+            <li><a class= 'button' href="{% url 'edit_hosted_project' project_details.id %}">Edit</a></li>
+            <li><a class = 'button' href ="{% url 'remove_hosted_project' project_details.id %}">Remove</a></li>
+            {% if project_details.project_status == 'active' and project_details.user.id == user.id %}
+                <li style = 'border:2px solid red'><a class = 'button' href ="{% url 'deactivate_hosted_project' project_details.id %}">Deactivate</a></li>
+            {% elif project_details.project_status == 'deactive' and project_details.user.id == user.id %}
+                <li style = 'border:2px solid green'><a class = 'button' href ="{% url 'activate_hosted_project' project_details.id %}">Activate</a></li>
+            {% endif %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class = 'meta'>
+        <time class="published">{{ project_details.created }}</time>
+        {% if project_details.user_profile.user_profile_pic.name %}
+          <h2><a href="{% url 'user_profile' project_details.user.id %}" class="author"><span class="name">{{ project_details.user.username }}</span><img src="/media/{{ project_details.user_profile.user_profile_pic }}" alt="Profile pic" /></a></h2>
+        {% else %}
+          <h2><a href="{% url 'user_profile' project_details.user.id %}" class="author"><span class="name">{{ project_details.user.username }}</span><img src = "{% static 'images/default_gravators/github.png' %}" /></a></h2>
+        {% endif %}
+      </div>
+    </header>
+    <div class ='make_sober'>
+      <h3>
+        Tags:&nbsp;
+        {% for tag in project_details.skills.all %}
+          <a href = "">"{{ tag.name }}"&nbsp;</a>
+        {% endfor %}
+      </h3>
+      <p>Last Edited:&nbsp;{{ project_details.modified }}</p>
+      <p>{{ project_details.project_description|markdown }}</p>
+    </div>
+  </article>
+</div>
+{% endblock %}

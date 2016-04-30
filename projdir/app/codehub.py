@@ -114,6 +114,7 @@ def edit_topic(request,id):
         tags = ",".join(tagArr)
         data = {'topic_heading':topic_details.topic_heading,'topic_detail':topic_details.topic_detail,'topic_link':topic_details.topic_link,'file':topic_details.file,'topic_type':topic_details.topic_type,'tags':tags}
         form = CodehubTopicForm(initial = data)
+    topic_details = CodehubTopicModel.objects.get(id = id)
     return render(request,'codehub/topic/edit_topic.html',{'form':form,'topic_heading':topic_details.topic_heading})
 
 
@@ -304,6 +305,7 @@ def remove_codehub_question(request,ques_id):
 @check_user_access_for_question_edit_or_remove
 def edit_codehub_question(request,ques_id):
     if request.method == 'POST':
+        ques_details = get_object_or_404(CodehubQuestionModel,id = ques_id)
         form = CodehubQuestionForm(request.POST)
         if form.is_valid():
             ques_details = get_object_or_404(CodehubQuestionModel,id = ques_id)

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<div id = 'main'>
+  <article class = 'post'>
+  <header>
+    <div class = 'title'>
+      <h2><a href="">Host Project</a></h2>
+      <p>"Get others involved with you"</p>
+    </div>
+  </header>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type = 'submit' name = '' value = 'Host' />
+  </form>
+  </article>
+</div>
+<section id = 'sidebar'>
+  <section id = 'intro'>
+    <header>
+      <h2 style="font-size:16px">Recently Hosted Projects</h2>
+      <h3><a href ="{% url 'get_all_hosted_projects' %}">View all hosted projects</a></h3>
+      <p>"Click on project for more info"</a></p>
+    </header>
+  </section>
+  <section>
+    <form method= "post"  action = "" />
+      {% csrf_token %}
+      {{ search_form.as_p }}
+      <input type = 'submit' value = 'Search' name='search_project' />
+    </form>
+    <div class = 'mini-posts'>
+      {% for project in projects %}
+      <article class = 'mini-post'>
+        <header>
+          <h3><a href="{% url 'hosted_project_details' project.id %}">{{ project.project_name }}</a></h3>
+          <time class="published">{{ project.created }}</time>
+          {% if project.user_profile.user_profile_pic.name %}
+            <a href="{% url 'user_profile' project.user.id %}" class="author"><img src="/media/{{ project.user_profile.user_profile_pic }}" alt="" /></a>
+          {% else %}
+            <a href="{% url 'user_profile' project.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+          {% endif %}
+          <p>by:<a href ="{% url 'user_profile' project.user.id %}">{{ project.user.username }}</a></p>
+        </header>
+       </article>
+      {% endfor %}
+      <h2><a href ="{% url 'get_all_hosted_projects' %}">View all other hosted projects</a></h2>
+    </div>
+  </section>
+</section>
+{% endblock %}

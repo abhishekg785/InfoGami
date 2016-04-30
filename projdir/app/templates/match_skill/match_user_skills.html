@@ -4,7 +4,7 @@
   <h2><a href ="">Skill Matcher</a></h2>
   <h3><a href = "{% url 'get_all_skills_stat' %}">Get all skills statistics</a></h3>
   <h3><a href = "">Work Collaborately</a></h3>
-  <h3><a href = "">Host a Project</a>(show peoples what you are working on)</h3>
+  <h3><a href = "{% url 'host_project' %}">Host a Project</a>(show peoples what you are working on)</h3>
   <hr/>
   {% if not logged_user_skills %}
     <h2>No Skills Added</h2>

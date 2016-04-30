@@ -310,7 +310,9 @@ def propose_event_users_upvoted(request,event_id):
 
 @loginRequired
 def propose_event_users_downvoted(request,event_id):
-    pass
+    event_details = get_object_or_404(ProposeEventModel,id = event_id)
+    down_vote_users = ProposeEventVoteModel.objects.filter(event_id = event_id)
+    return render(request,'propose_event/down_vote_users.html',{'users':down_vote_users,'event_details':event_details})
 
 
 
@@ -381,6 +383,9 @@ def get_all_proposed_events(request):
     form = SearchForm()
     events = do_pagination(request,proposed_events_list,5)
     return render(request,'propose_event/view_all_proposed_event.html',{'form':form,'events':events})
+
+
+
 
 def check_user_acess_for_propose_sugg_edit(func):
     def wrapper(request,event_id,sugg_id,*args,**kwargs):

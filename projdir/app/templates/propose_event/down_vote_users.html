@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h2>Users who Down Voted the event "{{ event_details.event_heading }}"</h2>
+  <hr/>
+  <section>
+    {% if not users %}
+      <h3>No users yet!!!</h3>
+    {% else %}
+      <ul class = 'posts'>
+        {% for user in users %}
+          <li>
+            <article>
+              <header>
+                <h2><a href = "{% url 'user_profile' user.user.id %}">{{ user.user.username }}</a></h2>
+              </header>
+            </article>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

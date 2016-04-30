@@ -307,3 +307,16 @@ class ProposeEventSuggestionModel(models.Model):
     sugg_text = models.CharField(max_length = 500)
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)
+
+
+
+#host_project section starts here
+class HostProjectModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    project_name = models.CharField(max_length = 200)
+    project_description = MarkdownField()
+    skills = TaggableManager()
+    project_status = models.CharField(max_length = 15,default = 'active')
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)

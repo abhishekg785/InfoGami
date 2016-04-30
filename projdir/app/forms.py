@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel
+from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel,HostProjectModel
 from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
 
@@ -197,3 +197,14 @@ class ProposeEventSuggestionForm(forms.ModelForm):
     class Meta:
         model = ProposeEventSuggestionModel
         fields = ['sugg_text']
+
+
+
+class HostProjectForm(forms.ModelForm):
+    project_name = forms.CharField(label = '',widget = forms.TextInput(attrs = {'placeholder':'Enter the name of your project'}))
+    project_description = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Project Description goes here'}))
+    skills = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Skills needed for project(comma separated)'}))
+
+    class Meta:
+        model = HostProjectModel
+        fields = ['project_name','project_description','skills']
