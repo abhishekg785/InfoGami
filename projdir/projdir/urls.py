@@ -27,7 +27,7 @@ from app.blog import blog,blog_post_edit,blog_post_remove,blog_post_details,sear
 from app.match_skill import match_user_skills,search_users_by_skill,get_all_skills_stat
 from app.tags import tags
 from app.devhub import devhub,devhub_question,devhub_question_details,edit_devhub_question,remove_devhub_question,get_all_devhub_questions,search_devhub_question,edit_devhub_question_answer,remove_devhub_question_answer,devhub_topic,get_all_devhub_topics,search_devhub_topic,devhub_topic_details,edit_devhub_topic,remove_devhub_topic,edit_devhub_topic_comment,remove_devhub_topic_comment
-from app.host_project import host_project,get_all_hosted_projects,hosted_project_details,edit_hosted_project,remove_hosted_project,activate_hosted_project,deactivate_hosted_project
+from app.host_project import work_collaborately,host_project,get_all_hosted_projects,hosted_project_details,edit_hosted_project,remove_hosted_project,activate_hosted_project,deactivate_hosted_project,skill_matched_hosted_project,user_hosted_projects,ping_hosted_project
 
 
 urlpatterns = [
@@ -130,7 +130,8 @@ urlpatterns = [
     url(r'^event/propose-event/all-events/$',get_all_proposed_events,name = 'get_all_proposed_events'),
     url(r'^event/propose-event/(?P<event_id>\d+)/suggestion/(?P<sugg_id>\d+)/edit/$',edit_suggestion_to_propose_event,name = 'edit_suggestion_to_propose_event'),
     url(r'^event/propose-event/(?P<event_id>\d+)/suggestion/(?P<sugg_id>\d+)/remove/$',remove_suggestion_to_propose_event,name = 'remove_suggestion_to_propose_event'),
-    #hosting a project
+    # work collaborately and hosting a project
+    url(r'^work-and-collaborate/$',work_collaborately,name = 'work_collaborately'),
     url(r'^project/host-project/$',host_project,name = 'host_project'),
     url(r'^project/all-projects/$',get_all_hosted_projects,name = 'get_all_hosted_projects'),
     url(r'^project/host-project/(?P<project_id>\d+)/details/$',hosted_project_details,name = 'hosted_project_details'),
@@ -138,4 +139,7 @@ urlpatterns = [
     url(r'^project/host-project/(?P<project_id>\d+)/remove/$',remove_hosted_project,name = 'remove_hosted_project'),
     url(r'^project/host-project/(?P<project_id>\d+)/activate/$',activate_hosted_project,name = 'activate_hosted_project'),
     url(r'^project/host-project/(?P<project_id>\d+)/deactivate/$',deactivate_hosted_project,name = 'deactivate_hosted_project'),
+    url(r'^project/matched-hosted-project/$',skill_matched_hosted_project,name = 'skill_matched_hosted_project'),
+    url(r'^project/user/(?P<user_id>\d+)/hosted-projects/$',user_hosted_projects,name = 'user_hosted_projects'),
+    url(r'^project/host-project/(?P<project_id>\d+)/ping/$',ping_hosted_project,name = 'ping_hosted_project'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

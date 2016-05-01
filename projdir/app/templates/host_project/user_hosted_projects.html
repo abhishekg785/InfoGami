@@ -1,19 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
-  <h2>All Hosted projects( {{ project_count }} )</h2>
-  <form method="POST" action="">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type='submit' name='search_project' value = 'Go'/>
-  </form>
+  <h2>hosted projects by "<a href = "{% url 'user_profile' user.id %}">{{ user_details.username }}</a>"</h2>
   <hr/>
   <section>
     {% if not projects %}
-      <h3>No projects Yet!!!</h3>
+      <h3>No projects yet!!!</h3>
     {% else %}
-    <ul class = 'posts'>
-      {% for project in projects.object_list %}
+      <ul class = 'posts'>
+        {% for project in projects %}
         <li>
           <article>
             <header>
@@ -34,25 +29,9 @@
             </header>
           </article>
         </li>
-      {% endfor %}
-    </ul>
-  <div class = "pagination">
-    {% if projects.has_previous %}
-      <li><a href = "?page={{ projects.previous_page_number }}">Previous</a></li>
+        {% endfor %}
+      </ul>
     {% endif %}
-    {% for pg in projects.paginator.page_range %}
-      {% if projects.number == pg %}
-        <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
-      {% else %}
-        <li><a href="?page={{ pg }}">{{ pg }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if projects.has_next %}
-      <li><a href = "?page={{ projects.next_page_number }}">Next</a></li>
-    {% endif %}
-    </ul>
-  </div>
-  {% endif %}
   </section>
 </div>
 {% endblock %}

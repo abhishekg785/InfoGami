@@ -46,6 +46,7 @@ Date Joined:{{ user_info.date_joined}}<br/>
 <a href = "{% url 'get_user_topics' user_info.id %}">Posted Topics </a><br/>
 <a href = "{% url 'user_blog' user_info.id %}">Blog</a><br/>
 <a href = "{% url 'get_user_new_ideas' user_info.id  %}">New way to solve problems</a><br/>
-<a href = "{% url 'get_codehub_user_events' user_info.id %}">Talks or Events by User</a>
+<a href = "{% url 'get_codehub_user_events' user_info.id %}">Talks or Events by User</a><br/>
+<a href = "{% url 'user_hosted_projects' user_info.id %}">Hosted projects by user</a>
 </div>
 {% endblock %}

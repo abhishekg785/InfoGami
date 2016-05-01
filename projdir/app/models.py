@@ -320,3 +320,13 @@ class HostProjectModel(models.Model):
     project_status = models.CharField(max_length = 15,default = 'active')
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)
+
+
+
+
+
+class PingHostProjectModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    hosted_project = models.ForeignKey(HostProjectModel)
+    created = models.DateTimeField(auto_now_add = True)

@@ -7,17 +7,22 @@
     <header>
       <div class = 'title'>
         <h2><a href="">{{ project_details.project_name }}</a></h2>
+      <ul class="actions">
         {% if project_details.user.username == user.username %}
-          <ul class="actions">
             <li><a class= 'button' href="{% url 'edit_hosted_project' project_details.id %}">Edit</a></li>
             <li><a class = 'button' href ="{% url 'remove_hosted_project' project_details.id %}">Remove</a></li>
             {% if project_details.project_status == 'active' and project_details.user.id == user.id %}
-                <li style = 'border:2px solid red'><a class = 'button' href ="{% url 'deactivate_hosted_project' project_details.id %}">Deactivate</a></li>
+                <li><a style = 'border:2px solid red' class = 'button' href ="{% url 'deactivate_hosted_project' project_details.id %}">Deactivate</a></li>
             {% elif project_details.project_status == 'deactive' and project_details.user.id == user.id %}
-                <li style = 'border:2px solid green'><a class = 'button' href ="{% url 'activate_hosted_project' project_details.id %}">Activate</a></li>
+                <li><a style = 'border:2px solid green' class = 'button' href ="{% url 'activate_hosted_project' project_details.id %}">Activate</a></li>
             {% endif %}
-          </ul>
         {% endif %}
+            {% if ping == False and project_details.user.id != user.id %}
+              <li><a style = 'border:2px solid blue' href = "{% url 'ping_hosted_project' project_details.id %}" class = 'button'>Ping!!!</a></li>
+            {% elif ping and project_details.user.id != user.id  %}
+              <li><a style = 'border:2px solid lightblue' href = "" class = 'button'>Pinged</a></li>
+            {% endif %}
+        </ul>
       </div>
       <div class = 'meta'>
         <time class="published">{{ project_details.created }}</time>

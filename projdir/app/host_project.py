@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 
 from app.forms import HostProjectForm,SearchForm
-from app.models import HostProjectModel,UserProfileModel
+from app.models import HostProjectModel,UserProfileModel,PingHostProjectModel
 from app.codehub import do_pagination
 from app.views import loginRequired
 
@@ -15,6 +15,12 @@ def check_project_active_or_not(func):
             return redirect('/')
         return func(request,project_id,*args,**kwargs)
     return wrapper
+
+
+
+@loginRequired
+def work_collaborately(request):
+    return render(request,'host_project/index.html')
 
 
 
@@ -32,7 +38,7 @@ def host_project(request):
             )
             new_project.save()
             new_project.skills.add(*skills)
-            print 'saved'
+            return redirect('/project/host-project/')
     else:
         form = HostProjectForm()
     search_form = SearchForm()
@@ -52,11 +58,17 @@ def get_all_hosted_projects(request):
 
 
 
+
+
 @loginRequired
 @check_project_active_or_not
 def hosted_project_details(request,project_id):
     project_details = HostProjectModel.objects.get(id = project_id)
-    return render(request,'host_project/project_details.html',{'project_details':project_details})
+    try:
+        ping = PingHostProjectModel.objects.get(hosted_project_id = project_id,user_id = request.user.id)
+    except:
+        ping = False
+    return render(request,'host_project/project_details.html',{'project_details':project_details,'ping':ping})
 
 
 
@@ -108,6 +120,8 @@ def remove_hosted_project(request,project_id):
 
 
 
+
+
 def check_user_acess_to_activate_or_deactivate(func):
     def wrapper(request,project_id,*args,**kwargs):
         project_details = get_object_or_404(HostProjectModel,id = project_id)
@@ -115,6 +129,8 @@ def check_user_acess_to_activate_or_deactivate(func):
             return redirect('/')
         return func(request,project_id,*args,**kwargs)
     return wrapper
+
+
 
 
 
@@ -133,6 +149,7 @@ def activate_hosted_project(request,project_id):
 
 
 
+
 @loginRequired
 @check_user_acess_to_activate_or_deactivate
 def deactivate_hosted_project(request,project_id):
@@ -142,4 +159,64 @@ def deactivate_hosted_project(request,project_id):
     elif project_details.project_status == 'active':
         project_details.project_status = 'deactive'
         project_details.save()
+    return redirect('/project/host-project/'+str(project_id)+'/details/')
+
+
+
+
+
+@loginRequired
+def skill_matched_hosted_project(request):
+    skillArr = []
+    session_user_profile = UserProfileModel.objects.get(user_id = request.user.id)
+    user_skills = session_user_profile.skills.all()
+    for skill in user_skills:
+        skillArr.append(skill.name)
+    projects = HostProjectModel.objects.filter(skills__name__in = skillArr,project_status = 'active').exclude(user_id = request.user.id).distinct()
+    project_count = projects.count()
+    return render(request,'host_project/skill_matched_projects.html',{'projects':projects,'user_skills':user_skills,'project_count':project_count})
+
+
+
+
+
+
+@loginRequired
+def user_hosted_projects(request,user_id):
+    user_details = User.objects.get(id = user_id)
+    if user_id == str(request.user.id):
+        user_projects = HostProjectModel.objects.filter(user_id = user_id)
+    else:
+        user_projects = HostProjectModel.objects.filter(user_id = user_id,project_status = 'active')
+    return render(request,'host_project/user_hosted_projects.html',{'projects':user_projects,'user_details':user_details})
+
+
+
+
+
+#check that the current user only pings the others and the active project
+def check_user_access_for_ping_project(func):
+    def wrapper(request,project_id,*args,**kwargs):
+        project_details = get_object_or_404(HostProjectModel,id = project_id)
+        if project_details.user.id == request.user.id or project_details.project_status == 'deactive':   #check that user does not ping its own and pings only active projects
+            return redirect('/')
+        return func(request,project_id,*args,**kwargs)
+    return wrapper
+
+
+
+#check that the user does not ping the same project again
+@loginRequired
+@check_user_access_for_ping_project
+def ping_hosted_project(request,project_id):
+    try:
+        project_obj = PingHostProjectModel.objects.get(user_id = request.user.id,hosted_project_id = project_id)
+        return redirect('/')
+    except:
+        new_ping = PingHostProjectModel(
+            user = request.user,
+            user_profile = UserProfileModel.objects.get(user_id = request.user.id),
+            hosted_project = HostProjectModel.objects.get(id = project_id)
+        )
+        new_ping.save()
     return redirect('/project/host-project/'+str(project_id)+'/details/')
