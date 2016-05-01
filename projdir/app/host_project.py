@@ -185,7 +185,7 @@ def skill_matched_hosted_project(request):
 def user_hosted_projects(request,user_id):
     user_details = User.objects.get(id = user_id)
     if user_id == str(request.user.id):
-        user_projects = HostProjectModel.objects.filter(user_id = user_id)
+        user_projects = HostProjectModel.objects.filter(user_id = request.user.id)
     else:
         user_projects = HostProjectModel.objects.filter(user_id = user_id,project_status = 'active')
     return render(request,'host_project/user_hosted_projects.html',{'projects':user_projects,'user_details':user_details})
@@ -220,3 +220,22 @@ def ping_hosted_project(request,project_id):
         )
         new_ping.save()
     return redirect('/project/host-project/'+str(project_id)+'/details/')
+
+
+
+
+
+
+def hosted_project_interested_users(request):
+    print request.user.id
+    projects = HostProjectModel.objects.filter(user_id = request.user.id)
+    if projects:
+        project_dict = {project.project_name:[] for project in projects}
+        print project_dict
+        for project in projects:
+            ping_project_obj = PingHostProjectModel.objects.filter(hosted_project_id = project.id).values('user__username')
+            project_dict[project.project_name] = ping_project_obj
+        return render(request,'host_project/interested_users.html',{'projects':projects,'project_dict':project_dict})
+    else:
+        print 'no projects'
+    return HttpResponse(projects)

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+    {% for key,value in project_dict.items %}
+      <h2>{{ key }}:</h2>
+      {% if not value %}
+        <h3>No users</h3>
+      {% else %}
+        {% for val in value %}
+          <h3><a href = "">{{ val.user__username }}</a></h3>
+        {% endfor %}
+      {% endif %}
+      <hr/>
+    {% endfor %}
+    <hr/>
+</div>
+{% endblock %}
