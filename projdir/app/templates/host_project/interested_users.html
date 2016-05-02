@@ -1,17 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id = 'main'>
+  <h2><a href = "">Users who pinged to your hosted projects</a></h2>
+  <hr/>
+  {% if not projects %}
+    <h2>You have no hosted projects!!!</h2>
+  {% else %}
     {% for key,value in project_dict.items %}
-      <h2>{{ key }}:</h2>
+      <h2><a href = "{% url 'hosted_project_details' key.id %}">{{ key.project_name }}</a>({{ value.count }}):</h2>
       {% if not value %}
-        <h3>No users</h3>
+        <h3>No Invites</h3>
       {% else %}
         {% for val in value %}
-          <h3><a href = "">{{ val.user__username }}</a></h3>
+          <ul class = 'actions'>
+            <li><h3><a href = "{% url 'user_profile' val.user_id %}">{{ val.user }}</a></h3></li>
+            <li style="float:right"><a href = "" class = 'button'>Message</a></li>
+          </ul>
         {% endfor %}
       {% endif %}
       <hr/>
     {% endfor %}
-    <hr/>
+  {% endif %}
 </div>
 {% endblock %}

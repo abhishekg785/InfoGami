@@ -7,6 +7,10 @@ from app.models import HostProjectModel,UserProfileModel,PingHostProjectModel
 from app.codehub import do_pagination
 from app.views import loginRequired
 
+from taggit.models import Tag
+from itertools import chain
+from sets import Set
+
 
 def check_project_active_or_not(func):
     def wrapper(request,project_id,*args,**kwargs):
@@ -225,17 +229,33 @@ def ping_hosted_project(request,project_id):
 
 
 
-
+@loginRequired
 def hosted_project_interested_users(request):
     print request.user.id
-    projects = HostProjectModel.objects.filter(user_id = request.user.id)
+    projects = HostProjectModel.objects.filter(user_id = request.user.id,project_status ='active')
     if projects:
-        project_dict = {project.project_name:[] for project in projects}
+        project_dict = {project:[] for project in projects}
         print project_dict
         for project in projects:
-            ping_project_obj = PingHostProjectModel.objects.filter(hosted_project_id = project.id).values('user__username')
-            project_dict[project.project_name] = ping_project_obj
+            ping_project_obj = PingHostProjectModel.objects.filter(hosted_project_id = project.id)
+            project_dict[project] = ping_project_obj
         return render(request,'host_project/interested_users.html',{'projects':projects,'project_dict':project_dict})
     else:
-        print 'no projects'
-    return HttpResponse(projects)
+        return render(request,'host_project/interested_users.html',{'projects':False})
+
+
+
+@loginRequired
+def search_hosted_project(request):
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search_str = form.cleaned_data['search_str']
+            list_by_name = HostProjectModel.objects.filter(project_status = 'active',project_name__contains = search_str)
+            list_by_tags = HostProjectModel.objects.filter(project_status = 'active',skills__name__in = [search_str])
+            result = list(chain(list_by_name,list_by_tags))
+            result = Set(result)
+            return render(request,'host_project/search_hosted_project.html',{'results':result,'form':form,'search_str':search_str})
+    else:
+        form = SearchForm()
+    return render(request,'host_project/search_hosted_project.html',{'form':form})

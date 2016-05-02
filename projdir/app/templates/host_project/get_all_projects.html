@@ -2,7 +2,7 @@
 {% block content %}
 <div id = 'main'>
   <h2>All Hosted projects( {{ project_count }} )</h2>
-  <form method="POST" action="">
+  <form method="POST" action="{% url 'search_hosted_project' %}">
     {% csrf_token %}
     {{ form.as_p }}
     <input type='submit' name='search_project' value = 'Go'/>

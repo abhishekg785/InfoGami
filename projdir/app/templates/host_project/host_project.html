@@ -25,7 +25,7 @@
     </header>
   </section>
   <section>
-    <form method= "post"  action = "" />
+    <form method= "post"  action = "{% url 'search_hosted_project' %}" />
       {% csrf_token %}
       {{ search_form.as_p }}
       <input type = 'submit' value = 'Search' name='search_project' />
