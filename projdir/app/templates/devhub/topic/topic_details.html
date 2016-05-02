@@ -51,7 +51,7 @@
       {% for comment in comments %}
         <article class="mini-post">
           <header>
-            <p>{{ comment.comment_text|markdown }}</p>
+            {{ comment.comment_text|markdown }}
             <time class="published">{{ comment.created }}</time>
             {% if comment.user_profile.user_profile_pic.name %}
               <a href="{% url 'user_profile' comment.user.id %}" class="author">{{ comment.user.username }}<img src="/media/{{ comment.user_profile.user_profile_pic.name }}" alt="" /></a>
