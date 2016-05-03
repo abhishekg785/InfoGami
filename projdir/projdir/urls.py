@@ -144,4 +144,6 @@ urlpatterns = [
     url(r'^project/host-project/(?P<project_id>\d+)/ping/$',ping_hosted_project,name = 'ping_hosted_project'),
     url(r'^project/search-hosted-project/$',search_hosted_project,name = 'search_hosted_project'),
     url(r'^project/host-project/interested-users/$',hosted_project_interested_users,name = 'hosted_project_interested_users')
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
+if settings.DEBUG is True:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

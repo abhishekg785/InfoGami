@@ -34,12 +34,66 @@
       <li><a href="{% url 'register_view' %}">Register</a></li>
     </ul>
     {% endif %}
+    {% if user.is_authenticated %}
     </nav>
+    <nav class="main">
+      <ul>
+        <li class="menu">
+          <a class="fa-bars" href="#menu">Menu</a>
+          <!-- <a class="image" href="#menu"><img style = "height:48px;border-radius:50%" src = "{% static 'images/default_gravators/github.png' %}" /></a> -->
+        </li>
+      </ul>
+    </nav>
+    {% endif %}
   </header>
+  <section id="menu">
+    {% if user.is_authenticated %}
+      <section>
+        <h3>Welcome "<a href = "{% url 'user_profile' user.id %}">{{ user.username }}</a>"</h3>
+      </section>
+      <section>
+        <ul class="links">
+          <li>
+            <a href="{% url 'user_profile' user.id %}">
+              <h3>Your Profile</h3>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'user_blog' user.id %}">
+              <h3>My Blog</h3>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'notifications' %}">
+              <h3>Notifications</h3>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'tags' %}">
+              <h3>Tags</h3>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'music_list' %}">
+              <h3>Music</h3>
+            </a>
+          </li>
+        </ul>
+      </section>
+      <section>
+        <ul class="actions vertical">
+          <li><a href="{% url 'logout_view' %}" class="button big fit">Log Out</a></li>
+        </ul>
+      </section>
+    {% endif %}
+  </section>
+
     {% block content %}
     {% endblock %}
-    <!-- scripts -->
   </div>
+    <script src = "{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/skel.min.js' %}"></script>
+    <script src="{% static 'js/util.js' %}"></script>
     <script src ="{% static 'js/main.js' %}"></script>
   </body>
 </html>

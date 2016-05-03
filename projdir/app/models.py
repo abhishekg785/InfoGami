@@ -330,3 +330,14 @@ class PingHostProjectModel(models.Model):
     user_profile = models.ForeignKey(UserProfileModel)
     hosted_project = models.ForeignKey(HostProjectModel)
     created = models.DateTimeField(auto_now_add = True)
+
+
+
+
+
+class MesssageModel(models.Model):
+    sender = models.ForeignKey(User,related_name = 'sender')
+    receiver = models.ForeignKey(User,related_name = 'receiver')
+    sender_profile = models.ForeignKey(UserProfileModel,related_name = 'sender_profile')
+    receiver_profile = models.ForeignKey(UserProfileModel,related_name = 'receiver_profile')
+    message_text = models.CharField(max_length = 500)

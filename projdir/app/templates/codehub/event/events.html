@@ -32,23 +32,22 @@
           </article>
         </li>
       {% endfor %}
-    </ul>
-  <div class = "pagination">
-    {% if events.has_previous %}
-      <li><a href = "?page={{ events.previous_page_number }}">Previous</a></li>
-    {% endif %}
-    {% for pg in events.paginator.page_range %}
-      {% if events.number == pg %}
-        <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
-      {% else %}
-        <li><a href="?page={{ pg }}">{{ pg }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if events.has_next %}
-      <li><a href = "?page={{ events.next_page_number }}">Next</a></li>
-    {% endif %}
-    </ul>
-  </div>
+      <div class = "pagination">
+        {% if events.has_previous %}
+          <li><a href = "?page={{ events.previous_page_number }}">Previous</a></li>
+        {% endif %}
+        {% for pg in events.paginator.page_range %}
+          {% if events.number == pg %}
+            <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+          {% else %}
+            <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if events.has_next %}
+          <li><a href = "?page={{ events.next_page_number }}">Next</a></li>
+        {% endif %}
+        </ul>
+      </div>
   {% endif %}
 </section>
 </div>

@@ -245,6 +245,8 @@ def hosted_project_interested_users(request):
 
 
 
+
+
 @loginRequired
 def search_hosted_project(request):
     if request.method == 'POST':
