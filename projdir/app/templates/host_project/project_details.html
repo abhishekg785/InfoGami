@@ -19,8 +19,10 @@
         {% endif %}
             {% if ping == False and project_details.user.id != user.id %}
               <li><a style = 'border:2px solid blue' href = "{% url 'ping_hosted_project' project_details.id %}" class = 'button'>Ping!!!</a></li>
-            {% elif ping and project_details.user.id != user.id  %}
+            {% elif ping.ping_status == 'waiting' and project_details.user.id != user.id  %}
               <li><a style = 'border:2px solid lightblue' href = "" class = 'button'>Pinged</a></li>
+            {% elif ping.ping_status == 'accepted' and project_details.user.id != user.id  %}
+              <li><a style = 'border:2px solid green' href = "" class = 'button'>Accepted</a></li>
             {% endif %}
         </ul>
       </div>
@@ -44,5 +46,39 @@
       <p>{{ project_details.project_description|markdown }}</p>
     </div>
   </article>
+  <form method = 'POST'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type = 'submit' name = 'post_query' value = 'Post Query'/>
+  </form>
+  <hr/>
+  {% if not queries %}
+    <h3>No Queries Yet!!!</h3>
+  {% else %}
+    <section>
+      <div class = 'mini-posts'>
+        {% for query in queries %}
+          <article class = 'mini-post'>
+            <header>
+              <p>{{ query.question_text }}</p>
+              <time class="published">Created:{{ query.created }}</time>
+              <time class="published">Last Edited:{{ query.modified }}</time>
+              {% if query.user_profile.user_profile_pic.name %}
+                <h2><a style = "top:0.5em" href="{% url 'user_profile' query.user.id %}" class="author">{{ query.user.username }}<img src="/media/{{ query.user_profile.user_profile_pic }}" alt="" /></a></h2>
+              {% else %}
+              <h2><a style = "top:0.5em" href="{% url 'user_profile' query.user.id %}" class="author">{{ query.user.username }}<img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a></h2>
+              {% endif %}
+              {% if query.user.username == request.user.username %}
+              <ul class = 'actions'>
+                <li><a href = "" class='button'>Edit</a></li>
+                <li><a href = "" class='button'>Remove</a></li>
+              </ul>
+              {% endif %}
+            </header>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
 </div>
 {% endblock %}

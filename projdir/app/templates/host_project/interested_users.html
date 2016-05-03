@@ -14,7 +14,12 @@
         {% for val in value %}
           <ul class = 'actions'>
             <li><h3><a href = "{% url 'user_profile' val.user_id %}">{{ val.user }}</a></h3></li>
-            <li style="float:right"><a href = "" class = 'button'>Message</a></li>
+            {% if val.ping_status != 'accepted' %}
+              <li><a style="border:1px solid green" href = "{% url 'accept_hosted_project_request' key.id val.user.id %}" class = 'button'>Accept</a></li>
+            {% else %}
+              <li style="color:green">Accepted</li>
+            {% endif %}
+            <li><a style="border:1px solid red" href = "{% url 'reject_hosted_project_request' key.id val.user.id %}" class = 'button'>Reject</a></li
           </ul>
         {% endfor %}
       {% endif %}

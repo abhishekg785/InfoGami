@@ -329,9 +329,18 @@ class PingHostProjectModel(models.Model):
     user = models.ForeignKey(User)
     user_profile = models.ForeignKey(UserProfileModel)
     hosted_project = models.ForeignKey(HostProjectModel)
+    ping_status = models.CharField(max_length = 20,default = 'waiting')
     created = models.DateTimeField(auto_now_add = True)
 
 
+
+
+class HostProjectQuestionModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    question_text = models.CharField(max_length = 500)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
 
 
 

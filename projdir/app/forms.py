@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel,HostProjectModel
+from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel,HostProjectModel,HostProjectQuestionModel
 from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
 
@@ -192,11 +192,14 @@ class ProposeEventForm(forms.ModelForm):
         fields = ['event_heading','event_description','tags','event_type']
 
 
+
+
 class ProposeEventSuggestionForm(forms.ModelForm):
     sugg_text = forms.CharField(label = '',widget = forms.Textarea(attrs = {'placeholder':'Give suggestions here...','cols':'2','rows':'2'}))
     class Meta:
         model = ProposeEventSuggestionModel
         fields = ['sugg_text']
+
 
 
 
@@ -208,3 +211,13 @@ class HostProjectForm(forms.ModelForm):
     class Meta:
         model = HostProjectModel
         fields = ['project_name','project_description','skills']
+
+
+
+
+class HostProjectQuestionForm(forms.ModelForm):
+    question_text = forms.CharField(label = '',widget = forms.Textarea(attrs = {'placeholder':'Ask queries here...','rows':'2'}))
+
+    class Meta:
+        model = HostProjectQuestionModel
+        fields = ['question_text']

@@ -24,13 +24,15 @@
               </h3>
               <time class="published">{{ project.created }}</time>
               <p class="published">by:<a href = "{% url 'user_profile' project.user.id %}">{{ project.user.username }}</a></p>
+              {% if project.user.id  == user.id %}
               <ul class = 'actions'>
-                {% if project.project_status == 'deactive' and project.user.id  == user.id %}
+                {% if project.project_status == 'deactive' %}
                   <li style = 'border:2px solid green'><a href = "{% url 'activate_hosted_project' project.id %}" class = 'button'>Activate</a></li>
-                {% elif project.project_status == 'active' and project.user.id  == user.id %}
+                {% elif project.project_status == 'active' %}
                   <li style = 'border:2px solid red'><a href = "{% url 'deactivate_hosted_project' project.id %}" class = 'button'>Dectivate</a></li>
                 {% endif %}
               </ul>
+              {% endif %}
             </header>
           </article>
         </li>

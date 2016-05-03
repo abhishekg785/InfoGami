@@ -2,8 +2,8 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 
-from app.forms import HostProjectForm,SearchForm
-from app.models import HostProjectModel,UserProfileModel,PingHostProjectModel
+from app.forms import HostProjectForm,SearchForm,HostProjectQuestionForm
+from app.models import HostProjectModel,UserProfileModel,PingHostProjectModel,HostProjectQuestionModel
 from app.codehub import do_pagination
 from app.views import loginRequired
 
@@ -67,12 +67,25 @@ def get_all_hosted_projects(request):
 @loginRequired
 @check_project_active_or_not
 def hosted_project_details(request,project_id):
+    if request.method == 'POST':
+        form = HostProjectQuestionForm(request.POST)
+        if form.is_valid():
+            new_query = HostProjectQuestionModel(
+                user = request.user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
+                question_text = form.cleaned_data['question_text']
+            )
+            new_query.save()
+            return redirect('/project/host-project/'+str(project_id)+'/details/')
+    else:
+        form = HostProjectQuestionForm()
     project_details = HostProjectModel.objects.get(id = project_id)
     try:
         ping = PingHostProjectModel.objects.get(hosted_project_id = project_id,user_id = request.user.id)
     except:
         ping = False
-    return render(request,'host_project/project_details.html',{'project_details':project_details,'ping':ping})
+    queries = HostProjectQuestionModel.objects.all()
+    return render(request,'host_project/project_details.html',{'project_details':project_details,'ping':ping,'form':form,'queries':queries})
 
 
 
@@ -261,3 +274,43 @@ def search_hosted_project(request):
     else:
         form = SearchForm()
     return render(request,'host_project/search_hosted_project.html',{'form':form})
+
+
+
+def check_user_acess_to_ping_accept_or_reject(func):
+    def wrapper(request,project_id,user_id,*args,**kwargs):
+        project_obj = get_object_or_404(HostProjectModel,id = project_id)
+        if project_obj.user.id != request.user.id:
+            return redirect('/')
+        return func(request,project_id,user_id,*args,**kwargs)
+    return wrapper
+
+
+
+
+
+#check user acess to accpet or reject
+@loginRequired
+@check_user_acess_to_ping_accept_or_reject
+def accept_hosted_project_request(request,project_id,user_id):
+    #user_id is the user who requests for the project
+    ping_obj = get_object_or_404(PingHostProjectModel,hosted_project_id = project_id,user_id = user_id)
+    ping_obj.ping_status = 'accepted';
+    ping_obj.save()
+    return redirect('/project/host-project/interested-users/')
+
+
+
+
+
+@loginRequired
+@check_user_acess_to_ping_accept_or_reject
+def reject_hosted_project_request(request,project_id,user_id):
+    #user_id is the user who requests for the project
+    ping_obj = get_object_or_404(PingHostProjectModel,hosted_project_id = project_id,user_id = user_id)
+    ping_obj.delete()
+    return redirect('/project/host-project/interested-users/')
+
+
+
+# edit_hosted_project_query(request,)
