@@ -39,6 +39,9 @@ def index(request):
     return render(request,'index.html')
 
 
+def about_view(request):
+    return render(request,'auth/about.html')
+
 
 def login_view(request):
     if request.method == 'POST':

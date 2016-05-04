@@ -36,7 +36,7 @@ class UserProfileForm(forms.ModelForm):
     CHOICES = (('','--Select Type--'),('Programmer','Programmer'),('Developer','Developer'),('Not sure right now:)','Not sure right now:)'),('Both','Both'),)
     user_description = forms.CharField(label = 'A line about yourself(max = 200 characters)',max_length = 200)
     # skills = forms.CharField(label = 'Skills you have',max_length = 200)
-    skills = TagField()
+    skills = TagField(widget = TagWidget(attrs = {'placeholder':'Enter your skills(comma separated)'}))
     user_type_select = forms.ChoiceField(choices = CHOICES, required = True )
     user_profile_pic = forms.FileField(label = 'Upload profile pic',required = False)
     class Meta:

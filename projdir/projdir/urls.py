@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
-from app.views import login_view,register_view,logout_view,index
+from app.views import login_view,register_view,logout_view,index,about_view
 from app.codehub import codehub_question,remove_codehub_question,edit_codehub_question,codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,codehub_question_details,remove_codehub_question_comment,edit_codehub_question_comment,search_question,codehub_innovation,codehub_innovation_details,edit_codehub_innovation_idea,remove_codehub_innovation_idea,edit_codehub_innovation_idea_comment,remove_codehub_innovation_idea_comment,search_codehub_innovation_post,get_all_codehub_topics,get_all_codehub_questions
 from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog,follow_user_profile,get_user_new_ideas,get_codehub_user_events,unfollow_user_profile,get_user_notifications
 from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question,search_codehub_event,propose_event,propose_event_details,upVote_propose_event,downVote_propose_event,propose_event_users_upvoted,propose_event_users_downvoted,edit_propose_event,remove_propose_event,search_propose_event,get_all_proposed_events,edit_suggestion_to_propose_event,remove_suggestion_to_propose_event
@@ -36,6 +36,7 @@ urlpatterns = [
     url('^markdown/', include( 'django_markdown.urls')),
     url(r'^$',index,name = 'index'),
     url(r'^auth/login/$',login_view,name='login_view'),
+    url(r'^auth/about/$',about_view,name='about_view'),
     url(r'^auth/register/$',register_view,name='register_view'),
     url(r'^auth/logout/$',logout_view,name='logout_view'),
     url(r'^codehub/$',codehub,name='codehub'),

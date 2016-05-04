@@ -32,9 +32,9 @@
     <ul>
       <li><a href="{% url 'login_view' %}">Login</a></li>
       <li><a href="{% url 'register_view' %}">Register</a></li>
+      <li><a href="{% url 'about_view' %}">About(Come here!!!)</a></li>
     </ul>
     {% endif %}
-    {% if user.is_authenticated %}
     </nav>
     <nav class="main">
       <ul>
@@ -44,7 +44,6 @@
         </li>
       </ul>
     </nav>
-    {% endif %}
   </header>
   <section id="menu">
     {% if user.is_authenticated %}
@@ -85,6 +84,26 @@
           <li><a href="{% url 'logout_view' %}" class="button big fit">Log Out</a></li>
         </ul>
       </section>
+      {% else %}
+      <section>
+      <ul class="links">
+        <li>
+          <a href="{% url 'login_view' %}">
+            <h3>Login</h3>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'register_view' %}">
+            <h3>Register</h3>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'about_view' %}">
+            <h3>About</h3>
+          </a>
+        </li>
+      </ul>
+    </section>
     {% endif %}
   </section>
   {% if messages %}
