@@ -11,7 +11,7 @@ from markitup.widgets import MarkItUpWidget
 class CodehubTopicForm(forms.ModelForm):
     CHOICES = (('','--Select Type--'),('Basic', 'Basic'),('Advanced', 'Advanced'),)
     topic_heading = forms.CharField(label = '',max_length = 100,widget = forms.TextInput(attrs = {'placeholder':'Topic heading goes here..'}))
-    topic_detail = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Topic details goes here','style':'height:10%'}))
+    topic_detail = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Topic details goes here'}))
     topic_link = forms.URLField(label = '',max_length = 100,required = False,widget = forms.TextInput(attrs = {'placeholder':'Link to topic'}))
     tags = TagField(label = '',widget = TagWidget(attrs = {'placeholder':'Give some Tags(separated by commas)'}))
     topic_type = forms.ChoiceField(label = '',choices = CHOICES,required = True)
@@ -168,7 +168,7 @@ class DevhubTopicForm(forms.ModelForm):
 
 class DevhubTopicCommentForm(forms.ModelForm):
     #comment_text = forms.CharField(label = '',max_length = 500,widget = forms.Textarea(attrs = {'rows':'3','cols':'40'}))
-    comment_text = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Your comment...','style':'height:15%'}))
+    comment_text = forms.CharField(label = '',widget=MarkItUpWidget(attrs = {'placeholder':'Your comment...','style':'height:5%'}))
     class Meta:
         model = DevhubTopicCommentModel
         fields = ['comment_text']

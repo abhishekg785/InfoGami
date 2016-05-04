@@ -22,12 +22,17 @@ def check_user_access_for_event_edit(func):
     return wrapper
 
 
+
+
+
 @loginRequired
 def codehub_events(request):
     events_list = CodehubCreateEventModel.objects.all().order_by("-created")
     events = do_pagination(request,events_list,5)
     search_form = SearchForm()
     return render(request,'codehub/event/events.html/',{'events':events,'search_form':search_form})
+
+
 
 
 
@@ -46,7 +51,7 @@ def codehub_event_details(request,event_id):
             )
             new_question.save()
             print 'saved'
-            #flash message
+            messages.success(request,'Question posted Successfully')
             return redirect('/codehub/event/'+str(event_id)+'/details/')
     else:
         form = CodehubEventQuestionForm()
@@ -54,6 +59,8 @@ def codehub_event_details(request,event_id):
     # event_questions = get_object_or_404(CodehubEventQuestionModel,event_id = event_id)
     event_questions = CodehubEventQuestionModel.objects.filter(event_id = event_id).order_by("-created")
     return render(request,'codehub/event/event_details.html',{'event':event_details,'form':form,'event_questions':event_questions})
+
+
 
 
 
@@ -74,14 +81,17 @@ def create_codehub_event(request):
             )
             new_event.save()
             new_event.tags.add(*tags)
+            messages.success(request,'Event created Successfully')
             return redirect('/codehub/events')
-            #flash message  for event created
-            #return redirect('codehub_events')
     else:
         form = CodehubCreateEventForm()
     search_form = SearchForm()
     events = CodehubCreateEventModel.objects.all().order_by("-created")[:5]
     return render(request,'codehub/event/create_event.html',{'form':form,'events':events,'search_form':search_form})
+
+
+
+
 
 
 @loginRequired
@@ -93,7 +103,7 @@ def edit_codehub_event(request,event_id):
             event_details = get_object_or_404(CodehubCreateEventModel,id = event_id)
             form = CodehubCreateEventForm(request.POST,instance = event_details)
             form.save()
-            #flash message here
+            messages.success(request,'Event edited Successfully')
             return redirect('/codehub/events')
     else:
         event_details = get_object_or_404(CodehubCreateEventModel,id = event_id)
@@ -106,13 +116,16 @@ def edit_codehub_event(request,event_id):
     return render(request,'codehub/event/edit_event.html',{'form':form,'event_title':event_details.event_heading})
 
 
+
+
 @loginRequired
 @check_user_access_for_event_edit
 def remove_codehub_event(request,event_id):
     get_object_or_404(CodehubCreateEventModel,id = event_id).delete()
-    print 'event deleted'
+    messages.success(request,'Event removed Successfully')
     return redirect('/codehub/events')
-    #flash message
+
+
 
 
 #decorators for event_question comes here
@@ -124,6 +137,9 @@ def check_user_acess_for_question_edit(func):
             return redirect('/codehub/event/'+str(event_id)+'/details/')
         return func(request,ques_id,*args,**kwargs)
     return wrapper
+
+
+
 
 
 def check_user_access_for_question_remove(func):
@@ -152,7 +168,7 @@ def edit_codehub_event_question(request,ques_id):
             form = CodehubEventQuestionForm(request.POST,instance = ques_details)
             form.save()
             print 'data updated'
-            #flash message
+            messages.success(request,'Question edited Successfully')
             return redirect('/codehub/event/'+str(event_id)+'/details/')
     else:
         quest_details = get_object_or_404(CodehubEventQuestionModel,id = ques_id)
@@ -170,7 +186,7 @@ def remove_codehub_event_question(request,ques_id):
     quest_details = get_object_or_404(CodehubEventQuestionModel,id = ques_id)
     event_id = quest_details.event.id
     quest_details.delete()
-    print 'question deleted'
+    messages.success(request,'Question removed Successfully')
     return redirect('/codehub/event/'+str(event_id)+'/details/')
 
 
@@ -207,6 +223,7 @@ def propose_event(request):
             )
             new_event.save()
             new_event.tags.add(*tags)
+            messages.success(request,'Event has been proposed Successfully')
             return redirect('/event/propose-event')
     else:
         form = ProposeEventForm()
@@ -220,13 +237,13 @@ def propose_event_details(request,event_id):
     if request.method == 'POST':
         form = ProposeEventSuggestionForm(request.POST)
         if form.is_valid():
-            print 'cdchdvcj'
             new_sugg = ProposeEventSuggestionModel(
                 user = request.user,
                 user_profile = UserProfileModel.objects.get(user_id = request.user.id),
                 sugg_text = form.cleaned_data['sugg_text'],
             )
             new_sugg.save()
+            messages.success(request,'Suggestion posted Successfully')
             return redirect('/event/propose-event/'+str(event_id)+'/details')
     else:
         form = ProposeEventSuggestionForm()
@@ -249,6 +266,8 @@ def check_downVoted_or_not(func):
         except:
             return func(request,event_id,*args,**kwargs)
     return wrapper
+
+
 
 def check_upVoted_or_not(func):
     def wrapper(request,event_id,*args,**kwargs):
@@ -276,6 +295,7 @@ def upVote_propose_event(request,event_id):
         vote = 'upVote'
     )
     new_vote.save()
+    messages.success(request,'Up Voted Successfully')
     return redirect('/event/propose-event/'+str(event_id)+'/details')
 
 
@@ -296,6 +316,7 @@ def downVote_propose_event(request,event_id):
         vote = 'downVote'
     )
     new_vote.save()
+    messages.success(request,'Down Voted Successfully')
     return redirect('/event/propose-event/'+str(event_id)+'/details')
 
 
@@ -335,6 +356,7 @@ def edit_propose_event(request,event_id):
             event_details = ProposeEventModel.objects.get(id = event_id)
             form = ProposeEventForm(request.POST,instance = event_details)
             form.save()
+            messages.success(request,'Propose event edited Successfully')
             return redirect('/event/propose-event/'+str(event_id)+'/details')
     else:
         tagArr = []
@@ -354,7 +376,9 @@ def edit_propose_event(request,event_id):
 def remove_propose_event(request,event_id):
     event_details = get_object_or_404(ProposeEventModel,id = event_id)
     event_details.delete()
+    messages.success(request,'Propose event removed Successfully')
     return redirect('/event/propose-event')
+
 
 
 
@@ -377,6 +401,8 @@ def search_propose_event(request):
 
 
 
+
+
 @loginRequired
 def get_all_proposed_events(request):
     proposed_events_list = ProposeEventModel.objects.all().order_by('-created')
@@ -396,6 +422,8 @@ def check_user_acess_for_propose_sugg_edit(func):
     return wrapper
 
 
+
+
 @loginRequired
 @check_user_acess_for_propose_sugg_edit
 def edit_suggestion_to_propose_event(request,event_id,sugg_id):
@@ -405,6 +433,7 @@ def edit_suggestion_to_propose_event(request,event_id,sugg_id):
             sugg_details = get_object_or_404(ProposeEventSuggestionModel,id = sugg_id)
             form = ProposeEventSuggestionForm(request.POST,instance = sugg_details)
             form.save()
+            messages.success(request,'Suggestion edited Successfully')
             return redirect('/event/propose-event/'+str(event_id)+'/details')
     else:
         sugg_details = get_object_or_404(ProposeEventSuggestionModel,id = sugg_id)
@@ -420,4 +449,5 @@ def edit_suggestion_to_propose_event(request,event_id,sugg_id):
 def remove_suggestion_to_propose_event(request,event_id,sugg_id):
     sugg_obj = get_object_or_404(ProposeEventSuggestionModel,id = sugg_id)
     sugg_obj.delete()
+    messages.success(request,'Suggestion removed Successfully')
     return redirect('/event/propose-event/'+str(event_id)+'/details')

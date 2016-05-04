@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django import template
 from django.utils.safestring import mark_safe
+from django.contrib import messages
 import hashlib
 import urllib
 
@@ -90,6 +91,7 @@ def edit_user_profile(request,user_id):
                 profile_details.user_profile_pic = file
             form = UserProfileForm(request.POST,instance = profile_details)
             form.save()
+            messages.success(request,'User profile edited Successfully')
             return redirect('/user/profile/'+str(user_id))
     else:
         try:
@@ -208,8 +210,8 @@ def follow_user_profile(request,user_id):           #user_id is the id of the us
         followed_user_profile = followed_user_profile
     )
     new_user.save()
+    messages.success(request,'User followed Successfully')
     return redirect('/user/profile/'+str(user_id))
-    return HttpResponse('saved')
 
 
 @loginRequired
@@ -217,6 +219,7 @@ def follow_user_profile(request,user_id):           #user_id is the id of the us
 def unfollow_user_profile(request,user_id):
     result = get_object_or_404(FollowUserModel,following_user_id = request.user.id,followed_user_id = user_id)
     result.delete()
+    messages.success(request,'User has been unfollowed')
     return redirect('/user/profile/'+str(user_id))
 
 

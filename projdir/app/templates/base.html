@@ -87,10 +87,19 @@
       </section>
     {% endif %}
   </section>
-
+  {% if messages %}
+  <ul style="list-style:none" class="messages">
+      {% for msg in messages %}
+      <li>
+          <div class="alert alert-{{msg.level_tag}}" role="alert">
+    {{msg.message}}
+    </div>
+      </li>
+      {% endfor %}
+  </ul>
+  {% endif %}
     {% block content %}
     {% endblock %}
-  </div>
     <script src = "{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/skel.min.js' %}"></script>
     <script src="{% static 'js/util.js' %}"></script>

@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,logout,login
+from django.contrib import messages
 import datetime
 
 from taggit.models import Tag
@@ -39,12 +40,15 @@ def devhub_question(request):
             new_question.save()
             new_question.question_tags.add(*tags)
             print 'saved'
+            messages.success(request,'Question posted Successfully')
             return redirect('/developer-section/ask-question')
     else:
         form = DevhubQuestionForm()
     search_form = SearchForm()
     questions = DevhubQuestionModel.objects.all().order_by('-created')[:5]
     return render(request,'devhub/question/ask_question.html',{'form':form,'questions':questions,'search_form':search_form})
+
+
 
 
 
@@ -60,13 +64,14 @@ def devhub_question_details(request,ques_id):
                 answer_text = form.cleaned_data['answer_text']
             )
             new_ans.save()
+            messages.success(request,'Answer posted Successfully')
             return redirect('/developer-section/question/'+str(ques_id)+'/details')
     else:
         form = DevhubQuestionAnswerForm()
     ques_details = get_object_or_404(DevhubQuestionModel,id = ques_id)
     ques_answers = DevhubQuestionAnswerModel.objects.all().order_by('-created')
-    print ques_answers
     return render(request,'devhub/question/ques_details.html',{'ques_details':ques_details,'form':form,'ques_answers':ques_answers})
+
 
 
 
@@ -81,6 +86,9 @@ def check_user_access_for_question_edit(func):
     return wrapper
 
 
+
+
+
 @loginRequired
 @check_user_access_for_question_edit
 def edit_devhub_question(request,ques_id):
@@ -89,7 +97,7 @@ def edit_devhub_question(request,ques_id):
         if form.is_valid():
             ques_details = DevhubQuestionModel.objects.get(id = ques_id)
             form = DevhubQuestionForm(request.POST,instance = ques_details)
-            form.save();
+            messages.success(request,'Question edited Successfully')
             return redirect('/developer-section/question/'+str(ques_id)+'/details/')
     else:
         tagArr = []
@@ -103,11 +111,15 @@ def edit_devhub_question(request,ques_id):
     return render(request,'devhub/question/edit_question.html',{'form':form,'ques_heading':ques_details.question_heading})
 
 
+
+
+
 @loginRequired
 @check_user_access_for_question_edit
 def remove_devhub_question(request,ques_id):
     ques_details = DevhubQuestionModel.objects.get(id = ques_id)
     ques_details.delete()
+    messages.success(request,'Question removed Successfully')
     return redirect('/developer-section/ask-question/')
 
 
@@ -152,6 +164,7 @@ def edit_devhub_question_answer(request,ques_id,ans_id):
             ans_details = get_object_or_404(DevhubQuestionAnswerModel,id = ans_id)
             form = DevhubQuestionAnswerForm(request.POST,instance = ans_details)
             form.save()
+            messages.success(request,'Answer edited Successfully')
             return redirect('/developer-section/question/'+str(ques_id)+'/details')
     else:
         ans_details = get_object_or_404(DevhubQuestionAnswerModel,id = ans_id)
@@ -168,6 +181,7 @@ def edit_devhub_question_answer(request,ques_id,ans_id):
 def remove_devhub_question_answer(request,ques_id,ans_id):
     answer = DevhubQuestionAnswerModel.objects.get(id = ans_id)
     answer.delete()
+    messages.success(request,'Answer removed Successfully')
     return redirect('/developer-section/question/'+str(ques_id)+'/details')
 
 
@@ -193,6 +207,7 @@ def devhub_topic(request):
             )
             new_topic.save()
             new_topic.tags.add(*tags)
+            messages.success(request,'Topic posted Successfully')
             return redirect('/developer-section/post-topic')
     else:
         form = DevhubTopicForm()
@@ -243,6 +258,7 @@ def devhub_topic_details(request,topic_id):
                 comment_text = form.cleaned_data['comment_text']
             )
             new_comment.save()
+            messages.success(request,'Comment posted Successfully')
             return redirect('/developer-section/topic/'+str(topic_id)+'/details')
     else:
         form = DevhubTopicCommentForm()
@@ -283,6 +299,7 @@ def edit_devhub_topic(request,topic_id):
             topic_details.file = file
             form = DevhubTopicForm(request.POST,instance = topic_details)
             form.save()
+            messages.success(request,'Topic edited Successfully')
             return redirect('/developer-section/topic/'+str(topic_id)+'/details')
     else:
         tagArr = []
@@ -302,6 +319,7 @@ def edit_devhub_topic(request,topic_id):
 def remove_devhub_topic(request,topic_id):
     topic = get_object_or_404(DevhubTopicModel,id = topic_id)
     topic.delete()
+    messages.success(request,'Topic removed Successfully')
     return redirect('/developer-section/post-topic/')
 
 
@@ -317,6 +335,7 @@ def check_user_acess_for_devhub_topic_comment_edit(func):
 
 
 
+
 @loginRequired
 @check_user_acess_for_devhub_topic_comment_edit
 def edit_devhub_topic_comment(request,topic_id,comm_id):
@@ -326,6 +345,7 @@ def edit_devhub_topic_comment(request,topic_id,comm_id):
             comment_details = get_object_or_404(DevhubTopicCommentModel,id = comm_id)
             form = DevhubTopicCommentForm(request.POST,instance = comment_details)
             form.save()
+            messages.success(request,'Comment edited Successfully')
             return redirect('/developer-section/topic/'+str(topic_id)+'/details')
     else:
         comment_details = get_object_or_404(DevhubTopicCommentModel,id = comm_id)
@@ -341,4 +361,5 @@ def edit_devhub_topic_comment(request,topic_id,comm_id):
 def remove_devhub_topic_comment(request,topic_id,comm_id):
     comment = get_object_or_404(DevhubTopicCommentModel,id = comm_id)
     comment.delete()
+    messages.success(request,'Comment removed Successfully')
     return redirect('/developer-section/topic/'+str(topic_id)+'/details')

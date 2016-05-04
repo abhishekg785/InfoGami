@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 from app.forms import HostProjectForm,SearchForm,HostProjectQuestionForm
 from app.models import HostProjectModel,UserProfileModel,PingHostProjectModel,HostProjectQuestionModel
@@ -42,6 +43,7 @@ def host_project(request):
             )
             new_project.save()
             new_project.skills.add(*skills)
+            messages.success(request, 'Your project has been hosted!!!')
             return redirect('/project/host-project/')
     else:
         form = HostProjectForm()
@@ -76,6 +78,7 @@ def hosted_project_details(request,project_id):
                 question_text = form.cleaned_data['question_text']
             )
             new_query.save()
+            messages.success(request, 'Your Query has been posted!!!')
             return redirect('/project/host-project/'+str(project_id)+'/details/')
     else:
         form = HostProjectQuestionForm()
@@ -111,6 +114,7 @@ def edit_hosted_project(request,project_id):
         if form.is_valid():
             form = HostProjectForm(request.POST,instance = project_details)
             form.save()
+            messages.success(request,'Project edited Successfully')
             return redirect('/project/host-project/'+str(project_id)+'/details/')
     else:
         skillArr = []
@@ -132,6 +136,7 @@ def edit_hosted_project(request,project_id):
 def remove_hosted_project(request,project_id):
     project_details = get_object_or_404(HostProjectModel,id = project_id)
     project_details.delete()
+    messages.success(request, 'Project Removed Successfully!!!')
     return redirect('/project/host-project/')
 
 
@@ -160,6 +165,7 @@ def activate_hosted_project(request,project_id):
     elif project_details.project_status == 'deactive':
         project_details.project_status = 'active'
         project_details.save()
+        messages.success(request,'Project activated Successfully')
     return redirect('/project/host-project/'+str(project_id)+'/details/')
 
 
@@ -176,6 +182,7 @@ def deactivate_hosted_project(request,project_id):
     elif project_details.project_status == 'active':
         project_details.project_status = 'deactive'
         project_details.save()
+        messages.success(request,'Project deactivated Successfully')
     return redirect('/project/host-project/'+str(project_id)+'/details/')
 
 
@@ -236,6 +243,7 @@ def ping_hosted_project(request,project_id):
             hosted_project = HostProjectModel.objects.get(id = project_id)
         )
         new_ping.save()
+        messages.success(request,'Project pinged Successfully')
     return redirect('/project/host-project/'+str(project_id)+'/details/')
 
 
@@ -297,6 +305,7 @@ def accept_hosted_project_request(request,project_id,user_id):
     ping_obj = get_object_or_404(PingHostProjectModel,hosted_project_id = project_id,user_id = user_id)
     ping_obj.ping_status = 'accepted';
     ping_obj.save()
+    messages.success(request,'Request accepted Successfully')
     return redirect('/project/host-project/interested-users/')
 
 
@@ -309,8 +318,5 @@ def reject_hosted_project_request(request,project_id,user_id):
     #user_id is the user who requests for the project
     ping_obj = get_object_or_404(PingHostProjectModel,hosted_project_id = project_id,user_id = user_id)
     ping_obj.delete()
+    messages.success(request,'Request has been rejected')
     return redirect('/project/host-project/interested-users/')
-
-
-
-# edit_hosted_project_query(request,)

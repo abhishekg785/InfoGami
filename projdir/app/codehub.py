@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,logout,login
+from django.contrib import messages
 import datetime
 from django.utils.datastructures import MultiValueDictKeyError
 from django.core.paginator import Paginator,EmptyPage,InvalidPage
@@ -71,7 +72,7 @@ def codehub_topic(request):
             )
             new_topic.save()
             new_topic.tags.add(*tags)
-            #add flash message
+            messages.success(request,'Topic posted Successfully')
             return redirect('/codehub/topic')
     else:
         form = CodehubTopicForm()
@@ -103,7 +104,7 @@ def edit_topic(request,id):
             initial_topic_details.file = file
             form = CodehubTopicForm(request.POST,instance = initial_topic_details)
             form.save()
-            #flash message for edit data
+            messages.success(request,'Topic has been edited Successfully')
             print 'data edited'
             return redirect('/codehub/topic/'+str(id)+'/comment')
     else:
@@ -125,7 +126,7 @@ def edit_topic(request,id):
 def remove_topic(request,id):
     topic_obj = get_object_or_404(CodehubTopicModel,id = id)
     topic_obj.delete()
-    print 'deleted'
+    messages.success(request,'Topic removed Successfully')
     return redirect('/codehub/topic')
 
 
@@ -142,7 +143,7 @@ def comment_on_topic(request,id):
                 comment_text = form.cleaned_data['comment_text'],
             )
             new_comment.save()
-            #flash message here
+            messages.success(request,'Your comment has been posted')
             return redirect("/codehub/topic/"+id+"/comment")
     else:
         form = CodehubTopicCommentForm()
@@ -200,7 +201,7 @@ def remove_topic_comment(request,id):
     # topic_id = CodehubTopicCommentModel.objects.get(id = id).topic.id
     topic_id = get_object_or_404(CodehubTopicCommentModel,id =id).topic.id
     get_object_or_404(CodehubTopicCommentModel,id = id).delete()
-
+    messages.success(request,'comment deleted')
     return redirect('/codehub/topic/'+str(topic_id)+'/comment')
 
 
@@ -214,6 +215,7 @@ def edit_topic_comment(request,id):
             comment = CodehubTopicCommentModel.objects.get(id = id)
             form = CodehubTopicCommentForm(request.POST,instance = comment)
             form.save()
+            messages.success(request,'Comment has been edited Successfully')
             return redirect('/codehub/topic/'+str(comment.topic.id)+'/comment')
     else:
         comment = CodehubTopicCommentModel.objects.get(id = id)
@@ -251,6 +253,7 @@ def codehub_question(request):
             )
             new_ques.save()
             new_ques.question_tags.add(*tags)
+            messages.success(request,'Question has been posted Successfully')
             return redirect('/codehub/question')
     else:
         form = CodehubQuestionForm()
@@ -283,6 +286,7 @@ def codehub_question_details(request,ques_id):
                 comment_text = form.cleaned_data['comment_text']
             )
             new_answer.save()
+            messages.success(request,'Answer has been posted Successfully')
             return redirect('/codehub/question/'+str(ques_id)+'/details')
     else:
         form = CodehubQuestionCommentForm()
@@ -297,9 +301,11 @@ def remove_codehub_question(request,ques_id):
     ques_details = get_object_or_404(CodehubQuestionModel,id = ques_id)
     ques_user_id = ques_details.user.id
     ques_details.delete()
-    print 'deleted'
+    messages.success(request,'Question deleted Successfully')
     return redirect('/user/'+str(ques_user_id)+'/questions/')
-    #flash message here
+
+
+
 
 @loginRequired
 @check_user_access_for_question_edit_or_remove
@@ -311,7 +317,7 @@ def edit_codehub_question(request,ques_id):
             ques_details = get_object_or_404(CodehubQuestionModel,id = ques_id)
             form = CodehubQuestionForm(request.POST,instance = ques_details)
             form.save()
-            # flash messge here
+            messages.success(request,'Question edited Successfully')
             return redirect('/codehub/question/' +str(ques_id) + '/details/')
     else:
         ques_details = get_object_or_404(CodehubQuestionModel,id = ques_id)
@@ -329,6 +335,7 @@ def remove_codehub_question_comment(request,ans_id):
     c_details = get_object_or_404(CodehubQuestionCommentModel,id = ans_id)
     ques_id = c_details.question.id
     c_details.delete()
+    messages.success(request,'Comment removed Successfully')
     return redirect('/codehub/question/'+str(ques_id)+'/details/')
 
 
@@ -341,7 +348,7 @@ def edit_codehub_question_comment(request,ans_id):
             ques_id = ans_details.question.id
             form = CodehubQuestionCommentForm(request.POST,instance = ans_details)
             form.save()
-            #flash message here
+            messages.success(request,'Comment edited Successfully')
             return redirect('/codehub/question/'+str(ques_id)+'/details')
     else:
         ans_details = get_object_or_404(CodehubQuestionCommentModel,id = ans_id)
@@ -382,6 +389,7 @@ def codehub_innovation(request):
             )
             new_idea.save()
             new_idea.tags.add(*tags)
+            messages.success(request,'Idea has been posted Successfully')
             return redirect('/codehub/innovation')
 
     else:
@@ -403,6 +411,7 @@ def codehub_innovation_details(request,idea_id):
                 comment_text = form.cleaned_data['comment_text']
             )
             new_comment.save()
+            messages.success(request,'Comment has been posted Successfully')
             return redirect('/codehub/innovation/'+str(idea_id)+'/details')
     else:
         form = CodehubInnovationCommentForm()
@@ -432,6 +441,7 @@ def edit_codehub_innovation_idea(request,idea_id):
             idea_details = get_object_or_404(CodehubInnovationPostModel,id = idea_id)
             form = CodehubInnovationPostForm(request.POST,instance = idea_details)
             form.save()
+            messages.success(request,'Idea has been edited Successfully')
             return redirect('/codehub/innovation')
     else:
         tagArr = []
@@ -450,7 +460,10 @@ def edit_codehub_innovation_idea(request,idea_id):
 def remove_codehub_innovation_idea(request,idea_id):
     idea_obj = get_object_or_404(CodehubInnovationPostModel,id = idea_id)
     idea_obj.delete()
+    messages.success(request,'Idea has been removed')
     return redirect('/codehub/innovation')
+
+
 
 #decorator for comment comes here
 def check_user_access_for_innovation_comment_edit(func):
@@ -472,6 +485,7 @@ def edit_codehub_innovation_idea_comment(request,idea_id,com_id):
             comment_details = get_object_or_404(CodehubInnovationCommentModel,id = com_id)
             form = CodehubInnovationCommentForm(request.POST,instance = comment_details)
             form.save()
+            messages.success(request,'Comment edited Successfully')
             return redirect('/codehub/innovation/'+str(idea_id)+'/details')
     else:
         comment_details = get_object_or_404(CodehubInnovationCommentModel,id = com_id)
@@ -486,6 +500,7 @@ def edit_codehub_innovation_idea_comment(request,idea_id,com_id):
 def remove_codehub_innovation_idea_comment(request,idea_id,com_id):
     comment_details = get_object_or_404(CodehubInnovationCommentModel,id = com_id)
     comment_details.delete()
+    messages.success(request,'Comment removed Successfully')
     return redirect('/codehub/innovation/'+str(idea_id)+'/details')
 
 

@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,logout,login
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 import hashlib
 import urllib
 import datetime
@@ -49,10 +50,12 @@ def login_view(request):
                 login(request,user)
                 return redirect('/')
             else:
-                print 'The password is valid,but the account has been disabled'
+                # print 'The password is valid,but the account has been disabled'
+                messages.warning(request,'The password is valid,but the account has been disabled')
+                return redirect('/auth/login')
         else:
-            print 'Invalid username or password'
-            return HttpResponse('Invalid username or password')
+            messages.warning(request,'Invalid username or password')
+            return redirect('/auth/login')
     return render(request,'auth/login.html')
 
 
@@ -68,7 +71,8 @@ def register_view(request):
        user = User.objects.create_user(first_name = fname,last_name = lname,username = username,email = email,password = password)
        new_user_profile = UserProfileModel(user = user)
        new_user_profile.save()
-       return HttpResponse('Successfully registered');
+       messages.success(request,'Successfully Registered')
+       return redirect('/auth/login')
     return render(request,'auth/register.html')
 
 
