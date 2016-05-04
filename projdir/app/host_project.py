@@ -87,7 +87,7 @@ def hosted_project_details(request,project_id):
         ping = PingHostProjectModel.objects.get(hosted_project_id = project_id,user_id = request.user.id)
     except:
         ping = False
-    queries = HostProjectQuestionModel.objects.all()
+    queries = HostProjectQuestionModel.objects.all().order_by('-created')
     return render(request,'host_project/project_details.html',{'project_details':project_details,'ping':ping,'form':form,'queries':queries})
 
 
@@ -320,3 +320,45 @@ def reject_hosted_project_request(request,project_id,user_id):
     ping_obj.delete()
     messages.success(request,'Request has been rejected')
     return redirect('/project/host-project/interested-users/')
+
+
+
+def check_user_access_for_query_edit(func):
+    def wrapper(request,project_id,query_id,*args,**kwargs):
+        query_details = get_object_or_404(HostProjectQuestionModel,id = query_id)
+        if query_details.user.id != request.user.id:
+            return redirect('/')
+        return func(request,project_id,query_id,*args,**kwargs)
+    return wrapper
+
+
+
+
+@loginRequired
+@check_user_access_for_query_edit
+def edit_hosted_project_query(request,project_id,query_id):
+    if request.method == 'POST':
+        form = HostProjectQuestionForm(request.POST)
+        if form.is_valid():
+            query_details = get_object_or_404(HostProjectQuestionModel,id = query_id)
+            form = HostProjectQuestionForm(request.POST,instance = query_details)
+            form.save()
+            messages.success(request,'Query edited Successfully')
+            return redirect('/project/host-project/'+str(project_id)+'/details')
+    else:
+        query_obj = get_object_or_404(HostProjectQuestionModel,id = query_id)
+        query_data = {'question_text':query_obj.question_text}
+        form = HostProjectQuestionForm(initial = query_data)
+    return render(request,'host_project/edit_query.html',{'form':form})
+
+
+
+
+
+@loginRequired
+@check_user_access_for_query_edit
+def remove_hosted_project_query(request,project_id,query_id):
+    query_details = get_object_or_404(HostProjectQuestionModel,id = query_id)
+    query_details.delete()
+    messages.success(request,'Query removed Successfully')
+    return redirect('/project/host-project/' +str(project_id)+ '/details/')

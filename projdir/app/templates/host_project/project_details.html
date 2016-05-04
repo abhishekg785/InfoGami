@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load django_markdown %}
 {% block content %}
+<div id = 'main'>
   <article class = 'post'>
     <header>
       <div class = 'title'>
@@ -67,10 +68,10 @@
               {% else %}
               <h2><a style = "top:0.5em" href="{% url 'user_profile' query.user.id %}" class="author">{{ query.user.username }}<img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a></h2>
               {% endif %}
-              {% if query.user.username == request.user.username %}
+              {% if query.user.username == user.username %}
               <ul class = 'actions'>
-                <li><a href = "" class='button'>Edit</a></li>
-                <li><a href = "" class='button'>Remove</a></li>
+                <li><a href = "{% url 'edit_hosted_project_query' project_details.id query.id %}" class='button'>Edit</a></li>
+                <li><a href = "{% url 'remove_hosted_project_query' project_details.id query.id %}" class='button'>Remove</a></li>
               </ul>
               {% endif %}
             </header>
