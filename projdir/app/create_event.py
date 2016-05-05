@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 from .forms import CodehubCreateEventForm,CodehubEventQuestionForm,SearchForm,ProposeEventForm,ProposeEventSuggestionForm
 from .models import CodehubCreateEventModel,CodehubEventQuestionModel,UserProfileModel,ProposeEventModel,ProposeEventVoteModel,ProposeEventSuggestionModel

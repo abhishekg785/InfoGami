@@ -71,11 +71,16 @@ def register_view(request):
        username = request.POST['username']
        email = request.POST['email']
        password = request.POST['password']
-       user = User.objects.create_user(first_name = fname,last_name = lname,username = username,email = email,password = password)
-       new_user_profile = UserProfileModel(user = user)
-       new_user_profile.save()
-       messages.success(request,'Successfully Registered')
-       return redirect('/auth/login')
+       try:
+           User.objects.get(username = username)
+           messages.warning(request,'Username already exists')
+           return redirect('/auth/register')
+       except:
+           user = User.objects.create_user(first_name = fname,last_name = lname,username = username,email = email,password = password)
+           new_user_profile = UserProfileModel(user = user)
+           new_user_profile.save()
+           messages.success(request,'Successfully Registered')
+           return redirect('/auth/login')
     return render(request,'auth/register.html')
 
 
