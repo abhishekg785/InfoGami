@@ -302,7 +302,7 @@ def remove_codehub_question(request,ques_id):
     ques_user_id = ques_details.user.id
     ques_details.delete()
     messages.success(request,'Question deleted Successfully')
-    return redirect('/user/'+str(ques_user_id)+'/questions/')
+    return redirect('/codehub/question/')
 
 
 

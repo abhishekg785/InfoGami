@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  {% if not following_users %}
+    <h1>'<a href = "{% url 'user_profile' user_id %}">{{ username }}</a>' has no followers</h1>
+  {% else %}
+    <h1>Followers of '<a href = "{% url 'user_profile' user_id %}">{{ username }}({{ followers_count }})</a>':</h1>
+    <hr/>
+    {% for following_user in following_users %}
+      <h3><a href = "{% url 'user_profile' following_user.following_user.id %}">{{ following_user.following_user.username }}</a></h3>
+    <hr/>
+    {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

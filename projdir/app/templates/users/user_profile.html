@@ -40,6 +40,9 @@ Date Joined:{{ user_info.date_joined}}<br/>
   {% else %}
    <h2>No description yet</h2>
   {% endif %}
+  <br/>
+  <a href = "{% url 'get_following_users' user_profile.user.id %}">Followers</a>
+  <a href = "{% url 'get_users_followed' user_profile.user.id %}">Following</a>
   <hr/>
 <h1>User Activities:</h1>
 <a href = "{% url 'get_user_questions' user_info.id %}">Asked Questions</a><br/>

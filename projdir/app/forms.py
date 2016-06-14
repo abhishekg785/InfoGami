@@ -4,7 +4,7 @@ from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
 
 from markitup.widgets import MarkItUpWidget
-
+from dal import autocomplete
 
 
 #forms for posting a new topic
@@ -36,7 +36,7 @@ class UserProfileForm(forms.ModelForm):
     CHOICES = (('','--Select Type--'),('Programmer','Programmer'),('Developer','Developer'),('Not sure right now:)','Not sure right now:)'),('Both','Both'),)
     user_description = forms.CharField(label = 'A line about yourself(max = 200 characters)',max_length = 200)
     # skills = forms.CharField(label = 'Skills you have',max_length = 200)
-    skills = TagField(widget = TagWidget(attrs = {'placeholder':'Enter your skills(comma separated)'}))
+    skills = TagField(widget = TagWidget(attrs = {'placeholder':'Enter your skills'}))
     user_type_select = forms.ChoiceField(choices = CHOICES, required = True )
     user_profile_pic = forms.FileField(label = 'Upload profile pic',required = False)
     class Meta:
@@ -140,7 +140,9 @@ class DevhubQuestionForm(forms.ModelForm):
     class Meta:
         model = DevhubQuestionModel
         fields = ['question_heading','question_description','question_link','question_tags','question_type']
-
+        widgets = {
+           'ques_heading':autocomplete.ModelSelect2(url = 'devhubQuestion_autocomplete')
+        }
 
 
 

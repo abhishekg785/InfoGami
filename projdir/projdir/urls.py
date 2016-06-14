@@ -20,13 +20,13 @@ from django.conf.urls.static import static
 
 from app.views import login_view,register_view,logout_view,index,about_view
 from app.codehub import codehub_question,remove_codehub_question,edit_codehub_question,codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,codehub_question_details,remove_codehub_question_comment,edit_codehub_question_comment,search_question,codehub_innovation,codehub_innovation_details,edit_codehub_innovation_idea,remove_codehub_innovation_idea,edit_codehub_innovation_idea_comment,remove_codehub_innovation_idea_comment,search_codehub_innovation_post,get_all_codehub_topics,get_all_codehub_questions
-from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog,follow_user_profile,get_user_new_ideas,get_codehub_user_events,unfollow_user_profile,get_user_notifications
+from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog,follow_user_profile,get_user_new_ideas,get_codehub_user_events,unfollow_user_profile,get_user_notifications,get_following_users,get_users_followed,user_messages_api,get_api_data
 from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question,search_codehub_event,propose_event,propose_event_details,upVote_propose_event,downVote_propose_event,propose_event_users_upvoted,propose_event_users_downvoted,edit_propose_event,remove_propose_event,search_propose_event,get_all_proposed_events,edit_suggestion_to_propose_event,remove_suggestion_to_propose_event
 from app.music import music_list
 from app.blog import blog,blog_post_edit,blog_post_remove,blog_post_details,search_user_blog_post_by_slug,search_all_blog_posts_by_slug,edit_blog_post_comment,remove_blog_post_comment,search_blog_post,get_all_blog_posts
 from app.match_skill import match_user_skills,search_users_by_skill,get_all_skills_stat
 from app.tags import tags
-from app.devhub import devhub,devhub_question,devhub_question_details,edit_devhub_question,remove_devhub_question,get_all_devhub_questions,search_devhub_question,edit_devhub_question_answer,remove_devhub_question_answer,devhub_topic,get_all_devhub_topics,search_devhub_topic,devhub_topic_details,edit_devhub_topic,remove_devhub_topic,edit_devhub_topic_comment,remove_devhub_topic_comment
+from app.devhub import devhub,devhub_question,devhub_question_details,edit_devhub_question,remove_devhub_question,get_all_devhub_questions,search_devhub_question,edit_devhub_question_answer,remove_devhub_question_answer,devhub_topic,get_all_devhub_topics,search_devhub_topic,devhub_topic_details,edit_devhub_topic,remove_devhub_topic,edit_devhub_topic_comment,remove_devhub_topic_comment,DevhubQuestionAutoComplete
 from app.host_project import work_collaborately,host_project,get_all_hosted_projects,hosted_project_details,edit_hosted_project,remove_hosted_project,activate_hosted_project,deactivate_hosted_project,skill_matched_hosted_project,user_hosted_projects,ping_hosted_project,hosted_project_interested_users,search_hosted_project,accept_hosted_project_request,reject_hosted_project_request,edit_hosted_project_query,remove_hosted_project_query
 
 
@@ -72,11 +72,15 @@ urlpatterns = [
     url(r'^codehub/question/answer/(?P<ans_id>\d+)/remove/$',remove_codehub_question_comment,name = 'remove_codehub_question_comment'),
     url(r'^codehub/question/answer/(?P<ans_id>\d+)/edit/$',edit_codehub_question_comment,name = 'edit_codehub_question_comment'),
     url(r'^codehub/all_questions/$',get_all_codehub_questions,name = 'get_all_codehub_questions'),
+    #user's specific
     url(r'^user/(?P<user_id>\d+)/topics/$',get_user_topics,name = 'get_user_topics'),
     url(r'^user/(?P<user_id>\d+)/questions/$',get_user_questions,name = 'get_user_questions'),
     url(r'^user/(?P<user_id>\d+)/blog/$',user_blog,name = 'user_blog'),
     url(r'^user/(?P<user_id>\d+)/new-ideas/$',get_user_new_ideas,name = 'get_user_new_ideas'),
     url(r'^user/(?P<user_id>\d+)/codehub-events/$',get_codehub_user_events,name = 'get_codehub_user_events'),
+    url(r'^user/(?P<user_id>\d+)/following-users/$',get_following_users,name = 'get_following_users'),
+    url(r'^user/(?P<user_id>\d+)/users-followed/$',get_users_followed,name = 'get_users_followed'),
+    url(r'^messages/$',user_messages_api,name = 'get_user_messages'),
     url(r'^blog/$',blog,name = 'write_blog'),
     url(r'^notifications/',get_user_notifications,name = 'notifications'),
     url(r'^blog/search/(?P<slug_str>[\w\-]+)/posts$',search_all_blog_posts_by_slug,name = 'search_all_blog_posts_by_slug'),
@@ -149,6 +153,10 @@ urlpatterns = [
     url(r'^project/hosted-project/(?P<project_id>\d+)/user/(?P<user_id>\d+)/reject-request/$',reject_hosted_project_request,name = 'reject_hosted_project_request'),
     url(r'^project/hosted-project/(?P<project_id>\d+)/query/(?P<query_id>\d+)/edit/$',edit_hosted_project_query,name = 'edit_hosted_project_query'),
     url(r'^project/hosted-project/(?P<project_id>\d+)/query/(?P<query_id>\d+)/remove/$',remove_hosted_project_query,name = 'remove_hosted_project_query'),
+    #queries for the autocomplete
+    url(r'^devhubQuestion_autocomplete/$',DevhubQuestionAutoComplete.as_view(),name = 'devhubQuestion_autocomplete'),
+    #get_api_data
+    url(r'^api_data/$',get_api_data,name = 'get_api_data')
 ]
 if settings.DEBUG is True:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

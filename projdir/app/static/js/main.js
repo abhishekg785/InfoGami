@@ -1,3 +1,89 @@
+var visualDiv = $('#visualDiv'),
+    closeMusic = $('#closeMusic'),
+		musicName = $('#musicName h1'),
+		musicVisual = $('#musicVisual'),
+		is_playing = false,
+    old_track = "",
+		new_track = "",
+		//parameters for the svg visual data animation
+		svgHeight = 300,
+		svgWidth = 1200,
+		barPadding = 1,
+		frequencyData = new Uint8Array(200);
+
+
+
+function playMusic(music_id,music_name){
+
+	var track_id = 'music' + music_id;
+	musicName.html(music_name);
+
+	visualDiv.css('display','block')
+	if(is_playing == false){
+	  new_track = $("#"+track_id)[0];
+		old_track = new_track;
+	  is_playing = true;
+	  new_track.play();
+  }
+	else if(is_playing == true){
+		new_track = $("#"+track_id)[0];
+    old_track.pause();
+		old_track.currentTime = 0;
+		new_track.play();
+		old_track = new_track;
+	}
+
+	var graph = createSVG('#musicVisual',svgHeight,svgWidth);
+	graph.selectAll('rect')
+	  .data(frequencyData)
+		.enter()
+		.append('rect')
+		.attr('width',svgWidth / frequencyData.length - barPadding)
+		.attr('x',function(d,i){
+			return i*(svgWidth / frequencyData.length);
+		});
+
+	var audioCtx = new (window.AudioContext || window.webkitAudioContext)(),
+	    audioSrc = audioCtx.createMediaElementSource(new_track),
+	    analyser = audioCtx.createAnalyser();
+			audioSrc.connect(analyser);
+	    audioSrc.connect(audioCtx.destination);
+
+			function renderChart(){
+				requestAnimationFrame(renderChart);
+
+				//copy frequencydata to frequencydataArray
+				analyser.getByteFrequencyData(frequencyData);
+
+				//update d3 chart with new data
+				graph.selectAll('rect')
+					.data(frequencyData)
+					.attr('y',function(d){
+						return svgHeight - d;
+					})
+					.attr('height',function(d){
+						return d;
+					})
+					.attr('fill',function(d){
+						return 'rgb(0,0,' +d +')';
+					});
+			}
+	renderChart();
+}
+
+	$('#closeMusic').on('click',function(){
+		visualDiv.css('display','none');
+		new_track.pause();
+		new_track.currentTime = 0;
+	});
+
+
+function createSVG(parent,height,width){
+	return d3.select(parent).append('svg').attr('height',height).attr('width',width)
+}
+
+
+
 (function($) {
 	skel.breakpoints({
 		xlarge:	'(max-width: 1680px)',
@@ -13,6 +99,7 @@
 			$menu = $('#menu'),
 			$sidebar = $('#sidebar'),
 			$main = $('#main');
+			$loader = $('#loader')
 
 		// Disable animations/transitions until the page has loaded.
 			$body.addClass('is-loading');
@@ -103,5 +190,4 @@
 					});
 
 	});
-
 })(jQuery);

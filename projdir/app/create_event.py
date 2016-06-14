@@ -241,6 +241,7 @@ def propose_event_details(request,event_id):
             new_sugg = ProposeEventSuggestionModel(
                 user = request.user,
                 user_profile = UserProfileModel.objects.get(user_id = request.user.id),
+                event = ProposeEventModel.objects.get(id = event_id),
                 sugg_text = form.cleaned_data['sugg_text'],
             )
             new_sugg.save()
@@ -255,7 +256,7 @@ def propose_event_details(request,event_id):
         voteStatus = "none"
     up_vote_count = ProposeEventVoteModel.objects.filter(event_id = event_id,vote = 'upVote').count()
     down_vote_count = ProposeEventVoteModel.objects.filter(event_id = event_id,vote = 'downVote').count()
-    suggestions = ProposeEventSuggestionModel.objects.all().order_by('-created')
+    suggestions = ProposeEventSuggestionModel.objects.filter(event_id = event_id).order_by('-created')
     return render(request,'propose_event/event_details.html',{'event':event_details,'voteStatus':voteStatus,'up_vote_count':up_vote_count,'down_vote_count':down_vote_count,'sugg_form':form,'suggestions':suggestions})
 
 

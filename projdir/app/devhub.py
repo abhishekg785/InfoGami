@@ -18,6 +18,12 @@ from os.path import join as isfile
 from django.conf import settings
 import os
 
+from dal import autocomplete
+
+from django.core.urlresolvers import reverse_lazy
+from django.views import generic
+
+
 
 def devhub(request):
     return render(request,'devhub/index.html')
@@ -69,7 +75,7 @@ def devhub_question_details(request,ques_id):
     else:
         form = DevhubQuestionAnswerForm()
     ques_details = get_object_or_404(DevhubQuestionModel,id = ques_id)
-    ques_answers = DevhubQuestionAnswerModel.objects.all().order_by('-created')
+    ques_answers = DevhubQuestionAnswerModel.objects.filter(question_id = ques_id).order_by('-created')
     return render(request,'devhub/question/ques_details.html',{'ques_details':ques_details,'form':form,'ques_answers':ques_answers})
 
 
@@ -263,7 +269,7 @@ def devhub_topic_details(request,topic_id):
     else:
         form = DevhubTopicCommentForm()
     topic_details = get_object_or_404(DevhubTopicModel,id = topic_id)
-    comments = DevhubTopicCommentModel.objects.all()
+    comments = DevhubTopicCommentModel.objects.filter(topic_id = topic_id).order_by('-created')
     return render(request,'devhub/topic/topic_details.html',{'topic':topic_details,'form':form,'comments':comments})
 
 
@@ -363,3 +369,16 @@ def remove_devhub_topic_comment(request,topic_id,comm_id):
     comment.delete()
     messages.success(request,'Comment removed Successfully')
     return redirect('/developer-section/topic/'+str(topic_id)+'/details')
+
+
+
+
+class DevhubQuestionAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        print 'value of q is:',self.q
+        if not self.request.user.is_authenticated():
+            return DevhubQuestionModel.objects.none()
+        qs = DevhubQuestionModel.objects.all()
+        if self.q:
+            qs = qs.filter(question_heading__contains = self.q)
+        return qs

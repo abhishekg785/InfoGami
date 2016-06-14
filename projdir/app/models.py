@@ -85,6 +85,9 @@ class CodehubCreateEventModel(models.Model):
 
 
 
+
+
+
 class CodehubEventQuestionModel(models.Model):
     user = models.ForeignKey(User)
     user_profile = models.ForeignKey(UserProfileModel)
@@ -92,6 +95,9 @@ class CodehubEventQuestionModel(models.Model):
     question_text = MarkdownField()
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)
+
+
+
 
 
 class MusicModel(models.Model):
@@ -301,9 +307,11 @@ class ProposeEventVoteModel(models.Model):
 
 
 
+
 class ProposeEventSuggestionModel(models.Model):
     user = models.ForeignKey(User)
     user_profile = models.ForeignKey(UserProfileModel)
+    event = models.ForeignKey(ProposeEventModel)
     sugg_text = models.CharField(max_length = 500)
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)
@@ -338,6 +346,7 @@ class PingHostProjectModel(models.Model):
 class HostProjectQuestionModel(models.Model):
     user = models.ForeignKey(User)
     user_profile = models.ForeignKey(UserProfileModel)
+    project = models.ForeignKey(HostProjectModel)
     question_text = models.CharField(max_length = 500)
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)

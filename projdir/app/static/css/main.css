@@ -7,6 +7,49 @@
 	left: 10px;
 }*/
 
+#visualDiv{
+	height: 100%;
+	width: 100%;
+	position:absolute;
+	top:55px;
+	background-color: green;
+	left:0px;
+	border: 2px solid black;
+	transition: all 1s ease;
+	opacity: 0.9;
+	display: none;
+}
+
+#closeMusic{
+	position: absolute;
+	top:0px;
+	height: 30px;
+	width: 100px;
+	background-color: black;
+	right: 0px;
+	cursor: pointer;
+	text-align: center;
+	color: white;
+	opacity: 1;
+}
+
+#musicName{
+	position:absolute;
+	top:0px;
+	width: 100%;
+	text-align: center;
+	color: black;
+	padding: 10px;
+	font-size: 20px;
+}
+
+#musicVisual{
+	width: 100%;
+	position:absolute;
+	top:105px;
+	height: 85%;
+	text-align: center;
+}
 
 /* Reset */
 textarea{
@@ -3233,13 +3276,21 @@ form select {
 		}
 
 		@media screen and (max-width: 736px) {
-
 			#wrapper {
 				padding: 1.5em;
 			}
 
 		}
-
+    @media screen and (max-width:500px) {
+    	#visualDiv{
+				display: block;
+			}
+			#closeMusic{
+				width: 100%;
+				top:50px;
+				text-align: center;
+			}
+    }
 /* Main */
 
 	#main {

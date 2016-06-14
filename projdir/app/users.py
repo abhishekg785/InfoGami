@@ -235,3 +235,34 @@ def get_user_notifications(request):
     #get user_ideas
     #return render(request,'users/notifications.html',{'notifications':followed_users})
     return HttpResponse(followed_user_arr)
+
+
+#the route is for getting the following users
+@loginRequired
+def get_following_users(request,user_id):
+    username = User.objects.get(id = user_id).username  #username if the name of the user with id = user_id
+    following_users = FollowUserModel.objects.filter(followed_user_id = user_id)
+    followers_count = following_users.count()
+    return render(request,'users/following_users_view.html',{'username':username,'user_id':user_id,'following_users':following_users,'followers_count':followers_count})
+
+
+#this gives the users i am following
+@loginRequired
+def get_users_followed(request,user_id):
+    username = User.objects.get(id = user_id)
+    followed_users = FollowUserModel.objects.filter(following_user_id = user_id)
+    followed_count = followed_users.count()
+    return render(request,'users/followed_users_list.html',{'username':username,'user_id':user_id,'followed_users':followed_users,'followed_count':followed_count})
+
+
+
+def user_messages_api(request):
+    return HttpResponse('8');
+
+
+def get_api_data(request):
+    if request.method == 'POST':
+        print 'post data'
+        return HttpResponse('cdkjcdkjcbdkjcd')
+    else:
+        return HttpResponse('cjcdbkcbdkjcbdcjk')

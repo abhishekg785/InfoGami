@@ -24,6 +24,7 @@
       <li><a href = "{% url 'user_blog' user.id %}">My Blog</a></li>
       <li><a href = "{% url 'notifications' %}">Notifications</a></li>
       <li><a href = "{% url 'tags' %}">Tags</a></li>
+      <li><a href = "{% url 'tags' %}">Messages<span id = "msg"></span></a></li>
       <li><a href="{% url 'music_list' %}">Music</a></li>
       <li><a href="{% url 'logout_view' %}">Logout</a></li>
     </ul>
@@ -72,6 +73,11 @@
               <h3>Tags</h3>
             </a>
           </li>
+          <li id = 'message_heading'>
+            <a href = "">
+              <h3>Messages</h3>
+            </a>
+          </li>
           <li>
             <a href="{% url 'music_list' %}">
               <h3>Music</h3>
@@ -117,11 +123,24 @@
       {% endfor %}
   </ul>
   {% endif %}
+  <!-- <div style="height:100px;width:100px;background-color:red" id = 'loader'></div> -->
     {% block content %}
     {% endblock %}
     <script src = "{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/skel.min.js' %}"></script>
     <script src="{% static 'js/util.js' %}"></script>
     <script src ="{% static 'js/main.js' %}"></script>
+    <script>
+      var message_span = $('#msg');
+      var message_heading = $('a#message_heading');
+      console.log(message_heading);
+      $.ajax({
+        url:'http://localhost:8000/messages/',
+        success:function(data){
+          msg.innerHTML = '(' + data + ')';
+          // message_heading.css('color','red');
+        }
+      });
+    </script>
   </body>
 </html>

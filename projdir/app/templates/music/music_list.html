@@ -1,6 +1,17 @@
 
 {% extends 'base.html' %}
 {% block content %}
+<div id = "visualDiv">
+  <div id = 'musicName'>
+    <h1 id = 'musicHeading'></h1>
+  </div>
+  <div id = "closeMusic">
+    Stop Music
+  </div>
+  <div id = 'musicVisual'>
+
+  </div>
+</div>
 <div id = 'main'>
   <h1>Music List({{ music_list.count }})</h1>
   <hr/>
@@ -13,7 +24,9 @@
           <li>
             <article>
               <header>
-                <h2><a target = '_blank'  href = "/media/{{ music.music_file }}">{{ music.music_name }}</a></h2>
+                <!-- <h2><a target = '_blank'  href = "/media/{{ music.music_file }}">{{ music.music_name }}</a></h2> -->
+                <audio src = "/media/{{ music.music_file }}" id = "music{{ music.id }}"></audio>
+                <h2 id = "{{ music.music_id }}" onclick="playMusic({{ music.id }},'{{ music.music_name }}')"><a>{{ music.music_name}}</a></h2>
                 <p class="published">by:{{ music.music_artist }}</p>
                 <p class = 'published'>{{ music.music_lang }}</p>
               </header>
@@ -23,11 +36,7 @@
       </ul>
     {% endif %}
   </section>
-  <!-- {% for music in music_list %}
-    <h2><a target = '_blank'  href = "/media/{{ music.music_file }}">{{ music.music_name }}</a></h2>
-      by:{{ music.music_artist }}<br/>
-      {{ music.music_lang }}
-    <hr/>
-  {% endfor %} -->
+  <!-- for showing visual data of the music -->
 </div>
+<script src = 'http://d3js.org/d3.v3.min.js' charset = 'utf-8'></script>
 {% endblock %}

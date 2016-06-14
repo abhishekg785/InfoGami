@@ -75,6 +75,7 @@ def hosted_project_details(request,project_id):
             new_query = HostProjectQuestionModel(
                 user = request.user,
                 user_profile = UserProfileModel.objects.get(user_id = request.user.id),
+                project = HostProjectModel.objects.get(id = project_id),
                 question_text = form.cleaned_data['question_text']
             )
             new_query.save()
@@ -87,7 +88,7 @@ def hosted_project_details(request,project_id):
         ping = PingHostProjectModel.objects.get(hosted_project_id = project_id,user_id = request.user.id)
     except:
         ping = False
-    queries = HostProjectQuestionModel.objects.all().order_by('-created')
+    queries = HostProjectQuestionModel.objects.filter(project_id = project_id).order_by('-created')
     return render(request,'host_project/project_details.html',{'project_details':project_details,'ping':ping,'form':form,'queries':queries})
 
 
@@ -282,6 +283,7 @@ def search_hosted_project(request):
     else:
         form = SearchForm()
     return render(request,'host_project/search_hosted_project.html',{'form':form})
+
 
 
 
