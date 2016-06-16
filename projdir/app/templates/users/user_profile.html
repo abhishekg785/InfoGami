@@ -1,34 +1,34 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block content %}
-<div id = 'main'>
-{% if user_info.username  == user.username %}
-<h2><a href = "{% url 'edit_user_profile' user.id %}">Edit Profile</a></h2>
-{% endif %}
-{% if user_profile.user_profile_pic %}
-  <img style="height:120px;width:120px;border-radius:50%" src = "/media/{{ user_profile.user_profile_pic }}"/>
-{% else %}
-  <img style="height:120px;border-radius:50%" src = "{% static 'images/default_gravators/github.png' %}"/>
-{% endif %}
-<br/>
-<h1>{{ user_info.username }}</h1>
-{% if user_profile.user.id != user.id %}
-  {% if is_following %}
-    <h3 style="color:green">Following</h3>
-    <a href = "{% url 'unfollow_user_profile' user_profile.user.id %}">Unfollow</a>
-  {% else %}
-    <h3 style="color:red"><a href = "{% url 'follow_user_profile' user_profile.user.id %}">Follow</a></h3>
+  <div id = 'main'>
+  {% if user_info.username  == user.username %}
+    <h2><a href = "{% url 'edit_user_profile' user.id %}">Edit Profile</a></h2>
   {% endif %}
-{% endif %}
-{% if user_info.is_superuser == 1 %}
-  <img src = "{% static 'images/default_gravators/admin.png' %}" alt ='No avatar available' style="height:150px"/><br/>
-{% endif %}
-<h2>{{ user_info.first_name }}</h2>
-<h2>{{ user_info.last_name }}</h2>
-{{ user_info.email }}<br/>
-Date Joined:{{ user_info.date_joined}}<br/>
-<hr/>
-<h1>User profile Data</h1>
+  {% if user_profile.user_profile_pic %}
+    <img style="height:120px;width:120px;border-radius:50%" src = "/media/{{ user_profile.user_profile_pic }}"/>
+  {% else %}
+    <img style="height:120px;border-radius:50%" src = "{% static 'images/default_gravators/github.png' %}"/>
+  {% endif %}
+  <br/>
+  <h1>{{ user_info.username }}</h1>
+  {% if user_profile.user.id != user.id %}
+    {% if is_following %}
+      <h3 style="color:green">Following</h3>
+      <a href = "{% url 'unfollow_user_profile' user_profile.user.id %}">Unfollow</a>
+    {% else %}
+      <h3 style="color:red"><a href = "{% url 'follow_user_profile' user_profile.user.id %}">Follow</a></h3>
+    {% endif %}
+  {% endif %}
+  {% if user_info.is_superuser == 1 %}
+    <img src = "{% static 'images/default_gravators/admin.png' %}" alt ='No avatar available' style="height:150px"/><br/>
+  {% endif %}
+  <h2>{{ user_info.first_name }}</h2>
+  <h2>{{ user_info.last_name }}</h2>
+  {{ user_info.email }}<br/>
+  Date Joined:{{ user_info.date_joined}}<br/>
+  <hr/>
+  <h1>User profile Data</h1>
   {% if user_profile %}
     Description:{{ user_profile.user_description }}<br/>
     Skills:
@@ -38,18 +38,43 @@ Date Joined:{{ user_info.date_joined}}<br/>
     <br/>
     Type:{{ user_profile.user_type_select }}
   {% else %}
-   <h2>No description yet</h2>
+    <h2>No description yet</h2>
   {% endif %}
   <br/>
   <a href = "{% url 'get_following_users' user_profile.user.id %}">Followers</a>
   <a href = "{% url 'get_users_followed' user_profile.user.id %}">Following</a>
   <hr/>
-<h1>User Activities:</h1>
-<a href = "{% url 'get_user_questions' user_info.id %}">Asked Questions</a><br/>
-<a href = "{% url 'get_user_topics' user_info.id %}">Posted Topics </a><br/>
-<a href = "{% url 'user_blog' user_info.id %}">Blog</a><br/>
-<a href = "{% url 'get_user_new_ideas' user_info.id  %}">New way to solve problems</a><br/>
-<a href = "{% url 'get_codehub_user_events' user_info.id %}">Talks or Events by User</a><br/>
-<a href = "{% url 'user_hosted_projects' user_info.id %}">Hosted projects by user</a>
-</div>
+  <h1>User Activities:</h1>
+  <a href = "{% url 'get_user_questions' user_info.id %}">Asked Questions</a><br/>
+  <a href = "{% url 'get_user_topics' user_info.id %}">Posted Topics </a><br/>
+  <a href = "{% url 'user_blog' user_info.id %}">Blog</a><br/>
+  <a href = "{% url 'get_user_new_ideas' user_info.id  %}">New way to solve problems</a><br/>
+  <a href = "{% url 'get_codehub_user_events' user_info.id %}">Talks or Events by User</a><br/>
+  <a href = "{% url 'user_hosted_projects' user_info.id %}">Hosted projects by user</a>
+  <hr/>
+  <div id = 'user_skill_stat_div'>
+    <h1>Your skills statstics among community</h1>
+    <div id = 'user_stat_visual'>
+
+    </div>
+  </div>
+  </div>
+  <script src = "{% static 'js/jquery.min.js' %}"></script>
+  <script src = 'http://d3js.org/d3.v3.min.js' charset = 'utf-8'></script>
+  <script src = "{% static 'js/createVisual.js' %}"></script>
+  <script>
+    var user_id = "{{ user_info.id }}"
+        div_name = "user_stat_visual";
+    $.ajax({
+      url:"http://localhost:8000/get-user-skills-stat-api/v1/" + user_id + "/",
+      type:'GET',
+      success:function(data){
+        createStatVisual(data,div_name);
+      },
+      error:function(e){
+        console.log(e);
+      }
+    });
+  </script>
+  </script>
 {% endblock %}

@@ -61,6 +61,24 @@
 	text-align: center;
 }
 
+
+#user_skill_stat_div{
+	width: 100%;
+	height: 100%;
+	position:relative;
+	background-color: 'red';
+	top:0px;
+	left: 0px;
+	text-align: center;
+	/*border: 2px solid black;*/
+}
+
+#user_stat_visual{
+	width: 100%;
+	height: 100%;
+	background-color: green;
+	opacity: 0.6;
+}
 /* Reset */
 textarea{
 	font-family: "Raleway", Helvetica, sans-serif;

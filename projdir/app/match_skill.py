@@ -28,7 +28,6 @@ def get_all_users_skill_count_arr(request):
 
 @loginRequired
 def get_all_users_skill_percent_arr(request):
-    print 'ckjjdbvkjvbf'
     all_skills = UserProfileModel.skills.all()
     total_users = User.objects.all().count()
     skill_per_arr = []
@@ -98,3 +97,18 @@ def get_all_skills_stat_apiv1(request):
     #get user stats
     skill_count_arr = get_all_users_skill_percent_arr(request)
     return HttpResponse(json.dumps(skill_count_arr),content_type = 'application/json')
+
+
+
+#api for getting skill statistsics according to a user
+def get_user_skills_stat_apiv1(request,user_id):
+    user_skill_stat_arr = []
+    total_user_count = User.objects.all().count()
+    user_skills = UserProfileModel.objects.get(user_id  = user_id).skills.all()
+    for skill in user_skills:
+        skill_count = UserProfileModel.objects.filter(skills__name__in = [skill]).count()
+        skill_per  = (skill_count / float(total_user_count))*100
+        skill_per = round(skill_per,2)
+        obj = {'skill':skill.name,'count':skill_per}
+        user_skill_stat_arr.append(obj)
+    return HttpResponse(json.dumps(user_skill_stat_arr),content_type = 'application/json')
