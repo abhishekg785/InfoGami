@@ -7,6 +7,16 @@
 	left: 10px;
 }*/
 
+#skills_stat_visual{
+	height: 80%;
+	width: 80%;
+	position: absolute;
+	top:180px;
+	right:0px;
+	background-color: green;
+	opacity: 0.4;
+}
+
 #visualDiv{
 	height: 100%;
 	width: 100%;

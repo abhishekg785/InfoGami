@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block content %}
 <div id = 'main'>
+  <div id = 'skills_stat_visual'>
+  </div>
   <h2>Get All Skills Statistics</h2>
   <hr/>
   {% for key,value in skill_count_dict.items %}
@@ -12,4 +15,67 @@
     <a href = "{% url 'search_users_by_skill' key.slug %}">{{ key }}</a>:{{ value }}<br/>
   {% endfor %}
 </div>
+<script src = "{% static 'js/jquery.min.js' %}"></script>
+<script src = 'http://d3js.org/d3.v3.min.js' charset = 'utf-8'></script>
+<script>
+  $.ajax({
+    url:'http://localhost:8000/get-all-skills-stat-api/v1/',
+    type:'GET',
+    success:function(data){
+      createStatVisual(data);
+    },
+    error:function(e){
+      console.log(e);
+    }
+  });
+
+  function createStatVisual(skill_data){
+    var svgHeight = 500 ,
+        svgWidth = 1000,
+        barPadding = 1,
+        heightFactor = 10,
+        textPadding = 20,
+        skillStatVisual = d3.select('#skills_stat_visual'),
+        skill_data_length = skill_data.length,
+        visualSVG = skillStatVisual.append('svg')
+          .attr('height',svgHeight)
+          .attr('width',svgWidth)
+    visualSVG.selectAll('rect')
+      .data(skill_data)
+      .enter()
+      .append('rect')
+      .attr('x',function(d,i){
+        return i * (svgWidth / skill_data_length);
+      })
+      .attr('y',function(d){
+        return svgHeight - (d.count * heightFactor);
+      })
+      .attr('height',function(d){
+        console.log(d.count * heightFactor);
+        return d.count * heightFactor;
+      })
+      .attr('width',function(d,i){
+        return svgWidth / skill_data_length - barPadding;
+      });
+
+    function appendStatText(){
+      var visualText = visualSVG.selectAll('text')
+        .data(skill_data)
+        .enter()
+        .append('text')
+        .attr('x',function(d,i){
+          return i * (svgWidth / skill_data.length) + 10;
+        })
+        .attr('y',function(){
+          return svgHeight;
+        })
+        .attr('fill','blue')
+        .attr('font-size',5)
+        .text(function(d){
+          return d.skill;
+        })
+    }
+    appendStatText();
+  }
+</script>
 {% endblock %}

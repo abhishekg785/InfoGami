@@ -4,6 +4,46 @@ from django.contrib.auth.models import User
 
 from app.models import UserProfileModel
 
+from app.codehub import loginRequired
+import json
+
+
+
+
+
+@loginRequired
+def get_all_users_skill_count_arr(request):
+    all_skills = UserProfileModel.skills.all()
+    total_users = User.objects.all().count()
+    skill_count_arr = []  # have the count of users in a particular skill
+    for skill in all_skills:
+        skill_user_count = UserProfileModel.objects.filter(skills__name__in = [skill]).count()
+        obj = {'skill':skill.name,'count':skill_user_count}
+        skill_count_arr.append(obj)
+    return skill_count_arr
+
+
+
+
+
+@loginRequired
+def get_all_users_skill_percent_arr(request):
+    print 'ckjjdbvkjvbf'
+    all_skills = UserProfileModel.skills.all()
+    total_users = User.objects.all().count()
+    skill_per_arr = []
+    for skill in all_skills:
+        skill_user_count = UserProfileModel.objects.filter(skills__name__in = [skill]).count()
+        skill_user_per = (skill_user_count / float(total_users))*100
+        skill_user_per = round(skill_user_per,2)
+        obj = {'skill':skill.name,'count':skill_user_per}
+        skill_per_arr.append(obj)
+    return skill_per_arr
+
+
+
+
+@loginRequired
 def match_user_skills(request):
     total_user_count = User.objects.all().count()
     logged_user_profile = UserProfileModel.objects.get(user_id = request.user.id)
@@ -24,12 +64,15 @@ def match_user_skills(request):
 
 
 
+@loginRequired
 def search_users_by_skill(request,skill_slug_str):
     result = UserProfileModel.objects.filter(skills__slug = skill_slug_str)
     return render(request,'match_skill/search_users_by_skill.html',{'result':result,'skill_search_str':skill_slug_str})
 
 
 
+
+@loginRequired
 def get_all_skills_stat(request):
     all_skills = UserProfileModel.skills.all()
     total_users = User.objects.all().count()
@@ -44,3 +87,14 @@ def get_all_skills_stat(request):
     # print skill_count_dict
     # print skill_per_dict
     return render(request,'match_skill/get_all_skills_stat.html',{'skill_count_dict':skill_count_dict,'skill_per_dict':skill_per_dict})
+
+
+
+
+
+#apis for getting a json response for skills statstics
+@loginRequired
+def get_all_skills_stat_apiv1(request):
+    #get user stats
+    skill_count_arr = get_all_users_skill_percent_arr(request)
+    return HttpResponse(json.dumps(skill_count_arr),content_type = 'application/json')

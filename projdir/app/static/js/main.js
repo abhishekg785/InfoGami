@@ -33,6 +33,7 @@ function playMusic(music_id,music_name){
 		old_track = new_track;
 	}
 
+
 	var graph = createSVG('#musicVisual',svgHeight,svgWidth);
 	graph.selectAll('rect')
 	  .data(frequencyData)
@@ -42,6 +43,7 @@ function playMusic(music_id,music_name){
 		.attr('x',function(d,i){
 			return i*(svgWidth / frequencyData.length);
 		});
+
 
 	var audioCtx = new (window.AudioContext || window.webkitAudioContext)(),
 	    audioSrc = audioCtx.createMediaElementSource(new_track),
@@ -70,6 +72,7 @@ function playMusic(music_id,music_name){
 			}
 	renderChart();
 }
+
 
 	$('#closeMusic').on('click',function(){
 		visualDiv.css('display','none');
