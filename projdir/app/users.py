@@ -11,7 +11,7 @@ from sets import Set
 
 from .views import loginRequired
 from .forms import UserProfileForm,SearchForm
-from .models import UserProfileModel,CodehubTopicModel,CodehubQuestionModel,BlogPostModel,CodehubInnovationPostModel,CodehubCreateEventModel,FollowUserModel
+from .models import UserProfileModel,CodehubTopicModel,CodehubQuestionModel,BlogPostModel,CodehubInnovationPostModel,CodehubCreateEventModel,FollowUserModel,MesssageModel
 import datetime
 
 #pagination stuff
@@ -19,6 +19,8 @@ from .codehub import do_pagination
 from os.path import join as isfile
 from django.conf import settings
 import os
+import json
+import time
 
 register = template.Library()
 
@@ -256,13 +258,64 @@ def get_users_followed(request,user_id):
 
 
 
-def user_messages_api(request):
-    return HttpResponse('8');
+
+#sends the new messages of the user
+@loginRequired
+def user_new_messages_api(request):
+    new_message_arr = []
+    new_messages = MesssageModel.objects.filter(receiver_id = request.user.id,message_status = 'False').distinct()  .order_by('-created')
+    message_count = new_messages.count()
+    for msg in new_messages:
+        sender = User.objects.get(id = msg.sender_id).username
+        message_text = msg.message_text
+        msg_obj = {'sender':sender,'message':message_text}
+        new_message_arr.append(msg_obj)
+    return HttpResponse(json.dumps(new_message_arr),content_type = 'application/json')
 
 
-def get_api_data(request):
+
+
+
+@loginRequired
+def post_message_api(request):
+    error_msg = {'message':'Error'}
+    success_msg = {'message':'success'}
     if request.method == 'POST':
-        print 'post data'
-        return HttpResponse('cdkjcdkjcbdkjcd')
+        sender_id = request.POST['sender_id']
+        receiver_id = request.POST['receiver_id']
+        message_text = request.POST['message_text']
+        new_message = MesssageModel(
+            sender = User.objects.get(id = sender_id),
+            receiver = User.objects.get(id = receiver_id),
+            sender_profile = UserProfileModel.objects.get(user_id = sender_id),
+            receiver_profile = UserProfileModel.objects.get(user_id = receiver_id),
+            message_text = message_text
+        )
+        new_message.save();
+        return HttpResponse(json.dumps(success_msg),content_type = 'application/json')
     else:
-        return HttpResponse('cjcdbkcbdkjcbdcjk')
+        # return HttpResponse('cdcjkdbckjdbckjdc')
+        return HttpResponse(json.dumps(error_msg),content_type = 'application/json')
+
+
+
+
+#deals with the all messages of the user
+def get_user_messages(request):
+    new_messages = MesssageModel.objects.filter(receiver_id = request.user.id)
+    message_count = new_messages.count()
+    return HttpResponse(message_count)
+    # return HttpResponse('message section');
+
+
+
+
+#api to set the status of all the messages to true
+def set_message_status_true_api(request):
+    if request.method == 'POST':
+        user_id = request.POST['user_id']
+        new_messages = MesssageModel.objects.filter(receiver_id = user_id , message_status = False)
+        for msg in new_messages:
+            msg.message_status = True
+            msg.save()
+    return HttpResponse('success')

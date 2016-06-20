@@ -359,3 +359,5 @@ class MesssageModel(models.Model):
     sender_profile = models.ForeignKey(UserProfileModel,related_name = 'sender_profile')
     receiver_profile = models.ForeignKey(UserProfileModel,related_name = 'receiver_profile')
     message_text = models.CharField(max_length = 500)
+    message_status = models.CharField(max_length = 5,default = 'False')
+    created = models.DateTimeField(auto_now_add = True)

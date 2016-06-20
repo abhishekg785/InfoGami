@@ -79,6 +79,22 @@
 	background-color: green;
 	opacity: 0.6;
 }
+
+#messageBoxId{
+	display: none;
+}
+
+#messageSection{
+	height: 100%;
+	width: 100%;
+	position: relative;
+	top:0px;
+	right	:0px;
+	background-color: black;
+	opacity: 0.8;
+	display: none;
+	color:white;
+}
 /* Reset */
 textarea{
 	font-family: "Raleway", Helvetica, sans-serif;
@@ -86,6 +102,12 @@ textarea{
 	letter-spacing: 0.25em;
 	line-height: 2.5;
 	margin: 0 0 2em 0;
+}
+
+#closeMessagePane{
+	position: absolute;
+	color: white;
+	font-family:"Raleway", Helvetica, sans-serif;
 }
 
 .make_sober p{
@@ -2985,9 +3007,9 @@ form select {
 
 	header p {
 		font-family: "Raleway", Helvetica, sans-serif;
-		font-size: 0.7em;
+		font-size: 0.8em;
 		font-weight: 400;
-		letter-spacing: 0.25em;
+		/*letter-spacing: 0.25em;*/
 		line-height: 2.5;
 		margin-top: -1em;
 	}

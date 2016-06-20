@@ -13,6 +13,11 @@
   <br/>
   <h1>{{ user_info.username }}</h1>
   {% if user_profile.user.id != user.id %}
+  <div id = "messageBoxId">
+    <textarea id = "message_text" placeholder="Enter message here..." required></textarea>
+    <button id = "sendMessageId" onclick="sendMessage({{ user.id }},{{ user_info.id }})">Send</button>
+  </div>
+  <button id = 'getMessageBoxId'>Message</button>
     {% if is_following %}
       <h3 style="color:green">Following</h3>
       <a href = "{% url 'unfollow_user_profile' user_profile.user.id %}">Unfollow</a>
@@ -63,7 +68,7 @@
   <script src = 'http://d3js.org/d3.v3.min.js' charset = 'utf-8'></script>
   <script src = "{% static 'js/createVisual.js' %}"></script>
   <script>
-    var user_id = "{{ user_info.id }}"
+    var user_id = "{{ user_info.id }}",
         div_name = "user_stat_visual";
     $.ajax({
       url:"http://localhost:8000/get-user-skills-stat-api/v1/" + user_id + "/",
@@ -75,6 +80,64 @@
         console.log(e);
       }
     });
-  </script>
+
+
+    $('#getMessageBoxId').on('click',function(event){
+      event.stopPropagation();
+      var messageBoxId = $('#messageBoxId');
+      messageBoxId.css('display','block');
+      $("#getMessageBoxId").css('display','none');
+    });
+
+    //to prevent the wrapper event to occur on messageBoxId div
+    $("#messageBoxId").on('click',function(event){
+      event.stopPropagation();
+    });
+
+
+    //functio to send message
+    function sendMessage(senderId , receiverId){
+      $('#sendMessageId').text('Sending...');
+      //ajax request
+      message_text = $('#message_text').val();
+      if(message_text == ""){
+        alert('Message Field is required');
+        return;
+      }
+      console.log('Messafe'+message_text)
+      var post_data = {
+        'sender_id':senderId,
+        'receiver_id':receiverId,
+        'message_text':message_text,
+        'csrfmiddlewaretoken':"{{ csrf_token }}"
+      };
+
+      $.ajax({
+        url:'http://localhost:8000/post-message-api/',
+        type:'POST',
+        data:post_data,
+        dataType:'json',
+        success:function(data){
+          console.log(data);
+          sucessFunc();
+        },
+        error:function(error){
+          console.log('Error:',error);
+        }
+      });
+    }
+
+
+
+    $('#wrapper').on('click',function(event){
+      $('#messageBoxId').css('display','none');
+      $("#getMessageBoxId").css('display','block');
+    });
+
+
+    function sucessFunc(){
+      $('#sendMessageId').text('Send');
+      $('#message_text').val('');
+    }
   </script>
 {% endblock %}

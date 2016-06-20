@@ -100,6 +100,8 @@ def get_all_skills_stat_apiv1(request):
 
 
 
+
+
 #api for getting skill statistsics according to a user
 def get_user_skills_stat_apiv1(request,user_id):
     user_skill_stat_arr = []

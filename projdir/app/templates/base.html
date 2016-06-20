@@ -24,7 +24,7 @@
       <li><a href = "{% url 'user_blog' user.id %}">My Blog</a></li>
       <li><a href = "{% url 'notifications' %}">Notifications</a></li>
       <li><a href = "{% url 'tags' %}">Tags</a></li>
-      <li><a href = "{% url 'tags' %}">Messages<span id = "msg"></span></a></li>
+      <li id = 'messageLink'>Messages<span class = "messageSpan"></span></li>
       <li><a href="{% url 'music_list' %}">Music</a></li>
       <li><a href="{% url 'logout_view' %}">Logout</a></li>
     </ul>
@@ -74,8 +74,8 @@
             </a>
           </li>
           <li id = 'message_heading'>
-            <a href = "">
-              <h3>Messages</h3>
+            <a href = "{% url 'get_user_messages' %}">
+              <h3>Messages<span class = "messageSpan"></span></h3>
             </a>
           </li>
           <li>
@@ -112,17 +112,9 @@
     </section>
     {% endif %}
   </section>
-  {% if messages %}
-  <ul style="list-style:none" class="messages">
-      {% for msg in messages %}
-      <li>
-          <div class="alert alert-{{msg.level_tag}}" role="alert">
-    {{msg.message}}
-    </div>
-      </li>
-      {% endfor %}
-  </ul>
-  {% endif %}
+  <section id = 'messageSection'>
+    <div id = 'closeMessagePane'>Close</div>
+  </section>
   <!-- <div style="height:100px;width:100px;background-color:red" id = 'loader'></div> -->
     {% block content %}
     {% endblock %}
@@ -132,16 +124,73 @@
     <script src ="{% static 'js/main.js' %}"></script>
     <script src ="{% static 'js/createSkillStats.js' %}"></script>
     <script>
-      var message_span = $('#msg');
-      var message_heading = $('a#message_heading');
-      console.log(message_heading);
+      var message_span = $('.messageSpan'),
+          message_heading = $('a#message_heading'),
+          new_message_count = 0;
+
+
+      //getting new_messages
+      //async is fasle so that following operations takes place only after messges have been fetched
       $.ajax({
-        url:'http://localhost:8000/messages/',
+        url:'http://localhost:8000/user-new-messages/',
+        async:false,
         success:function(data){
-          msg.innerHTML = '(' + data + ')';
-          // message_heading.css('color','red');
+          message_fetched_success(data);
         }
       });
+
+
+      //shows the message pane
+      $('#messageLink').click(function(){
+        //get the top 5 messages and append them to the dom and set message_status to true
+        $('#messageSection').css('display','block');
+        //CALL THE API TO SET THE MESSAGE STATUS TO TRUE
+        var user_id = {{ user.id }}
+        post_data = {
+          'user_id':user_id,
+          'csrfmiddlewaretoken':"{{ csrf_token }}"
+        }
+
+        $.ajax({
+          url:'http://localhost:8000/set-message-status-true-api/',
+          type:'POST',
+          data:post_data,
+          success:function(data){
+            console.log(data);
+            message_span.css('display','none');
+          },
+          error:function(error){
+            console.log(error);
+          }
+        });
+      });
+
+
+      //close message pane
+      $('#closeMessagePane').click(function(){
+        $('#messageSection').css('display','none');
+      });
+
+
+      function message_fetched_success(message_arr){
+        var message_count = message_arr.length;
+        if(!message_count){
+          var msg = "<h1>No NEW Messages!!!</h1>";
+          $('#messageSection').append(msg);
+        }
+        else{
+          var ul = $('<ul id = "messageList">');
+          $('#messageSection').append(ul);
+          for(var i =0 ;i< message_count;i++){
+            //create element in DOM
+            var new_msg = "<li>" + '<a href = "">' + message_arr[i].sender + '</a>' + ":" +message_arr[i].message +"</li>";
+            ul.append(new_msg);
+          }
+          // console.log(data);
+          message_span.text('(' + message_count + ')');
+          message_span.css('color','red');
+        }
+      }
     </script>
   </body>
 </html>
