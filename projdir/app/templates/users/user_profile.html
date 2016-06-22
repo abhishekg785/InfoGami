@@ -58,7 +58,7 @@
   <a href = "{% url 'user_hosted_projects' user_info.id %}">Hosted projects by user</a>
   <hr/>
   <div id = 'user_skill_stat_div'>
-    <h1>Your skills statstics among community</h1>
+    <h1>"{{ user_info.username  }}" skills statstics among community</h1>
     <div id = 'user_stat_visual'>
 
     </div>
@@ -69,12 +69,17 @@
   <script src = "{% static 'js/createVisual.js' %}"></script>
   <script>
     var user_id = "{{ user_info.id }}",
-        div_name = "user_stat_visual";
+        div_name = "user_stat_visual",
+        user_skill_stat_div = $('#user_skill_stat_div');
     $.ajax({
       url:"http://localhost:8000/get-user-skills-stat-api/v1/" + user_id + "/",
       type:'GET',
       success:function(data){
-        createStatVisual(data,div_name);
+        var data_length = data.length;
+        if(data_length){
+          user_skill_stat_div.css('display','block');
+          createStatVisual(data,div_name);
+        }
       },
       error:function(e){
         console.log(e);
