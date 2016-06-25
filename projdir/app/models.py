@@ -17,7 +17,7 @@ class UserProfileModel(models.Model):
     user_description = MarkdownField()
     skills = TaggableManager()
     user_type_select = models.CharField(max_length = 50,default = 'None')   #developer or programmer
-    user_profile_pic = models.FileField(upload_to = 'profile_pics/',blank = True)
+    user_profile_pic = models.FileField(upload_to = 'profile_pics/',blank = True,default = 'profile_pics/avatars/default.png')
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)
 

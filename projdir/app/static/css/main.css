@@ -7,6 +7,19 @@
 	left: 10px;
 }*/
 
+#loader{
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	background: red;
+	top:0px;
+	left: 0px;
+	z-index: 999;
+	opacity: 0.8;
+	display: none;
+}
+
+
 #skills_stat_visual{
 	height: 80%;
 	width: 80%;
@@ -125,6 +138,10 @@ textarea{
 	letter-spacing: 0.25em;
 	line-height: 2.5;
 	margin: 0 0 2em 0;
+}
+
+.user_name_sec{
+	cursor: pointer;
 }
 
 form input {
@@ -3359,6 +3376,8 @@ form select {
 		margin-right: 3em;
 		min-width: 22em;
 		width: 22em;
+		max-height: 30em;
+		overflow: scroll;
 	}
 
 		#sidebar > * {
@@ -3372,6 +3391,13 @@ form select {
 			margin-top: 0;
 			padding-top: 0;
 		}
+
+		#message_disp_div{
+			max-height: 35em;
+			overflow: scroll;
+		}
+
+
 
 		@media screen and (max-width: 1280px) {
 

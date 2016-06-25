@@ -22,6 +22,9 @@ import os
 import json
 import time
 
+from django.db.models import Count
+
+
 register = template.Library()
 
 #decorator to check user has access to edit profile or not
@@ -262,16 +265,21 @@ def get_users_followed(request,user_id):
 #sends the new messages of the user
 @loginRequired
 def user_new_messages_api(request):
+    #select sender_id,count(messages) from <table name> group by sender_id where receiver_id = user.id
+    #getting all unseen messages
     new_message_arr = []
-    new_messages = MesssageModel.objects.filter(receiver_id = request.user.id,message_status = 'False').distinct()  .order_by('-created')
-    message_count = new_messages.count()
-    for msg in new_messages:
-        sender = User.objects.get(id = msg.sender_id).username
-        message_text = msg.message_text
-        msg_obj = {'sender':sender,'message':message_text}
-        new_message_arr.append(msg_obj)
+    sender_message_count_arr = MesssageModel.objects.filter( message_status = 'False',receiver_id = request.user.id).values('sender_id').annotate(message_count = Count('sender_id'))
+    if not sender_message_count_arr:
+        return HttpResponse(json.dumps({}),content_type = 'application/json')
+    else:
+        for sender in sender_message_count_arr:
+            sender_message_count = sender['message_count']
+            sender_id = sender['sender_id']
+            sender_username = User.objects.get(id = sender_id).username
+            latest_message = MesssageModel.objects.filter(message_status = 'False' , sender_id = sender_id).values('message_text').order_by('-created')[:1]
+            message_obj = {'sender_id':sender_id,'sender':sender_username,'message_count':sender_message_count,'latest_message':latest_message[0]['message_text']}
+            new_message_arr.append(message_obj)
     return HttpResponse(json.dumps(new_message_arr),content_type = 'application/json')
-
 
 
 
@@ -301,6 +309,7 @@ def post_message_api(request):
 
 
 #deals with the all messages of the user
+@loginRequired
 def get_user_messages(request):
     new_messages = MesssageModel.objects.filter(receiver_id = request.user.id)
     message_count = new_messages.count()
@@ -311,6 +320,7 @@ def get_user_messages(request):
 
 
 #api to set the status of all the messages to true
+@loginRequired
 def set_message_status_true_api(request):
     if request.method == 'POST':
         user_id = request.POST['user_id']
@@ -319,3 +329,59 @@ def set_message_status_true_api(request):
             msg.message_status = True
             msg.save()
     return HttpResponse('success')
+
+
+
+
+
+
+#MESSAGE CENTER apis
+#fetch the user's messages by the given sender
+
+@loginRequired
+def get_message_center(request):
+    return render(request,'users/message_center.html')
+
+
+
+    # """
+    # sender
+    # received messages
+    # sent messages
+    # """
+    # messages = MesssageModel.objects.filter(receiver_id = request.user.id)
+    # return HttpResponse(messages)
+
+
+
+
+#api to fetch data for message center api
+@loginRequired
+def get_message_center_data_api(request):
+    received_message_data = []
+    sent_message_data = []
+    rec_messages = MesssageModel.objects.filter(receiver_id = request.user.id).order_by('-created').distinct()
+    for msg in rec_messages:
+        created = msg.created
+        sender_pic = msg.sender_profile.user_profile_pic.name
+        obj1 = {'sender':msg.sender.username,'message':msg.message_text,'sender_profile_pic':sender_pic,'created':str(created)}
+        received_message_data.append(obj1)
+    sent_messages = MesssageModel.objects.filter(sender_id = request.user.id).order_by('-created').distinct()
+    for msg in sent_messages:
+        receiver_pic = msg.receiver_profile.user_profile_pic.name
+        obj2 = {'receiver':msg.receiver.username,'message':msg.message_text,'receiver_profile_pic':receiver_pic,'created':str(msg.created)}
+        sent_message_data.append(obj2)
+    final_obj = {'sent_message_data':sent_message_data,'received_message_data':received_message_data}
+    return HttpResponse(json.dumps(final_obj),content_type = 'application/json')
+
+
+
+
+
+
+@loginRequired
+def fetch_user_messages_message_center_api(request,sender_id):
+    #fetch user messages by the sender having id = sender_id
+    messages = MesssageModel.objects.filter(receiver_id = request.user.id, sender_id = sender_id).order_by('-created')
+    return HttpResponse(messages)
+    #return HttpResponse(json.dumps(messages), content_type = 'application/json')

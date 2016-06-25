@@ -66,21 +66,25 @@ def login_view(request):
 #route for registering the user
 def register_view(request):
     if request.method == 'POST':
-       fname = request.POST['fname']
-       lname = request.POST['lname']
-       username = request.POST['username']
-       email = request.POST['email']
-       password = request.POST['password']
-       try:
-           User.objects.get(username = username)
-           messages.warning(request,'Username already exists')
-           return redirect('/auth/register')
-       except:
-           user = User.objects.create_user(first_name = fname,last_name = lname,username = username,email = email,password = password)
-           new_user_profile = UserProfileModel(user = user)
-           new_user_profile.save()
-           messages.success(request,'Successfully Registered')
-           return redirect('/auth/login')
+        fname = request.POST['fname']
+        lname = request.POST['lname']
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        try:
+            User.objects.get(username = username)
+            messages.warning(request,'Username already exists')
+            return render(request,'/auth/register.html')
+        except:
+            if ' ' in username:
+                messages.warning(request,'No Spaces allowed in Username')
+                return render(request,'auth/register.html')
+            else:
+                user = User.objects.create_user(first_name = fname,last_name = lname,username = username,email = email,password = password)
+                new_user_profile = UserProfileModel(user = user)
+                new_user_profile.save()
+                messages.success(request,'Successfully Registered')
+                return redirect('/auth/login')
     return render(request,'auth/register.html')
 
 

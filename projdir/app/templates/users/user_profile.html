@@ -14,7 +14,7 @@
   <h1>{{ user_info.username }}</h1>
   {% if user_profile.user.id != user.id %}
   <div id = "messageBoxId">
-    <textarea id = "message_text" placeholder="Enter message here..." required></textarea>
+    <textarea id = "message_text" maxlength="100" placeholder="Enter message here(max 150 chars)" required></textarea>
     <button id = "sendMessageId" onclick="sendMessage({{ user.id }},{{ user_info.id }})">Send</button>
   </div>
   <button id = 'getMessageBoxId'>Message</button>

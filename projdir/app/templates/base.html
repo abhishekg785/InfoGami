@@ -24,7 +24,7 @@
       <li><a href = "{% url 'user_blog' user.id %}">My Blog</a></li>
       <li><a href = "{% url 'notifications' %}">Notifications</a></li>
       <li><a href = "{% url 'tags' %}">Tags</a></li>
-      <li id = 'messageLink'>Messages<span class = "messageSpan"></span></li>
+      <li class = 'messageLink'>Messages<span class = "messageSpan"></span></li>
       <li><a href="{% url 'music_list' %}">Music</a></li>
       <li><a href="{% url 'logout_view' %}">Logout</a></li>
     </ul>
@@ -73,8 +73,8 @@
               <h3>Tags</h3>
             </a>
           </li>
-          <li id = 'message_heading'>
-            <a href = "{% url 'get_user_messages' %}">
+          <li>
+            <a href ="">
               <h3>Messages<span class = "messageSpan"></span></h3>
             </a>
           </li>
@@ -112,10 +112,23 @@
     </section>
     {% endif %}
   </section>
+  <!-- flash messages -->
+  {% if messages %}
+    <ul class="messages" style="list-style:none">
+      {% for msg in messages %}
+        <li>
+          <div class="alert alert-{{msg.level_tag}}" role="alert">
+   	        {{msg.message}}
+  	      </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <!-- flash message ends here -->
   <section id = 'messageSection'>
     <div id = 'closeMessagePane'>Close</div>
   </section>
-  <!-- <div style="height:100px;width:100px;background-color:red" id = 'loader'></div> -->
+  <div id = 'loader'></div>
     {% block content %}
     {% endblock %}
     <script src = "{% static 'js/jquery.min.js' %}"></script>
@@ -135,14 +148,13 @@
         url:'http://localhost:8000/user-new-messages/',
         async:false,
         success:function(data){
-          message_fetched_success(data);
+          message_data_fetched_success(data);
         }
       });
 
 
       //shows the message pane
-      $('#messageLink').click(function(){
-        //get the top 5 messages and append them to the dom and set message_status to true
+      $('.messageLink').click(function(){
         $('#messageSection').css('display','block');
         //CALL THE API TO SET THE MESSAGE STATUS TO TRUE
         var user_id = {{ user.id }}
@@ -172,18 +184,20 @@
       });
 
 
-      function message_fetched_success(message_arr){
-        var message_count = message_arr.length;
-        if(!message_count){
-          var msg = "<h1>No NEW Messages!!!</h1>";
+      function message_data_fetched_success(message_data_arr){
+        var message_data_arr_len = message_data_arr.length;
+        if(!message_data_arr_len){
+          var msg = "<h1>No unread messages!!!</h1>";
           $('#messageSection').append(msg);
         }
         else{
-          var ul = $('<ul id = "messageList">');
+          var ul = $('<ul id = "messageList">'),
+              message_count = 0;
           $('#messageSection').append(ul);
-          for(var i =0 ;i< message_count;i++){
+          for(var i =0 ;i< message_data_arr_len;i++){
             //create element in DOM
-            var new_msg = "<li>" + '<a href = "">' + message_arr[i].sender + '</a>' + ":" +message_arr[i].message +"</li>";
+            var new_msg = "<li><a href = '/message-center'>" + message_data_arr[i].sender + ":" + message_data_arr[i].latest_message + "(" + message_data_arr[i].message_count +  ")</a></li>";
+            message_count += message_data_arr[i].message_count;
             ul.append(new_msg);
           }
           // console.log(data);

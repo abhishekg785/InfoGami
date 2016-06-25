@@ -17,13 +17,11 @@
   </article>
 </div>
 <section id = 'sidebar'>
-  <section id = 'intro'>
-    <header>
-      <h2 style="font-size:20px">Recent Questions</h2>
-      <h3><a href ="{% url 'get_all_devhub_questions' %}">View all Questions</a></h3>
-      <p>"Click on Question for more info"</a></p>
-    </header>
-  </section>
+  <header>
+    <h2 style="font-size:20px">Recent Questions</h2>
+    <h3><a href ="{% url 'get_all_devhub_questions' %}">View all Questions</a></h3>
+    <p>"Click on Question for more info"</a></p>
+  </header>
   <section>
     <form method= "post" align = 'center' action = "{% url 'search_devhub_question' %}" />
       {% csrf_token %}

@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 
 from app.views import login_view,register_view,logout_view,index,about_view
 from app.codehub import codehub_question,remove_codehub_question,edit_codehub_question,codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,codehub_question_details,remove_codehub_question_comment,edit_codehub_question_comment,search_question,codehub_innovation,codehub_innovation_details,edit_codehub_innovation_idea,remove_codehub_innovation_idea,edit_codehub_innovation_idea_comment,remove_codehub_innovation_idea_comment,search_codehub_innovation_post,get_all_codehub_topics,get_all_codehub_questions
-from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog,follow_user_profile,get_user_new_ideas,get_codehub_user_events,unfollow_user_profile,get_user_notifications,get_following_users,get_users_followed,user_new_messages_api,get_user_messages,post_message_api,set_message_status_true_api
+from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog,follow_user_profile,get_user_new_ideas,get_codehub_user_events,unfollow_user_profile,get_user_notifications,get_following_users,get_users_followed,user_new_messages_api,get_user_messages,post_message_api,set_message_status_true_api,fetch_user_messages_message_center_api,get_message_center,get_message_center_data_api
 from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question,search_codehub_event,propose_event,propose_event_details,upVote_propose_event,downVote_propose_event,propose_event_users_upvoted,propose_event_users_downvoted,edit_propose_event,remove_propose_event,search_propose_event,get_all_proposed_events,edit_suggestion_to_propose_event,remove_suggestion_to_propose_event
 from app.music import music_list
 from app.blog import blog,blog_post_edit,blog_post_remove,blog_post_details,search_user_blog_post_by_slug,search_all_blog_posts_by_slug,edit_blog_post_comment,remove_blog_post_comment,search_blog_post,get_all_blog_posts
@@ -84,6 +84,11 @@ urlpatterns = [
     url(r'^user-new-messages/$',user_new_messages_api,name = 'user_new_messages_api'),
     url(r'^post-message-api/$',post_message_api,name = 'post_message_api'),
     url(r'^set-message-status-true-api/$',set_message_status_true_api,name = 'set_message_status_true_api'),
+    #message center apis
+    url(r'^message-center/$',get_message_center,name = 'get_message_center'),
+    url(r'^get-message-center-data/api/$',get_message_center_data_api,name = 'get_message_center_data_api'),
+    url(r'^message-center/user/(?P<sender_id>\d+)/messages/api/$', fetch_user_messages_message_center_api, name = 'fetch_user_messages_message_center_api'),
+    #message center apis end here
     url(r'^blog/$',blog,name = 'write_blog'),
     url(r'^notifications/',get_user_notifications,name = 'notifications'),
     url(r'^blog/search/(?P<slug_str>[\w\-]+)/posts$',search_all_blog_posts_by_slug,name = 'search_all_blog_posts_by_slug'),
