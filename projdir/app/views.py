@@ -21,6 +21,16 @@ def loginRequired(func):
 
 
 
+#if a user is logged in then it is redirected to index page if he/she tries to access login or index page
+def check_authentication(func):
+    def wrapper(request,*args,**kwargs):
+        if request.user.is_authenticated:
+            return redirect('/')
+        return func(request,*args,**kwargs)
+    return wrapper
+
+
+
 def check_if_user_profile_exists(func):
     def wrapper(request,*args,**kwargs):
         try:
@@ -29,6 +39,7 @@ def check_if_user_profile_exists(func):
             return redirect('/users/profile/'+str(request.user.id)+'/edit')
         return func(request,*args,**kwargs)
     return wrapper
+
 
 
 
@@ -43,6 +54,8 @@ def about_view(request):
     return render(request,'auth/about.html')
 
 
+
+@check_authentication
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -63,7 +76,10 @@ def login_view(request):
 
 
 
+
+
 #route for registering the user
+@check_authentication
 def register_view(request):
     if request.method == 'POST':
         fname = request.POST['fname']

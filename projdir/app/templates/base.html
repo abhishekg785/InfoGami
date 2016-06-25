@@ -24,7 +24,7 @@
       <li><a href = "{% url 'user_blog' user.id %}">My Blog</a></li>
       <li><a href = "{% url 'notifications' %}">Notifications</a></li>
       <li><a href = "{% url 'tags' %}">Tags</a></li>
-      <li class = 'messageLink'>Messages<span class = "messageSpan"></span></li>
+      <li class = 'messageLink'><a href = "{% url 'get_message_center' %}">Messages</a><span class = "messageSpan"></span></li>
       <li><a href="{% url 'music_list' %}">Music</a></li>
       <li><a href="{% url 'logout_view' %}">Logout</a></li>
     </ul>
@@ -126,7 +126,10 @@
   {% endif %}
   <!-- flash message ends here -->
   <section id = 'messageSection'>
-    <div id = 'closeMessagePane'>Close</div>
+    <h1 id = 'loadMessage'></h1>
+    <div class  = 'mini-post'>
+
+    </div>
   </section>
   <div id = 'loader'></div>
     {% block content %}
@@ -137,74 +140,203 @@
     <script src ="{% static 'js/main.js' %}"></script>
     <script src ="{% static 'js/createSkillStats.js' %}"></script>
     <script>
+    /**
+      1.firstly fetch the data and store it in the array
+      2.place the data into the DOM
+      3.set loader for fetching messages
+    **/
+    (function($){
       var message_span = $('.messageSpan'),
           message_heading = $('a#message_heading'),
-          new_message_count = 0;
+          load_message = $('#loadMessage'),
+          mini_post = $('.mini-post'),
+          new_message_count = 0,
+          new_message_arr = [],
+          new_message_arr_len = 0,
+          is_data = false;
 
+      baseFunctions = {
 
-      //getting new_messages
-      //async is fasle so that following operations takes place only after messges have been fetched
-      $.ajax({
-        url:'http://localhost:8000/user-new-messages/',
-        async:false,
-        success:function(data){
-          message_data_fetched_success(data);
-        }
-      });
+        //gets the messsages from the server
+        getNewMessages:function(){
+          $.ajax({
+            url:'http://localhost:8000/user-new-messages/',
+            type:'GET',
+            success:function(data){
+              var data_len = data.length;
+              console.log(data_len);
+              if(data_len){
+                new_message_arr = data;
+                new_message_arr_len = data.length;
+                is_data = true;
+                baseFunctions.loadMessageData().hideMessageLoader();
+              }
+              else{
+                is_data = false;
+                load_message.text('No unread Messages');
+              }
+            },
+            error:function(error){
+              console.log(error);
+            }
+          });
+          return baseFunctions
+        },
 
-
-      //shows the message pane
-      $('.messageLink').click(function(){
-        $('#messageSection').css('display','block');
-        //CALL THE API TO SET THE MESSAGE STATUS TO TRUE
-        var user_id = {{ user.id }}
-        post_data = {
-          'user_id':user_id,
-          'csrfmiddlewaretoken':"{{ csrf_token }}"
-        }
-
-        $.ajax({
-          url:'http://localhost:8000/set-message-status-true-api/',
-          type:'POST',
-          data:post_data,
-          success:function(data){
-            console.log(data);
-            message_span.css('display','none');
-          },
-          error:function(error){
-            console.log(error);
-          }
-        });
-      });
-
-
-      //close message pane
-      $('#closeMessagePane').click(function(){
-        $('#messageSection').css('display','none');
-      });
-
-
-      function message_data_fetched_success(message_data_arr){
-        var message_data_arr_len = message_data_arr.length;
-        if(!message_data_arr_len){
-          var msg = "<h1>No unread messages!!!</h1>";
-          $('#messageSection').append(msg);
-        }
-        else{
-          var ul = $('<ul id = "messageList">'),
-              message_count = 0;
-          $('#messageSection').append(ul);
-          for(var i =0 ;i< message_data_arr_len;i++){
-            //create element in DOM
-            var new_msg = "<li><a href = '/message-center'>" + message_data_arr[i].sender + ":" + message_data_arr[i].latest_message + "(" + message_data_arr[i].message_count +  ")</a></li>";
-            message_count += message_data_arr[i].message_count;
-            ul.append(new_msg);
-          }
-          // console.log(data);
-          message_span.text('(' + message_count + ')');
+        //loads data into the DOM
+        loadMessageData:function(){
+          //loads the data
+          var list_item = '',
+              item_id = '',
+              item_class = 'new_messages';
+          message_span.text('('+ new_message_arr_len +')');
           message_span.css('color','red');
+          for(var i = 0 ; i < new_message_arr_len ; i++){
+            item_id = 'new_message' + i;
+            list_item = "<article class = '"+ item_class +"' id = '" + item_id +"' style = 'cursor:pointer' class = 'mini-post'><header><p>" + new_message_arr[i].latest_message +"(" + new_message_arr[i].message_count + ")</p><time class='published'>vkvnfkvnflkvnflkv</time><a class='author'><img src='' alt='' /></a><p>by:<a href = ''>" + new_message_arr[i].sender + "</a></p></header></article>";
+            mini_post.append(list_item);
+          }
+          return baseFunctions;
+        },
+
+        //displaying the message pane
+        displayMessagePane:function(){
+          $('#messageSection').css('display','block');
+        },
+
+        hideMessagePane:function(){
+          $('#messageSection').css('display','none');
+        },
+
+        setMessageLoader:function(){
+          load_message.text('Fetching new messages...');
+          return baseFunctions;
+        },
+
+        hideMessageLoader:function(){
+          load_message.text('Unread Messages');
+        },
+
+        takeTime:function(){
+          setTimeout(function(){
+            console.log('over');
+          },6000);
+          return baseFunctions
         }
       }
+
+      $(document).ready(function(){
+        var username = "{{ user.username }}";
+        console.log('username'+username);
+        if(username != 'undefined' && username != ''){
+          baseFunctions.setMessageLoader().getNewMessages();
+          $('.messageLink').hover(
+            function(){
+              baseFunctions.displayMessagePane();
+            },
+            function(){
+              baseFunctions.hideMessagePane();
+            }
+          );
+        $('#messageSection').hover(
+          function(){
+            baseFunctions.displayMessagePane();
+          },
+          function(){
+            baseFunctions.hideMessagePane();
+          }
+        );
+
+        $('.mini-post').on('click','.new_messages',function(){
+          alert('clicked');
+        });
+      }
+      });
+    })(jQuery);
+      //
+      //
+      //
+      //
+      //
+      // //getting new_messages
+      // //async is fasle so that following operations takes place only after messges have been fetched
+      // $.ajax({
+      //   url:'http://localhost:8000/user-new-messages/',
+      //   async:false,
+      //   success:function(data){
+      //     message_data_fetched_success(data);
+      //   }
+      // });
+      //
+      //
+      // //display the message pane on hover and take to the message center on click
+      // $('.messageLink').hover({
+      //   if(is_data == false){
+      //     //fetch data into global array
+      //   }
+      //   else{
+      //     //do nothing
+      //   }
+      // });
+      // // $('.messageLink').hover(function(){
+      // //   $('#messageSection').css('display','block');
+      // //   //CALL THE API TO SET THE MESSAGE STATUS TO TRUE
+      // //   var user_id = {{ user.id }}
+      // //   post_data = {
+      // //     'user_id':user_id,
+      // //     'csrfmiddlewaretoken':"{{ csrf_token }}"
+      // //   }
+      //
+      // // $('.messageLink').hover(
+      // //   function(){
+      // //     console.log('over');
+      // //   },
+      // //   function(){
+      // //     console.log('out');
+      // //   }
+      // // );
+      // //   $.ajax({
+      // //     url:'http://localhost:8000/set-message-status-true-api/',
+      // //     type:'POST',
+      // //     data:post_data,
+      // //     success:function(data){
+      // //       console.log(data);
+      // //       message_span.css('display','none');
+      // //     },
+      // //     error:function(error){
+      // //       console.log(error);
+      // //     }
+      // //   });
+      // // });
+      //
+      //
+      // //close message pane
+      // $('#closeMessagePane').click(function(){
+      //   $('#messageSection').css('display','none');
+      // });
+      //
+      //
+      // function message_data_fetched_success(message_data_arr){
+      //   var message_data_arr_len = message_data_arr.length;
+      //   if(!message_data_arr_len){
+      //     var msg = "<h1>No unread messages!!!</h1>";
+      //     $('#messageSection').append(msg);
+      //   }
+      //   else{
+      //     var ul = $('<ul id = "messageList">'),
+      //         message_count = 0;
+      //     $('#messageSection').append(ul);
+      //     for(var i =0 ;i< message_data_arr_len;i++){
+      //       //create element in DOM
+      //       var new_msg = "<li><a href = '/message-center'>" + message_data_arr[i].sender + ":" + message_data_arr[i].latest_message + "(" + message_data_arr[i].message_count +  ")</a></li>";
+      //       message_count += message_data_arr[i].message_count;
+      //       ul.append(new_msg);
+      //     }
+      //     // console.log(data);
+      //     message_span.text('(' + message_count + ')');
+      //     message_span.css('color','red');
+      //   }
+      // }
     </script>
   </body>
 </html>

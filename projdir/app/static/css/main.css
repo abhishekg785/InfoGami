@@ -98,17 +98,28 @@
 	display: none;
 }
 
+.message_users_display{
+	overflow: scroll;
+	max-height: 30em;
+}
+
 #messageSection{
 	height: 100%;
-	width: 100%;
-	position: relative;
-	top:0px;
+	width: 50%;
+	position: absolute;
+	top:55px;
 	right	:0px;
-	background-color: black;
-	opacity: 0.8;
-	display: none;
-	color:white;
+	background-color: #fff;
+	/*display: none;*/
+	color:black;
+	z-index: 999;
 }
+
+#loadMessage{
+	text-align:center;
+	margin-top:10px;
+}
+
 /* Reset */
 textarea{
 	font-family: "Raleway", Helvetica, sans-serif;
@@ -3167,10 +3178,12 @@ form select {
 		}
 
 			#header .links ul li {
-				border-left: solid 1px rgba(160, 160, 160, 0.3);
+				/*border-left: solid 1px rgba(160, 160, 160, 0.3);*/
 				line-height: 1;
 				margin-left: 1em;
 				padding-left: 1em;
+				padding-top: 1.5em;
+				padding-bottom: 1.2em;
 			}
 
 				#header .links ul li:first-child {
@@ -3376,8 +3389,7 @@ form select {
 		margin-right: 3em;
 		min-width: 22em;
 		width: 22em;
-		max-height: 30em;
-		overflow: scroll;
+		/*overflow: scroll;*/
 	}
 
 		#sidebar > * {

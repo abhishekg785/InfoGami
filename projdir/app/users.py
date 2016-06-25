@@ -270,7 +270,7 @@ def user_new_messages_api(request):
     new_message_arr = []
     sender_message_count_arr = MesssageModel.objects.filter( message_status = 'False',receiver_id = request.user.id).values('sender_id').annotate(message_count = Count('sender_id'))
     if not sender_message_count_arr:
-        return HttpResponse(json.dumps({}),content_type = 'application/json')
+        return HttpResponse(json.dumps([]),content_type = 'application/json')
     else:
         for sender in sender_message_count_arr:
             sender_message_count = sender['message_count']
