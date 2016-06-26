@@ -262,6 +262,7 @@ def get_users_followed(request,user_id):
 
 
 
+
 #sends the new messages of the user
 @loginRequired
 def user_new_messages_api(request):
@@ -280,6 +281,7 @@ def user_new_messages_api(request):
             message_obj = {'sender_id':sender_id,'sender':sender_username,'message_count':sender_message_count,'latest_message':latest_message[0]['message_text']}
             new_message_arr.append(message_obj)
     return HttpResponse(json.dumps(new_message_arr),content_type = 'application/json')
+
 
 
 

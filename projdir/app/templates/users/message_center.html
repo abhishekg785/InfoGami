@@ -65,11 +65,11 @@
 
     setData:function(){
       if(received_message_data_len){
-        for(var i = 0; i < received_message_data_len - 1; i++){
-          var received_message_details = received_message_data[i];
-              sender_username = received_message_details.sender;
-              sender_message_text = received_message_details.message;
-              sender_profile_pic = received_message_details.sender_profile_pic;
+        for(var i = 0; i < received_message_data_len ; i++){
+          var received_message_details = received_message_data[i],
+              sender_username = received_message_details.sender,
+              sender_message_text = received_message_details.message,
+              sender_profile_pic = received_message_details.sender_profile_pic,
               sender_message_date = received_message_details.created;
               index = Functions.getSenderUserIndex(sender_username);
           received_message_text[index].push(sender_message_text);
@@ -242,7 +242,7 @@
         user_message_arr = sent_message_text[index],
         user_message_created_arr = sent_message_created[index],
         message_arr_len = user_message_arr.length;
-        disp_username.append("Messages by" + " " + "'" + first_receiver + "'");
+        disp_username.append("Messages sent to" + " " + "'" + first_receiver + "'");
         for(var i = 0 ;i < message_arr_len ; i++){
           display_message_div.append(user_message_created_arr[i].split(".")[0] + ":<p>" +user_message_arr[i]+"</p><br/>");
         }

@@ -110,9 +110,10 @@
 	top:55px;
 	right	:0px;
 	background-color: #fff;
-	/*display: none;*/
+	display: none;
 	color:black;
 	z-index: 999;
+	overflow: scroll;
 }
 
 #loadMessage{

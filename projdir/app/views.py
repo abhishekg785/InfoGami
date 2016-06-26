@@ -24,10 +24,12 @@ def loginRequired(func):
 #if a user is logged in then it is redirected to index page if he/she tries to access login or index page
 def check_authentication(func):
     def wrapper(request,*args,**kwargs):
-        if request.user.is_authenticated:
+        if request.user.is_authenticated():
             return redirect('/')
         return func(request,*args,**kwargs)
     return wrapper
+
+
 
 
 
