@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load django_markdown %}
+{% load staticfiles %}
+{% block content %}
+<div id = 'main'>
+  <article class = 'post'>
+    <header>
+      <div class="title">
+        <h2><a href="#">{{ topic.topic_heading }}</a></h2>
+        {% if topic.user.username == user.username %}
+          <!-- <h3><a href="{% url 'edit_topic' topic.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_topic' topic.id %}">Remove</a></h3> -->
+          <ul class="actions">
+            <li><a class= 'button' href="{% url 'edit_topic' topic.id %}">Edit</a></li>
+            <li><a class = 'button' href ="{% url 'remove_topic' topic.id %}">Remove</a></li>
+          </ul>
+        {% endif %}
+      </div>
+      <div class="meta">
+        <time class="published">{{ topic.created }}</time>
+        {% if topic.user_profile.user_profile_pic.name %}
+          <h2><a href="{% url 'user_profile' topic.user.id %}" class="author"><span class="name">{{ topic.user.username }}</span><img src="/media/{{ topic.user_profile.user_profile_pic }}" alt="Profile pic" /></a></h2>
+        {% else %}
+          <h2><a href="{% url 'user_profile' topic.user.id %}" class="author"><span class="name">{{ topic.user.username }}</span><img src="{% static 'images/default_gravators/github.png' %}" alt="Profile pic" /></a></h2>
+        {% endif %}
+      </div>
+    </header>
+    <div class = 'make_sober'>
+      <h3>
+        Tags:
+        {% for tag in topic.tags.all %}
+          <a href = "">"{{ tag.name }}"&nbsp;</a>
+        {% endfor %}
+      </h3>
+      <p>Last Edited:&nbsp;{{ topic.modified }}</p>
+      {% if topic.file.name %}
+        <p>Attached File:&nbsp;<a href = "/media/{{ topic.file.name }}">{{ topic.file.name }}</a></p>
+      {% endif %}
+      <p>{{ topic.topic_detail|markdown }}</p>
+    </div>
+  </article>
+<form  method='post'>
+{% csrf_token %}
+{{ form.as_p }}
+<input type='submit' name='comment' value ='Comment'/>
+</form>
+<hr/>
+{% if not comments %}
+  <h3>No comments Yet!!!</h3>
+{% else %}
+  <section>
+    <div class="mini-posts">
+      {% for comment in comments %}
+        <article class="mini-post">
+          <header>
+            <p>{{ comment.comment_text|markdown }}</p>
+            <time class="published">{{ comment.created }}</time>
+            {% if comment.user_profile.user_profile_pic.name %}
+              <a href="{% url 'user_profile' comment.user.id %}" class="author">{{ comment.user.username }}<img src="/media/{{ comment.user_profile.user_profile_pic.name }}" alt="" /></a>
+            {% else %}
+              <a href="{% url 'user_profile' comment.user.id %}" class="author">{{ comment.user.username }}<img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+            {% endif %}
+            {% if comment.user.username == request.user.username %}
+            <ul class="actions">
+              <li><a class= 'button' href="{% url 'edit_topic_comment' comment.id %}">Edit</a></li>
+              <li><a class = 'button' href ="{% url 'remove_topic_comment' comment.id %}">Remove</a></li>
+            </ul>
+              <!-- <h3><a href = "{% url 'edit_topic_comment' comment.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_topic_comment' comment.id %}">Remove</a></h3> -->
+            {% endif %}
+          </header>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+</div>
+{% endblock %}

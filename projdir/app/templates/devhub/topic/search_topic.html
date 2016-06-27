@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+<h3>Search Devhub Topics</h3>
+<form method = "POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type = 'submit' name='search_topic' value ='Go'/>
+</form>
+<hr/>
+{% if not results %}
+  <h3>No results yet!!!</h3>
+{% else %}
+<h3>Search results for " {{ search_str }} "</h3>
+<section>
+  <ul class ='posts'>
+  {% for result in results %}
+    <li>
+      <article>
+        <header>
+          <h2><a href="{% url 'devhub_topic_details' result.id %}">{{ result.topic_heading }}</a></h2>
+          <time class="published">{{ result.created }}</time>
+          <p class="published">by:<a href = "{% url 'user_profile' result.user.id %}">{{ result.user.username }}</a></p>
+        </header>
+      </article>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
+{% endif %}
+</div>
+{% endblock %}

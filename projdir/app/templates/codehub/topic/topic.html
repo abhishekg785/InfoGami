@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<div id = 'main'>
+<article class = 'post'>
+<header>
+  <div class = 'title'>
+    <h2><a href="">Post Topic</a></h2>
+    <p>"Post topic which can be helpful"</p>
+  </div>
+</header>
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+{{ form.as_p }}
+<input type='submit'   name='submitTopic' value= 'Post Topic'/>
+</form>
+</article>
+</div>
+<section id = 'sidebar'>
+  <section id="intro">
+    <!-- <a href="{% url 'user_profile' user.id %}" class="logo"><img src="/media/{{ user_profile.user_profile_pic }}" alt="" /></a> -->
+    <header>
+      <h2 style="font-size:20px">Recent Topics</h2>
+      <h3><a href ="{% url 'get_all_codehub_topics' %}">View all Topics</a></h3>
+      <p>"Click on Topic for more info"</a></p>
+    </header>
+  </section>
+  <!-- mini posts comes here -->
+  <section>
+    <form align='center' method='POST' action = "{% url 'search_topic' %}">
+      {% csrf_token %}
+      {{ search_form.as_p }}
+    <input type='submit' name='seachTopic' value = 'Search'/>
+    </form>
+    <div class = 'mini-posts'>
+      {% for topic in topics %}
+      <article class = 'mini-post'>
+        <header>
+          <h3><a href = "{% url 'comment_on_topic' topic.id %}">{{ topic.topic_heading }}</a></h3>
+          <time class="published">{{ topic.created }}</time>
+          <p>by:<a href ="{% url 'user_profile' topic.user.id %}">{{ topic.user.username }}</a></p>
+          {% if topic.user_profile.user_profile_pic.name %}
+            <a href="{% url 'user_profile' topic.user.id %}" class="author"><img src="/media/{{ topic.user_profile.user_profile_pic }}" alt="" /></a>
+          {% else %}
+            <a href="{% url 'user_profile' topic.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+          {% endif %}
+        </header>
+      </article>
+      {% endfor %}
+      <h2><a href ="{% url 'get_all_codehub_topics' %}">View all other topics</a></h2>
+    </div>
+  </section>
+  <section id ='footer'>
+    <p class ='copyright'>&copy; license Reserved <a href="">Abhishek</a>.</p>
+  </section>
+</section>
+{% endblock %}

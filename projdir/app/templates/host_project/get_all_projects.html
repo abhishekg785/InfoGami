@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h2>All Hosted projects( {{ project_count }} )</h2>
+  <form method="POST" action="{% url 'search_hosted_project' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' name='search_project' value = 'Go'/>
+  </form>
+  <hr/>
+  <section>
+    {% if not projects %}
+      <h3>No projects Yet!!!</h3>
+    {% else %}
+    <ul class = 'posts'>
+      {% for project in projects.object_list %}
+        <li>
+          <article>
+            <header>
+              <h2><a href="{% url 'hosted_project_details' project.id %}">{{ project.project_name }}</a></h2>
+              <h3>Tags:{% for tag in project.skills.all %}
+                  "<a href = "">{{ tag.name }}</a>"&nbsp;
+                {% endfor %}
+              </h3>
+              <time class="published">{{ project.created }}</time>
+              <p class="published">by:<a href = "{% url 'user_profile' project.user.id %}">{{ project.user.username }}</a></p>
+              {% if project.user.id  == user.id %}
+              <ul class = 'actions'>
+                {% if project.project_status == 'deactive' %}
+                  <li style = 'border:2px solid green'><a href = "{% url 'activate_hosted_project' project.id %}" class = 'button'>Activate</a></li>
+                {% elif project.project_status == 'active' %}
+                  <li style = 'border:2px solid red'><a href = "{% url 'deactivate_hosted_project' project.id %}" class = 'button'>Dectivate</a></li>
+                {% endif %}
+              </ul>
+              {% endif %}
+            </header>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+  <div class = "pagination">
+    {% if projects.has_previous %}
+      <li><a href = "?page={{ projects.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    {% for pg in projects.paginator.page_range %}
+      {% if projects.number == pg %}
+        <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% else %}
+        <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if projects.has_next %}
+      <li><a href = "?page={{ projects.next_page_number }}">Next</a></li>
+    {% endif %}
+    </ul>
+  </div>
+  {% endif %}
+  </section>
+</div>
+{% endblock %}

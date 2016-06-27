@@ -1,0 +1,22 @@
+Metadata-Version: 1.1
+Name: django-twitter-bootstrap
+Version: 3.3.0
+Summary: Provides a Django app whose static folder contains Bootstrap assets
+Home-page: https://github.com/estebistec/django-twitter-bootstrap
+Author: Steven Cummings
+Author-email: cummingscs@gmail.com
+License: MIT
+Download-URL: http://pypi.python.org/pypi/django-twitter-bootstrap
+Description: UNKNOWN
+Keywords: django app staticfiles twitter bootstrap
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Topic :: Software Development :: Libraries

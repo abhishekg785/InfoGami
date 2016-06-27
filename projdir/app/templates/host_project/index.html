@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div id = 'main'>
+<h2>Find projects around you</h2>
+<hr/>
+<h1><a href = "{% url 'host_project' %}" >Host a project</a></h1>
+<h1><a href = "{% url 'skill_matched_hosted_project' %}" >projects as per my skills</a></h1>
+<h1><a href = "{% url 'get_all_hosted_projects' %}" >All Hosted Projects</a></h1>
+<h1><a href = "{% url 'user_hosted_projects' user.id %}" >Projects hosted by me</a></h1>
+<h1><a href = "{% url 'hosted_project_interested_users' %}" >Students Interested in your project</a></h1>
+<hr/>
+</div>
+{% endblock %}

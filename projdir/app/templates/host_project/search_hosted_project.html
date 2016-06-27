@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h2>Search hosted projects</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type = 'submit' name = 'search_hosted_project' value = 'Go'/>
+  </form>
+  <hr/>
+  {% if not results %}
+    <h3>No results yet!!!</h3>
+  {% else %}
+  <h3>Search results for " {{ search_str }} "</h3>
+  <section>
+    <ul class ='posts'>
+    {% for result in results %}
+      <li>
+        <article>
+          <header>
+            <h2><a href="{% url 'hosted_project_details' result.id %}">{{ result.project_name }}</a></h2>
+            <h3>
+              {% for skill in result.skills.all %}
+                "<a href = "">{{ skill.name }}</a>"&nbsp;
+              {% endfor %}
+            </h3>
+            <time class="published">{{ result.created }}</time>
+            <p class="published">by:<a href = "{% url 'user_profile' result.user.id %}">{{ result.user.username }}</a></p>
+          </header>
+        </article>
+      </li>
+    {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

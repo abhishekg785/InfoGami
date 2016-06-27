@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h2>hosted projects by "<a href = "{% url 'user_profile' user.id %}">{{ user_details.username }}</a>"</h2>
+  <hr/>
+  <section>
+    {% if not projects %}
+      <h3>No projects yet!!!</h3>
+    {% else %}
+      <ul class = 'posts'>
+        {% for project in projects %}
+        <li>
+          <article>
+            <header>
+              <h2><a href="{% url 'hosted_project_details' project.id %}">{{ project.project_name }}</a></h2>
+              <h3>Tags:{% for tag in project.skills.all %}
+                  "<a href = "">{{ tag.name }}</a>"&nbsp;
+                {% endfor %}
+              </h3>
+              <time class="published">{{ project.created }}</time>
+              <p class="published">by:<a href = "{% url 'user_profile' project.user.id %}">{{ project.user.username }}</a></p>
+              <ul class = 'actions'>
+                {% if project.project_status == 'deactive' and project.user.id  == user.id %}
+                  <li style = 'border:2px solid green'><a href = "{% url 'activate_hosted_project' project.id %}" class = 'button'>Activate</a></li>
+                {% elif project.project_status == 'active' and project.user.id  == user.id %}
+                  <li style = 'border:2px solid red'><a href = "{% url 'deactivate_hosted_project' project.id %}" class = 'button'>Dectivate</a></li>
+                {% endif %}
+              </ul>
+            </header>
+          </article>
+        </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

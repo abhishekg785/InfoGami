@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h2>Welcome <a href ="{% url 'user_profile' user.id %}">{{ user.username }}</a></h2>
+  <hr/>
+  <h1><a href ="{% url 'devhub_question' %}">Ask Questions</a></h1>
+  <h1><a href = "{% url 'devhub_topic' %}">Post Something Interseting</a></h1>
+  <h1><a href = "">Create a developer meetup/event/talk</a></h1>
+  <h1><a href = "">Events/Meetups/Talks</a></h1>
+  <h1><a href = "">Open Source</a></h1>
+  <h1><a href = "">My Open Source Projects</a></h1>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<div id = 'main'>
+  <article class = 'post'>
+  <header>
+    <div class = 'title'>
+      <h2><a href="">Propose an Event</a></h2>
+      <p>"Find what students are interested in"</p>
+    </div>
+  </header>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name = 'propose_event' value="Post event"/>
+  </form>
+  </article>
+</div>
+<section id = 'sidebar'>
+  <section id = 'intro'>
+    <header>
+      <h2 style="font-size:20px"><a href ="">Recent Proposed Events</a></h2>
+      <h3><a href ="{% url 'get_all_proposed_events' %}">View all Proposed Events</a></h3>
+      <p>"Click on event for more info"</a></p>
+    </header>
+  </section>
+  <section>
+    <form method= "post" align = 'center' action = "{% url 'search_propose_event' %}" />
+      {% csrf_token %}
+      {{ search_form.as_p }}
+      <input type = 'submit' value = 'Search' name='search_event' />
+    </form>
+    <div class = 'mini-posts'>
+      {% for event in events %}
+      <article class = 'mini-post'>
+        <header>
+          <h3><a href="{% url 'propose_event_details' event.id %}">{{ event.event_heading }}</a></h3>
+          <time class="published">{{ event.created }}</time>
+          {% if event.user_profile.user_profile_pic.name %}
+            <a href="{% url 'user_profile' event.user.id %}" class="author"><img src="/media/{{ event.user_profile.user_profile_pic }}" alt="" /></a>
+          {% else %}
+            <a href="{% url 'user_profile' event.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+          {% endif %}
+          <p>by:<a href ="{% url 'user_profile' event.user.id %}">{{ event.user.username }}</a></p>
+        </header>
+       </article>
+      {% endfor %}
+      <h2><a href ="{% url 'get_all_proposed_events' %}">View all other events</a></h2>
+    </div>
+  </section>
+</section>
+{% endblock %}

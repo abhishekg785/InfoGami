@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+<form method="post">
+{% csrf_token %}
+{{ form.as_p }}
+<input type='submit' name='search_user' value="search user"/>
+</form>
+<hr/>
+<section>
+  {% if not result %}
+    <h2>No results yet</h2>
+  {% else %}
+    <ul class = 'posts'>
+      <h2>Search result for "{{ search_str }}"</h2>
+      {% for user in result %}
+      <li>
+        <article>
+          <header>
+            <h2><a href = "{% url 'user_profile' user.id %}">{{ user }}</a></h2>
+          </header>
+        </article>
+      </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</section>
+</div>
+{% endblock %}

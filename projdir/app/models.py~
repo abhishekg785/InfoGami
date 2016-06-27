@@ -1,0 +1,160 @@
+from __future__ import unicode_literals
+from django_markdown.models import MarkdownField
+
+from django.db import models
+from django.contrib.auth.models import User
+# Create your models here.
+from taggit.managers import TaggableManager
+
+from os.path import join as isfile
+from django.conf import settings
+import os
+
+class CodehubTopicModel(models.Model):
+    user = models.ForeignKey(User)
+    topic_heading = models.CharField(max_length = 100)
+    topic_detail = MarkdownField()
+    topic_link = models.CharField(max_length = 100,blank = True)
+    # tags = models.CharField(max_length = 50)
+    tags = TaggableManager()
+    topic_type = models.CharField(max_length = 10)
+    file = models.FileField(upload_to = 'uploads/',blank = True)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.topic_heading
+
+    def delete(self,*args,**kwargs):
+        print 'in the delete function of codehub model'
+        if self.file:
+            file_path = os.path.join(settings.MEDIA_ROOT,self.file.name)
+            print file_path
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        super(CodehubTopicModel,self).delete(*args,**kwargs)
+
+
+class CodehubTopicCommentModel(models.Model):
+    user = models.ForeignKey(User)
+    topic = models.ForeignKey('CodehubTopicModel')
+    comment_text = MarkdownField()
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.topic.topic_heading
+
+
+#this will store the extra profile details of the user
+class UserProfileModel(models.Model):
+    user = models.ForeignKey(User)
+    user_description = MarkdownField()
+    # skills = models.CharField(max_length = 200)
+    skills = TaggableManager()
+    user_type_select = models.CharField(max_length = 50,default = 'None')   #developer or programmer
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.user.username
+
+
+class CodehubCreateEventModel(models.Model):
+    user = models.ForeignKey(User)
+    event_heading = models.CharField(max_length = 100)
+    event_date = models.DateTimeField(null = True,blank = True)
+    event_venue = models.CharField(max_length = 100)
+    event_description = MarkdownField()
+    event_for  = models.CharField(max_length = 25)#basic or advanced
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.event_heading
+
+
+class CodehubEventQuestionModel(models.Model):
+    user = models.ForeignKey(User)
+    event = models.ForeignKey(CodehubCreateEventModel)
+    question_text = MarkdownField()
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+
+class MusicModel(models.Model):
+    user = models.ForeignKey(User)
+    music_name = models.CharField(max_length = 100)
+    music_file = models.FileField(upload_to = 'music/')
+    music_lang = models.CharField(max_length = 20)
+    music_artist = models.CharField(max_length = 30)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.music_name
+
+
+class CodehubQuestionModel(models.Model):
+    user = models.ForeignKey(User)
+    question_heading = models.CharField(max_length = 200)
+    question_description = MarkdownField()
+    question_link = models.CharField(max_length = 100,blank = True)
+    question_tags = TaggableManager()
+    question_type = models.CharField(max_length = 20)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.question_heading
+
+class CodehubQuestionCommentModel(models.Model):
+    user = models.ForeignKey(User)
+    question = models.ForeignKey(CodehubQuestionModel)
+    comment_text = MarkdownField()
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.question.question_heading
+
+
+class BlogPostModel(models.Model):
+    user = models.ForeignKey(User)
+    title = models.CharField(max_length = 200)
+    body = MarkdownField()
+    tags = TaggableManager()
+    image_file = models.FileField(upload_to = 'blog_images/',blank = True)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.title
+
+    def delete(self,*args,**kwargs):
+        print 'In the delete function of the BlogPostModel'
+        if self.image_file:
+            file_path = os.path.join(settings.MEDIA_ROOT,self.image_file.name)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+        super(BlogPostModel,self).delete(*args,**kwargs)
+
+
+
+class BlogPostCommentModel(models.Model):
+    user = models.ForeignKey(User)
+    blog_post = models.ForeignKey(BlogPostModel)
+    comment_text = MarkdownField()
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.comment_text
+
+
+class CodehubInnovationPostModel(models.Model):
+    user = models.ForeignKey
+    title = models.CharField(max_length = 200)
+    description = 
+    tags =
+    vote =

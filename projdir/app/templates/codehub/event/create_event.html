@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<div id = 'main'>
+  <article class="post">
+    <header>
+      <div class = 'title'>
+        <h2><a href ="">Create a Coding Event</a></h2>
+        <p>"Share your knowledge with others"</p>
+      </div>
+    </header>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type='submit' name='create_event' value='Create Event'/>
+    </form>
+  </article>
+</div>
+<section id = 'sidebar'>
+  <section id = 'intro'>
+    <header>
+      <h2 style="font-size:18px">Recent Created Coding Events</h2>
+      <h3><a href ="{% url 'codehub_events' %}">View all upcoming Events</a></h3>
+      <p>"Click on an event for more info"</a></p>
+    </header>
+  </section>
+  <section>
+    <form method="post" action="{% url 'search_codehub_event' %}">
+      {% csrf_token %}
+      {{ search_form.as_p }}
+      <input type='submit' name ='search_event' value = 'Go'/>
+    </form>
+    <div class = 'mini-posts'>
+      {% for event in events %}
+        <article class = 'mini-post'>
+          <header>
+            <h3><a href="{% url 'codehub_event_details' event.id %}">{{ event.event_heading }}</a></h3>
+            <time class="published">{{ event.created }}</time>
+            {% if event.user_profile.user_profile_pic.name %}
+              <a href="{% url 'user_profile' event.user.id %}" class="author"><img src="/media/{{ event.user_profile.user_profile_pic }}" alt="" /></a>
+            {% else %}
+              <a href="{% url 'user_profile' event.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+            {% endif %}
+            <p>by:<a href ="{% url 'user_profile' event.user.id %}">{{ event.user.username }}</a></p>
+          </header>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+</section>
+{% endblock %}

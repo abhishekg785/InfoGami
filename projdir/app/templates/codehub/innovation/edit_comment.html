@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <article class = 'post'>
+  <header>
+    <div class = 'title'>
+      <h2><a href="">Edit Idea Comment</a></h2>
+    </div>
+  </header>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' name='edit_comment' value = 'Save Changes' />
+  </form>
+  </article>
+  <h2><a href = "{% url 'codehub_innovation' %}">Cancel</a></h2>
+</div>
+{% endblock %}

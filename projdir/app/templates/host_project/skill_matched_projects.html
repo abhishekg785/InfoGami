@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h2>Recommended hosted projects for you</h2>
+  <hr/>
+  <section>
+    {% if not user_skills %}
+      <h3>No skills added <a href = "{% url 'user_profile' user.id %}">Add here</a></h3>
+    {% else %}
+      {% if not projects %}
+        <h3>No matched projects</h3>
+      {% else %}
+        <h3>
+          Matched Projects:{{ project_count }}
+          <!-- {% for skill in user_skills %}
+            "<a href = "">{{ skill.name }}</a>&nbsp;"
+          {% endfor %} -->
+        </h3>
+        <br/>
+        <ul class = 'posts'>
+          {% for project in projects %}
+            <li>
+              <article>
+                <header>
+                  <h2><a href = "{% url 'hosted_project_details' project.id %}">{{ project.project_name }}</a></h2>
+                  <h3>
+                    Skills:{% for skill in project.skills.all %}
+                      "<a href = "">{{ skill.name }}</a>"&nbsp;
+                    {% endfor %}
+                  </h3>
+                  <time class = 'published'>{{ project.created }}</time>
+                  <p class = 'published'>by:<a href ="{% url 'user_profile' project.user.id %}">{{ project.user.username }}</a></p>
+                </header>
+              </article>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

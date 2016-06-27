@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h2>Code Events by {{ username }}</h2>
+  <hr/>
+  {% if not events %}
+    <h3>No Events added!!!</h3>
+  {% else %}
+    {% for event in events.object_list %}
+      <h3><a href = "{% url 'codehub_event_details' event.id %}">{{ event.event_heading }}</a></h3>
+      {{ event.created }}
+      <hr/>
+    {% endfor %}
+    <div class = "pagination">
+      {% if events.has_previous %}
+        <li><a href = "?page={{ events.previous_page_number }}">Previous</a></li>
+      {% endif %}
+      {% for pg in events.paginator.page_range %}
+        {% if events.number == pg %}
+          <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+        {% else %}
+          <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if events.has_next %}
+        <li><a href = "?page={{ events.next_page_number }}">Next</a></li>
+      {% endif %}
+      </ul>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

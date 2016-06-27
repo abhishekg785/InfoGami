@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <article class = 'post'>
+  <header>
+    <div class = 'title'>
+      <h2><a href="">Edit Topic</a></h2>
+      <p>"{{ topic_heading }}"</p>
+    </div>
+  </header>
+  <form method = 'post' enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+  <input type='submit' name='sub' value='submit'/>
+  </form>
+  </article>
+  <h2><a href = "{% url 'codehub_topic' %}">Cancel</a></h2>
+</div>
+{% endblock %}

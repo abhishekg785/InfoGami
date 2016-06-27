@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load django_markdown %}
+{% block content %}
+<div id = 'main'>
+  <article class = 'post'>
+    <header>
+      <div class="title">
+        <h2><a href="">{{ event.event_heading }}</a></h2>
+        {% if event.user.is_superuser == 1 %}
+          <p style = 'color:red'>Created by Admin</p>
+        {% endif %}
+        {% if event.user.username == user.username %}
+        <ul class="actions">
+          <li><a class= 'button' href="{% url 'edit_propose_event' event.id %}">Edit</a></li>
+          <li><a class = 'button' href ="{% url 'remove_propose_event' event.id %}">Remove</a></li>
+        </ul>
+        {% endif %}
+      </div>
+      <div class="meta">
+        <time class="published">{{ event.created }}</time>
+        {% if event.user_profile.user_profile_pic.name %}
+          <h2><a href="{% url 'user_profile' event.user.id %}" class="author"><span class="name">{{ event.user.username }}</span><img src="/media/{{ event.user_profile.user_profile_pic }}" alt="Profile pic" /></a></h2>
+        {% else %}
+          <h2><a href="{% url 'user_profile' event.user.id %}" class="author"><span class="name">{{ event.user.username }}</span><img src = "{% static 'images/default_gravators/github.png' %}" /></a></h2>
+        {% endif %}
+      </div>
+    </header>
+    <div class = 'make_sober'>
+      <p>
+        Last Edited:&nbsp;{{ event.modified }}<br/>
+        Tags:
+        {% for tag in event.tags.all %}
+          {{ tag.name }}
+        {% endfor %}
+      </p>
+      <p>{{ event.event_description }}</p>
+    </div>
+    <footer>
+      <ul class="actions">
+        {% if voteStatus != 'none' %}
+          {% if voteStatus.vote == 'upVote' %}
+            <li><a class = 'button' href = "{% url 'downVote_propose_event' event.id %}">DownVote</a></li>
+          {% else %}
+            <li><a class = 'button' href = "{% url 'upVote_propose_event' event.id %}">UpVote</a></li>
+          {% endif %}
+        {% else %}
+            <!-- <li><a href = "{% url 'upVote_propose_event' event.id %}">UpVote</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href = "{% url 'downVote_propose_event' event.id %}">DownVote</a> -->
+            <li><a href="{% url 'upVote_propose_event' event.id %}" class="button ">up Vote</a></li>
+            <li><a href="{% url 'downVote_propose_event' event.id %}" class="button ">Down Vote</a></li>
+        {% endif %}
+      </ul>
+      <ul class = 'stats'>
+        <li><a href ="{% url 'propose_event_users_upvoted' event.id %}" class="icon fa-heart">{{ up_vote_count }}</a></li>
+        <li><a href ="" class="icon fa-comment"></a></li>
+      </ul>
+    </footer>
+  </article>
+  <h3>Give Suggestions</h3>
+  <form method="post">
+    {% csrf_token %}
+    {{ sugg_form.as_p }}
+    <input type = 'submit'  name = 'post_sugg' value = 'Suggest' />
+  </form>
+  <hr/>
+  {% if not suggestions %}
+    <h3>No suggestions Yet!!!</h3>
+  {% else %}
+  <section>
+    <div class = 'mini-posts'>
+      {% for suggestion in suggestions %}
+        <article class = 'mini-post'>
+          <header>
+            <p>{{ suggestion.sugg_text }}</p>
+            <time class="published">Created:{{ suggestion.created }}</time>
+            <time class="published">LLast Edited:{{ suggestion.modified }}</time>
+            {% if suggestion.user_profile.user_profile_pic.name %}
+              <h2><a style = "top:0.5em" href="{% url 'user_profile' suggestion.user.id %}" class="author">{{ suggestion.user.username }}<img src="/media/{{ suggestion.user_profile.user_profile_pic }}" alt="" /></a></h2>
+            {% else %}
+            <h2><a style = "top:0.5em" href="{% url 'user_profile' suggestion.user.id %}" class="author">{{ suggestion.user.username }}<img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a></h2>
+            {% endif %}
+            {% if suggestion.user.username == request.user.username %}
+              <!-- <h3><a href = "{% url 'edit_codehub_question_comment' suggestion.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_codehub_question_comment' suggestion.id %}">Remove</a></h3> -->
+              <ul class = 'actions'>
+                <li><a class = 'button' href = "{% url 'edit_suggestion_to_propose_event' event.id suggestion.id %}">Edit</a></li>
+                <li><a class = 'button' href = "{% url 'remove_suggestion_to_propose_event' event.id suggestion.id %}">Remove</a></li>
+              </ul>
+            {% endif %}
+          </header>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

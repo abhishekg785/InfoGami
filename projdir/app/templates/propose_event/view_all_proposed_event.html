@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h2>All Proposed Events</h2>
+  <form method="POST" action="{% url 'search_propose_event' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type = 'submit' value = 'Search' name='search_event' />
+  </form>
+  <hr/>
+  <section>
+    {% if not events %}
+      <h3>No events Yet!!!</h3>
+    {% else %}
+    <ul class = 'posts'>
+      {% for event in events.object_list %}
+        <li>
+          <article>
+            <header>
+              <h2><a href="{% url 'propose_event_details' event.id %}">{{ event.event_heading }}</a></h2>
+              <h3>Tags:
+                {% for tag in event.tags.all %}
+                  "{{ tag.name }}"
+                {% endfor %}
+              </h3>
+              <time class="published">{{ event.created }}</time>
+              <p class="published">by:<a href = "{% url 'user_profile' event.user.id %}">{{ event.user.username }}</a></p>
+            </header>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+  <div class = "pagination">
+    {% if events.has_previous %}
+      <li><a href = "?page={{ events.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    {% for pg in events.paginator.page_range %}
+      {% if events.number == pg %}
+        <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% else %}
+        <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if events.has_next %}
+      <li><a href = "?page={{ events.next_page_number }}">Next</a></li>
+    {% endif %}
+    </ul>
+  </div>
+  {% endif %}
+  </section>
+</div>
+{% endblock %}

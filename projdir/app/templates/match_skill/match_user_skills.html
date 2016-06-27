@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h2><a href ="">Skill Matcher</a></h2>
+  <h3><a href = "{% url 'get_all_skills_stat' %}">Get all skills statistics</a></h3>
+  <hr/>
+  {% if not logged_user_skills %}
+    <h2>No Skills Added</h2>
+    <h3><a href = "{% url 'user_profile' user.id %}">Add here</a></h3>
+  {% else %}
+  <h2>Matched user list</h2>
+  {% for user in matched_users_list %}
+    <h3><a href = "{% url 'user_profile' user.id %}">{{ user }}</a></h3>
+    <p>Skills:
+      {% for skill in user.skills.all %}
+        {{ skill  }}
+      {% endfor %}
+    </p>
+  {% endfor %}
+  <h3>Skills statistics</h3>
+  <hr/>
+  <h2>Skills Count:</h2>
+  {% for key,value in skill_user_count_dict.items %}
+    <a href = "{% url 'search_users_by_skill' key.slug %}">{{ key }}</a>:{{ value }}
+    <br/>
+  {% endfor %}
+  <hr/>
+  <h2>Skill Percentile</h2>
+  {% for key,value in skill_user_per_dict.items %}
+    <a href = "{% url 'search_users_by_skill' key.slug %}">{{ key }}</a>:{{ value }}
+    <br/>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

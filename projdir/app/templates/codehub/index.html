@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+  <div id = 'main'>
+    <h2>Welcome <a href = "{% url 'user_profile' user.id %}">"{{ user }}"</a> to Codehub</h2>
+    <hr/>
+    <h1><a href = "{% url 'codehub_question' %}" >Ask Questions</a></h1>
+    <h1><a href = "{% url 'codehub_topic' %}">Post Topics</a></h1>
+    <h1><a href = "{% url 'write_blog' %}">Write Blog</a></h1>
+    <h1><a href = "{% url 'codehub_innovation' %}">Got a new way to solve a problem!!!Share here...</a></h1>
+    <h1><a href="{% url 'codehub_events' %}">Upcoming Classes/Events/Talks</a></h1>
+    <h1><a href="{% url 'create_codehub_event' %}">Create an event</a></h1>
+    <hr/>
+</div>
+{% endblock %}

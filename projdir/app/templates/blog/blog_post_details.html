@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load django_markdown %}
+{% block content %}
+<div id = 'main'>
+  <article class="post">
+    <header>
+      <div class = 'title'>
+        <h2><a href="#">{{ post_details.title }}</a></h2>
+        {% if post_details.user.username == user.username %}
+          <h3><a href="{% url 'edit_blog_post' post_details.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_blog_post' post_details.id %}">Remove</a></h3>
+        {% endif %}
+      </div>
+      <div class = 'meta'>
+        <time class="published">{{ post_details.created }}</time>
+        {% if post_details.user_profile.user_profile_pic.name %}
+          <h2><a href="{% url 'user_profile' post_details.user.id %}" class="author"><span class="name">{{ post_details.user.username }}</span><img src="/media/{{ post_details.user_profile.user_profile_pic }}" alt="Profile pic" /></a></h2>
+        {% else %}
+          <h2><a href="{% url 'user_profile' post_details.user.id %}" class="author"><span class="name">{{ post_details.user.username }}</span><img src = "{% static 'images/default_gravators/github.png' %}" /></a></h2>
+        {% endif %}
+      </div>
+    </header>
+    {% if post_details.image_file.name %}
+    <a href = "" class = 'image featured'><img style = "height:400px;width:400px" src ="/media/{{ post_details.image_file }}" /></a>
+    <hr/>
+    {% endif %}
+    <div class ='make_sober'>
+      <h3>
+        Tags:
+        {% for tag in post_details.tags.all %}
+          <a href = "{% url 'search_all_blog_posts_by_slug' tag.slug %}">{{ tag }}</a>
+        {% endfor %}
+      </h3>
+      <p>Last Edited:&nbsp;{{ post_details.modified }}</p>
+      <p>{{ post_details.body|markdown }}</p>
+    </div>
+  </article>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' name='post_comment' value = 'Post Comment'/>
+  </form>
+  <hr/>
+  {% if not comments %}
+    <h3>No comments yet</h3>
+  {% else %}
+  <section>
+    <div class = 'mini-posts'>
+      {% for comment in comments %}
+        <article class = 'mini-post'>
+          <header>
+            <p>{{ comment.comment_text }}</p>
+            <time class="published">Created:{{ comment.created }}</time>
+            <time class="published">Last Edited:{{ comment.modified }}</time>
+            {% if comment.user_profile.user_profile_pic.name %}
+              <h2><a style = "top:0.5em" href="{% url 'user_profile' comment.user.id %}" class="author">{{ comment.user.username }}<img src="/media/{{ comment.user_profile.user_profile_pic }}" alt="" /></a></h2>
+            {% else %}
+            <h2><a style = "top:0.5em" href="{% url 'user_profile' comment.user.id %}" class="author">{{ comment.user.username }}<img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a></h2>
+            {% endif %}
+            {% if comment.user.username == user.username %}
+              <h3><a href = "{% url 'edit_blog_post_comment' post_details.id comment.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_blog_post_comment' post_details.id comment.id %}">Remove</a></h3>
+            {% endif %}
+          </header>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

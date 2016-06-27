@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+<h2>Users having skill "{{ skill_search_str }}"</h2>
+<hr/>
+{% for user_obj in result %}
+  <a href = "{% url 'user_profile' user_obj.user.id %}">{{ user_obj.user.username }}</a>
+  <br/>
+{% endfor %}
+</div>
+{% endblock %}
