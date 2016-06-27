@@ -373,12 +373,12 @@ def remove_devhub_topic_comment(request,topic_id,comm_id):
 
 
 
-class DevhubQuestionAutoComplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        print 'value of q is:',self.q
-        if not self.request.user.is_authenticated():
-            return DevhubQuestionModel.objects.none()
-        qs = DevhubQuestionModel.objects.all()
-        if self.q:
-            qs = qs.filter(question_heading__contains = self.q)
-        return qs
+# class DevhubQuestionAutoComplete(autocomplete.Select2QuerySetView):
+#     def get_queryset(self):
+#         print 'value of q is:',self.q
+#         if not self.request.user.is_authenticated():
+#             return DevhubQuestionModel.objects.none()
+#         qs = DevhubQuestionModel.objects.all()
+#         if self.q:
+#             qs = qs.filter(question_heading__contains = self.q)
+#         return qs

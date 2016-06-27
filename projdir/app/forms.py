@@ -140,9 +140,9 @@ class DevhubQuestionForm(forms.ModelForm):
     class Meta:
         model = DevhubQuestionModel
         fields = ['question_heading','question_description','question_link','question_tags','question_type']
-        widgets = {
-           'ques_heading':autocomplete.ModelSelect2(url = 'devhubQuestion_autocomplete')
-        }
+        # widgets = {
+        #    'ques_heading':autocomplete.ModelSelect2(url = 'devhubQuestion_autocomplete')
+        # }
 
 
 
