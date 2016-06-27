@@ -74,7 +74,7 @@
             </a>
           </li>
           <li>
-            <a href ="">
+            <a href ="{% url 'get_message_center' %}">
               <h3>Messages<span class = "messageSpan"></span></h3>
             </a>
           </li>
@@ -142,20 +142,17 @@
     <script src ="{% static 'js/main.js' %}"></script>
     <script src ="{% static 'js/createSkillStats.js' %}"></script>
     <script>
-    /**
-      1.firstly fetch the data and store it in the array
-      2.place the data into the DOM
-      3.set loader for fetching messages
-    **/
     (function($){
       var message_span = $('.messageSpan'),
           message_heading = $('a#message_heading'),
           load_message = $('#loadMessage'),
           mini_post = $('.mini-post'),
+          message_section = $('#messageSection'),
           new_message_count = 0,
           new_message_arr = [],
           new_message_arr_len = 0,
-          is_data = false;
+          is_data = false,
+          is_read = false,
 
       baseFunctions = {
 
@@ -175,7 +172,9 @@
               }
               else{
                 is_data = false;
+                message_section.css({'height':'50px','overflow':'hidden'})
                 load_message.text('No unread Messages');
+
               }
             },
             error:function(error){
@@ -195,7 +194,7 @@
           for(var i = 0 ; i < new_message_arr_len ; i++){
             item_id = 'new_message' + i;
             message_count += new_message_arr[i].message_count;
-            list_item = "<article class = '"+ item_class +"' id = '" + item_id +"' style = 'cursor:pointer' class = 'mini-post'><header><p>" + new_message_arr[i].latest_message +"(" + new_message_arr[i].message_count + ")</p><time class='published'>vkvnfkvnflkvnflkv</time><a class='author'><img src='' alt='' /></a><p>by:<a href = ''>" + new_message_arr[i].sender + "</a></p></header></article>";
+            list_item = "<article class = '"+ item_class +"' id = '" + item_id +"' style = 'cursor:pointer' class = 'mini-post'><header><p>" + new_message_arr[i].latest_message +"(" + new_message_arr[i].message_count + ")</p><time class='published'>"+ new_message_arr[i].created.split('.')[0] + "</time><a class='author'><img src='/media/"+ new_message_arr[i].sender_profile_pic +"' alt='' /></a><p>by:<a href = ''>" + new_message_arr[i].sender + "</a></p></header></article>";
             mini_post.append(list_item);
           }
           message_span.text('('+ message_count +')');
@@ -206,6 +205,10 @@
         //displaying the message pane
         displayMessagePane:function(){
           $('#messageSection').css('display','block');
+          if(is_read && is_data){
+            load_message.text('Recent Messages');
+          }
+          is_read = true;
         },
 
         hideMessagePane:function(){
@@ -222,7 +225,7 @@
         },
 
         setMessageStatusSeen:function(){
-          var user_id = {{ user.id }}
+          var user_id = "{{ user.id }}",
               post_data = {
               'user_id':user_id,
               'csrfmiddlewaretoken':"{{ csrf_token }}"
@@ -245,7 +248,6 @@
 
       $(document).ready(function(){
         var username = "{{ user.username }}";
-        console.log('username'+username);
         if(username != 'undefined' && username != ''){
           baseFunctions.setMessageLoader().getNewMessages();
           $('.messageLink').hover(

@@ -105,10 +105,10 @@
 
 #messageSection{
 	height: 100%;
-	width: 50%;
+	width: 35%;
 	position: absolute;
 	top:55px;
-	right	:0px;
+	right	:125px;
 	background-color: #fff;
 	display: none;
 	color:black;

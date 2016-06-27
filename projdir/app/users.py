@@ -228,6 +228,8 @@ def unfollow_user_profile(request,user_id):
     return redirect('/user/profile/'+str(user_id))
 
 
+
+@loginRequired
 def get_user_notifications(request):
     followed_user_arr = []
     followed_users = FollowUserModel.objects.filter(following_user_id = request.user.id)
@@ -277,8 +279,9 @@ def user_new_messages_api(request):
             sender_message_count = sender['message_count']
             sender_id = sender['sender_id']
             sender_username = User.objects.get(id = sender_id).username
-            latest_message = MesssageModel.objects.filter(message_status = 'False' , sender_id = sender_id).values('message_text').order_by('-created')[:1]
-            message_obj = {'sender_id':sender_id,'sender':sender_username,'message_count':sender_message_count,'latest_message':latest_message[0]['message_text']}
+            sender_profile_pic = UserProfileModel.objects.get(user_id = sender_id).user_profile_pic.name
+            latest_message = MesssageModel.objects.filter(message_status = 'False' , sender_id = sender_id).values('message_text','created').order_by('-created')[:1]
+            message_obj = {'sender_id':sender_id,'sender':sender_username,'message_count':sender_message_count,'latest_message':latest_message[0]['message_text'],'sender_profile_pic':sender_profile_pic,'created':str(latest_message[0]['created'])}
             new_message_arr.append(message_obj)
     return HttpResponse(json.dumps(new_message_arr),content_type = 'application/json')
 
