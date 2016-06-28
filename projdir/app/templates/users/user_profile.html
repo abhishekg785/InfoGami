@@ -2,6 +2,8 @@
 {% load staticfiles %}
 {% block content %}
   <div id = 'main'>
+    <!-- for getting value in createSkillStat.js -->
+    <input type="hidden" id = 'userId' value = '{{ user_info.id }}' />
   {% if user_info.username  == user.username %}
     <h2><a href = "{% url 'edit_user_profile' user.id %}">Edit Profile</a></h2>
   {% endif %}
@@ -15,7 +17,7 @@
   {% if user_profile.user.id != user.id %}
   <div id = "messageBoxId">
     <textarea id = "message_text" maxlength="100" placeholder="Enter message here(max 150 chars)" required></textarea>
-    <button id = "sendMessageId" onclick="sendMessage({{ user.id }},{{ user_info.id }})">Send</button>
+    <button id = "sendMessageId" onclick="sendMessage({{ user.id }},{{ user_info.id }},'{{ csrf_token }}')">Send</button>
   </div>
   <button id = 'getMessageBoxId'>Message</button>
     {% if is_following %}
@@ -64,85 +66,10 @@
     </div>
   </div>
   </div>
-  <script src = "{% static 'js/jquery.min.js' %}"></script>
-  <script src = 'http://d3js.org/d3.v3.min.js' charset = 'utf-8'></script>
-  <script src = "{% static 'js/createVisual.js' %}"></script>
-  <script>
-    var user_id = "{{ user_info.id }}",
-        div_name = "user_stat_visual",
-        user_skill_stat_div = $('#user_skill_stat_div');
-    $.ajax({
-      url:"http://localhost:8000/get-user-skills-stat-api/v1/" + user_id + "/",
-      type:'GET',
-      success:function(data){
-        var data_length = data.length;
-        if(data_length){
-          user_skill_stat_div.css('display','block');
-          createStatVisual(data,div_name);
-        }
-      },
-      error:function(e){
-        console.log(e);
-      }
-    });
-
-
-    $('#getMessageBoxId').on('click',function(event){
-      event.stopPropagation();
-      var messageBoxId = $('#messageBoxId');
-      messageBoxId.css('display','block');
-      $("#getMessageBoxId").css('display','none');
-    });
-
-    //to prevent the wrapper event to occur on messageBoxId div
-    $("#messageBoxId").on('click',function(event){
-      event.stopPropagation();
-    });
-
-
-    //functio to send message
-    function sendMessage(senderId , receiverId){
-      $('#sendMessageId').text('Sending...');
-      //ajax request
-      message_text = $('#message_text').val();
-      if(message_text == ""){
-        alert('Message Field is required');
-        return;
-      }
-      console.log('Messafe'+message_text)
-      var post_data = {
-        'sender_id':senderId,
-        'receiver_id':receiverId,
-        'message_text':message_text,
-        'csrfmiddlewaretoken':"{{ csrf_token }}"
-      };
-
-      $.ajax({
-        url:'http://localhost:8000/post-message-api/',
-        type:'POST',
-        data:post_data,
-        dataType:'json',
-        success:function(data){
-          console.log(data);
-          sucessFunc();
-        },
-        error:function(error){
-          console.log('Error:',error);
-        }
-      });
-    }
-
-
-
-    $('#wrapper').on('click',function(event){
-      $('#messageBoxId').css('display','none');
-      $("#getMessageBoxId").css('display','block');
-    });
-
-
-    function sucessFunc(){
-      $('#sendMessageId').text('Send');
-      $('#message_text').val('');
-    }
-  </script>
+{% endblock %}
+{% block script %}
+<script src = 'http://d3js.org/d3.v3.min.js' charset = 'utf-8'></script>
+<script src = "{% static 'js/createVisual.js' %}"></script>
+<script src = "{% static 'js/userProfile/messageController.js' %}"></script>
+<script src = "{% static 'js/userProfile/createSkillStat.js' %}"></script>
 {% endblock %}

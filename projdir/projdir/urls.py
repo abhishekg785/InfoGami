@@ -23,7 +23,6 @@ from app.codehub import codehub_question,remove_codehub_question,edit_codehub_qu
 from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog,follow_user_profile,get_user_new_ideas,get_codehub_user_events,unfollow_user_profile,get_user_notifications,get_following_users,get_users_followed,user_new_messages_api,get_user_messages,post_message_api,set_message_status_true_api,fetch_user_messages_message_center_api,get_message_center,get_message_center_data_api
 from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question,search_codehub_event,propose_event,propose_event_details,upVote_propose_event,downVote_propose_event,propose_event_users_upvoted,propose_event_users_downvoted,edit_propose_event,remove_propose_event,search_propose_event,get_all_proposed_events,edit_suggestion_to_propose_event,remove_suggestion_to_propose_event
 from app.music import music_list
-from app.blog import blog,blog_post_edit,blog_post_remove,blog_post_details,search_user_blog_post_by_slug,search_all_blog_posts_by_slug,edit_blog_post_comment,remove_blog_post_comment,search_blog_post,get_all_blog_posts
 from app.match_skill import match_user_skills,search_users_by_skill,get_all_skills_stat,get_all_skills_stat_apiv1,get_user_skills_stat_apiv1
 from app.tags import tags
 from app.devhub import devhub,devhub_question,devhub_question_details,edit_devhub_question,remove_devhub_question,get_all_devhub_questions,search_devhub_question,edit_devhub_question_answer,remove_devhub_question_answer,devhub_topic,get_all_devhub_topics,search_devhub_topic,devhub_topic_details,edit_devhub_topic,remove_devhub_topic,edit_devhub_topic_comment,remove_devhub_topic_comment
@@ -73,6 +72,7 @@ urlpatterns = [
     url(r'^codehub/question/answer/(?P<ans_id>\d+)/edit/$',edit_codehub_question_comment,name = 'edit_codehub_question_comment'),
     url(r'^codehub/all_questions/$',get_all_codehub_questions,name = 'get_all_codehub_questions'),
     #user's specific
+    url(r'^notifications/',get_user_notifications,name = 'notifications'),
     url(r'^user/(?P<user_id>\d+)/topics/$',get_user_topics,name = 'get_user_topics'),
     url(r'^user/(?P<user_id>\d+)/questions/$',get_user_questions,name = 'get_user_questions'),
     url(r'^user/(?P<user_id>\d+)/blog/$',user_blog,name = 'user_blog'),
@@ -89,18 +89,7 @@ urlpatterns = [
     url(r'^get-message-center-data/api/$',get_message_center_data_api,name = 'get_message_center_data_api'),
     url(r'^message-center/user/(?P<sender_id>\d+)/messages/api/$', fetch_user_messages_message_center_api, name = 'fetch_user_messages_message_center_api'),
     #message center apis end here
-    url(r'^blog/$',blog,name = 'write_blog'),
-    url(r'^notifications/',get_user_notifications,name = 'notifications'),
-    url(r'^blog/search/(?P<slug_str>[\w\-]+)/posts$',search_all_blog_posts_by_slug,name = 'search_all_blog_posts_by_slug'),
-    url(r'^user/(?P<user_id>\d+)/blog/slug/(?P<slug_str>[\w\-]+)/posts/$',search_user_blog_post_by_slug,name = 'search_user_blog_post_by_slug'),
-    url(r'^blog/post/(?P<post_id>\d+)/edit/$',blog_post_edit,name = 'edit_blog_post'),
-    url(r'^blog/post/(?P<post_id>\d+)/remove/$',blog_post_remove,name = 'remove_blog_post'),
-    url(r'^blog/post/(?P<post_id>\d+)/details/$',blog_post_details,name = 'blog_post_details'),
-    url(r'^blog/post/(?P<post_id>\d+)/comment/(?P<com_id>\d+)/edit/$',edit_blog_post_comment,name = 'edit_blog_post_comment'),
-    url(r'^blog/post/(?P<post_id>\d+)/comment/(?P<com_id>\d+)/remove/$',remove_blog_post_comment,name = 'remove_blog_post_comment'),
-    url(r'^blog/search_post/$',search_blog_post,name = 'search_blog_post'),
-    url(r'^blog/get_all_blog_posts/$',get_all_blog_posts,name = 'get_all_blog_posts'),
-    #codehub innovation routes here
+    url(r'^blog/',include('app.blog_urls')),
     url(r'^codehub/innovation/$',codehub_innovation,name = 'codehub_innovation'),
     url(r'^codehub/innovation/(?P<idea_id>\d+)/details/$',codehub_innovation_details,name = 'codehub_innovation_details'),
     url(r'^codehub/innovation/(?P<idea_id>\d+)/edit/$',edit_codehub_innovation_idea,name = 'edit_codehub_innovation_idea'),
@@ -147,25 +136,10 @@ urlpatterns = [
     url(r'^event/propose-event/(?P<event_id>\d+)/suggestion/(?P<sugg_id>\d+)/edit/$',edit_suggestion_to_propose_event,name = 'edit_suggestion_to_propose_event'),
     url(r'^event/propose-event/(?P<event_id>\d+)/suggestion/(?P<sugg_id>\d+)/remove/$',remove_suggestion_to_propose_event,name = 'remove_suggestion_to_propose_event'),
     # work collaborately and hosting a project
-    url(r'^work-and-collaborate/$',work_collaborately,name = 'work_collaborately'),
-    url(r'^project/host-project/$',host_project,name = 'host_project'),
-    url(r'^project/all-hosted-projects/$',get_all_hosted_projects,name = 'get_all_hosted_projects'),
-    url(r'^project/host-project/(?P<project_id>\d+)/details/$',hosted_project_details,name = 'hosted_project_details'),
-    url(r'^project/host-project/(?P<project_id>\d+)/edit/$',edit_hosted_project,name = 'edit_hosted_project'),
-    url(r'^project/host-project/(?P<project_id>\d+)/remove/$',remove_hosted_project,name = 'remove_hosted_project'),
-    url(r'^project/host-project/(?P<project_id>\d+)/activate/$',activate_hosted_project,name = 'activate_hosted_project'),
-    url(r'^project/host-project/(?P<project_id>\d+)/deactivate/$',deactivate_hosted_project,name = 'deactivate_hosted_project'),
-    url(r'^project/matched-hosted-project/$',skill_matched_hosted_project,name = 'skill_matched_hosted_project'),
-    url(r'^project/user/(?P<user_id>\d+)/hosted-projects/$',user_hosted_projects,name = 'user_hosted_projects'),
-    url(r'^project/hosted-project/(?P<project_id>\d+)/ping/$',ping_hosted_project,name = 'ping_hosted_project'),
-    url(r'^project/search-hosted-project/$',search_hosted_project,name = 'search_hosted_project'),
-    url(r'^project/host-project/interested-users/$',hosted_project_interested_users,name = 'hosted_project_interested_users'),
-    url(r'^project/hosted-project/(?P<project_id>\d+)/user/(?P<user_id>\d+)/accept-request/$',accept_hosted_project_request,name = 'accept_hosted_project_request'),
-    url(r'^project/hosted-project/(?P<project_id>\d+)/user/(?P<user_id>\d+)/reject-request/$',reject_hosted_project_request,name = 'reject_hosted_project_request'),
-    url(r'^project/hosted-project/(?P<project_id>\d+)/query/(?P<query_id>\d+)/edit/$',edit_hosted_project_query,name = 'edit_hosted_project_query'),
-    url(r'^project/hosted-project/(?P<project_id>\d+)/query/(?P<query_id>\d+)/remove/$',remove_hosted_project_query,name = 'remove_hosted_project_query'),
+    url(r'^project/',include('app.host_project_urls')),
     #queries for the autocomplete
     # url(r'^devhubQuestion_autocomplete/$',DevhubQuestionAutoComplete.as_view(),name = 'devhubQuestion_autocomplete'),
+    url(r'^theInfo/',include('app.the_info_urls')),
 ]
 if settings.DEBUG is True:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

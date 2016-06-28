@@ -18,7 +18,7 @@ from os.path import join as isfile
 from django.conf import settings
 import os
 
-from dal import autocomplete
+#from dal import autocomplete
 
 from django.core.urlresolvers import reverse_lazy
 from django.views import generic
