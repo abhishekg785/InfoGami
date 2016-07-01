@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block head %}
+  {% block title %}
+    <title>TheInfo:{{ query.queryText }}</title>
+  {% endblock %}
+  {% block css %}
+    <link href = "{% static 'css/theInfo/queryDetails.css' %}" rel = 'stylesheet' type = 'text/css'/>
+  {% endblock %}
+{% endblock %}
+{% block content %}
+  <div id = 'main'>
+    <input type="hidden" value = "{{ csrf_token}}" id = 'token'/>
+    <h1>{{ query.queryText }}</h1>
+    <button id = 'giveAnswerButton'>Write Your own Answer</button>
+    <hr/>
+    <div id = 'errorMessage'></div>
+    <form method="POST" name = 'answerForm' id = 'answerForm' onsubmit="return queryDetailsFunctions.checkAnswerForm()">
+      {% csrf_token %}
+      {{ answer_form }}
+      <input type = 'submit' name = 'postAnswer' value = 'Answer!' />
+    </form>
+    {% if not answer_obj %}
+      <h1>No results found!!!</h1>
+    {% else %}
+      <h1>Available answers({{ answer_count }}):</h1>
+      {% for answer in answer_obj %}
+        {{ answer.answer_text }}
+        <div id = 'voteDiv{{ ans.answer.id }}' class = 'voteDiv'>{{ answer.vote_count }}</div><br/>
+        <button>Vote</button>
+        <hr/>
+      {% endfor %}
+    {% endif %}
+  </div>
+{% endblock %}
+{% block script %}
+  <script src = "{% static 'js/theInfo/queryDetails.js' %}"></script>
+{% endblock %}

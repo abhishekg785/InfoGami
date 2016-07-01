@@ -1,0 +1,208 @@
+body{
+  background-color: black;
+  font-family: monospace;
+}
+
+
+input#searchBar{
+  height: 85px;
+  font-size: 50px;
+  color: white;
+  font-family: monospace;
+}
+
+
+#searchSection h1{
+  color:white;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+
+#addQueryDiv{
+  display: none;
+}
+
+
+#enableAddQuery{
+  cursor: pointer;
+}
+
+
+#answerToQueryDiv{
+  display: none;
+}
+
+
+#enableAnswerToQuery{
+  cursor: pointer;
+}
+
+#cancelAnswerToQuery{
+  cursor: pointer;
+}
+
+
+.queryAnswer{
+  color: white;
+  width: 100%;
+  margin-top: 5px;
+  overflow: hidden;
+  font-family: monospace;
+  transition: all 1s ease;
+  font-size: 13px;
+}
+
+
+.answerInfo{
+  color:none;
+}
+
+
+.messageTags{
+  /*border: 1px solid white;*/
+}
+
+
+.messageQuery{
+  /*border: 1px solid white;*/
+}
+
+
+.votingSection{
+
+}
+
+
+.votingSection button{
+  margin: 5px;
+}
+
+.voteCount{
+  display: inline-block;
+  position: absolute;
+  font-size:20px;
+  right:50px;
+  color: green;
+}
+
+
+
+#theInfoAboutDiv{
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top:0px;
+  left:0px;
+  background-color: white;
+  opacity: 0.9;
+  color: black;
+}
+
+#desc{
+  position: absolute;
+  left:10%;
+  top:12%;
+  color: black;
+  border:8px solid black;
+  width: 80%;
+  height: 80%;
+  padding: 10px;
+  font-family: monospace;
+  overflow-y: scroll;
+}
+
+#closeDesc{
+  position: absolute;
+  right:5px;
+  top:0px;
+  cursor: pointer;
+}
+
+#actionMessage{
+  text-align: center;
+  border: 1px solid white;
+}
+
+.queryAnswer a{
+  text-decoration: none;
+  color: white;
+}
+
+
+.queryAnswer p{
+  color: white;
+}
+
+
+#addQueryForm > *{
+  color: white;
+}
+
+
+#enableAnswerToQuery{
+  color:white;
+  font-family: monospace;
+  font-size: 12px;
+  animation: animateAnswer;
+}
+
+#headSection{
+  height: 30px;
+  width: 100%;
+  position:relative;
+  color: white;
+}
+
+#headSection ul{
+  list-style: none;
+  width: 280px;
+  position: absolute;
+  right: 0px;
+  /*border:1px solid white;*/
+}
+
+#headSection ul li{
+  display: inline-block;
+  font-family: monospace;
+  font-size: 14px;
+  margin: 5px;
+  position: relative;
+  cursor: pointer;
+}
+
+
+#dots-loader{
+  position:relative;
+  margin: 0 auto;
+  top:100px;
+  width: 100px;
+  height: 30px;
+  background: radial-gradient(circle at 15px 10px , #FFFFFF 3px, rgba(0, 0, 0, 0) 4px), radial-gradient(circle at 40px 10px , #FFFFFF 3px, rgba(0, 0, 0, 0) 4px), radial-gradient(circle at 65px 10px , #FFFFFF 3px, rgba(0, 0, 0, 0) 4px), radial-gradient(circle at 90px 10px , #FFFFFF 3px, rgba(0, 0, 0, 0) 4px);
+  animation: load 3s 400ms linear infinite;
+  display: none;
+}
+
+
+@keyframes load{
+  0%{
+    opacity: 0;
+    transform: translateX(-300px);
+  }
+  33%{
+    opacity: 0.8;
+    transform: translateX(-100px);
+  }
+  50%{
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  66%{
+    opacity: 0.8;
+    tranform: translateX(100px);
+  }
+  100%{
+    opacity: 0;
+    transform: translateX(300px);
+  }
+}

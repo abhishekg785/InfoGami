@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel,HostProjectModel,HostProjectQuestionModel
+from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel,HostProjectModel,HostProjectQuestionModel,TheInfoAddQueryModel,TheInfoQueryAnswerModel
 from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
 
@@ -220,3 +220,23 @@ class HostProjectQuestionForm(forms.ModelForm):
     class Meta:
         model = HostProjectQuestionModel
         fields = ['question_text']
+
+
+
+
+class TheInfoAddQueryForm(forms.ModelForm):
+    queryText = forms.CharField(required = True,label = '',max_length = 150,widget = forms.Textarea(attrs = {'placeholder':'Add query for something "best"','rows':'2','id':'addQueryTextId'}))
+    queryTags = TagField(required = True,label = '',widget = TagWidget(attrs = {'id':'addQueryTagsId','placeholder':'Enter tags for the query(separated by commas)'}))
+
+    class Meta:
+        model = TheInfoAddQueryModel
+        fields = ['queryText','queryTags']
+
+
+
+class TheInfoQueryAnswerForm(forms.ModelForm):
+    answerText = forms.CharField(required = False, label = '',max_length = 500,widget = forms.Textarea(attrs = {'placeholder':'Provide a best answer(optional)','rows':'2','id':'answerText'}))
+
+    class Meta:
+        model = TheInfoQueryAnswerModel
+        fields = ['answerText']

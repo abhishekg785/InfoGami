@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{%block head %}
+{% block title %}
+  <title>TheInfo:Queries</title>
+{% endblock %}
+{% endblock %}
+{% block content %}
+  <div id = 'main'>
+    <h1>Total Queries in the Record:({{ queries.count }})</h1>
+    <hr/>
+    {% for query in queries %}
+      <a href = '/theInfo/query/{{ query.id }}/details/'><h1>{{ query.queryText }}</h1></a>
+      Tags:&nbsp;&nbsp;
+      {% for tag in query.queryTags.all %}
+        "{{ tag }}"&nbsp;
+      {% endfor %}
+      <br/>
+      By:&nbsp;&nbsp;<a href = "{% url 'user_profile' query.user.id %}">{{ query.user.username }}</a>
+      <hr/>
+    {% endfor %}
+  </div>
+{% endblock %}

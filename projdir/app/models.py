@@ -3,8 +3,9 @@ from django_markdown.models import MarkdownField
 
 from django.db import models
 from django.contrib.auth.models import User
-# Create your models here.
+
 from taggit.managers import TaggableManager
+from taggit.models import TaggedItemBase
 
 from os.path import join as isfile
 from django.conf import settings
@@ -361,3 +362,32 @@ class MesssageModel(models.Model):
     message_text = models.CharField(max_length = 500)
     message_status = models.CharField(max_length = 5,default = 'False')
     created = models.DateTimeField(auto_now_add = True)
+
+
+
+#the info section comes here
+class TaggedInfoAddQuery(TaggedItemBase):
+    content_object = models.ForeignKey('TheInfoAddQueryModel')
+
+
+class TheInfoAddQueryModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    queryText = models.CharField(max_length = 200)
+    queryTags = TaggableManager(through = TaggedInfoAddQuery)
+    created = models.DateTimeField(auto_now_add = True)
+
+
+
+class TheInfoQueryAnswerModel(models.Model):
+    info_query = models.ForeignKey(TheInfoAddQueryModel)
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    answer_text = models.CharField(max_length = 200)
+
+
+
+class TheInfoQueryAnswerVoteModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    answer = models.ForeignKey(TheInfoQueryAnswerModel)

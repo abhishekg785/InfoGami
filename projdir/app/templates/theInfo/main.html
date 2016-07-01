@@ -2,13 +2,92 @@
 {% load staticfiles %}
 {% block head  %}
   {% block title %}
-    <title>TheInfo</title>
+    <title>TheInfo:You own search engine</title>
   {% endblock %}
   {% block css %}
-    <link href = "stylesheet" href = "{% static 'css/theInfo.css' %}" />
+    <link rel = "stylesheet" type= "text/css" href = "{% static 'css/theInfo/theInfo.css' %}" />
   {% endblock %}
 {% endblock %}
 {% block content %}
+  <div id = 'main'>
+    <div id = 'headSection'>
+      <ul>
+        <li id = 'aboutTheInfo'>About</li>
+        <li id = 'quesDict'>Queries Dictionary</li>
+      </ul>
+    </div>
+    <div id = 'theInfoAboutDiv'>
+      <div id = 'desc'>
+        <div id = 'closeDesc'>
+          Close
+        </div>
+        <h1>
+          Hello Friends,<br/><br/>
+          This is 'TheInfo', one of the stupidest idea i came with :)<br/>
+          So , you may be wandering what the is this!!!  Well this is a basic search engine which only provides the answers for the 'best' things!!!
+          <br/><br/>
+          Now what is that???
+          <br/></br/>
+          Whenver a question like "What is the best thing for _____" occurs in your mind , then just search in it, if such thing exists in its record it will find for you!!!
+          for eg:Best Books for Node.js or best resources for node.js etc.
+          <br/><br/>
+          Well you can search for it on the google, Yes you are correct but you will get to know that after spending hours on finding best or even seconds, but maybe someone may have answered it
+          on 'TheInfo' and it may save your time!!!
+          <br/><br/>
+          Now the best thing about is it that 'YOU' makes this search engine and make it better and better by your contributions to the answers i.e you can add a query and even provide an answer for that.
+          For some cases you will get your answer or for some cases you may be the answerer.So "it's your search engine".
+          The code is open source so, customize it , make it faster and contribute!!!
+          <br/><br/>
+          Thanks<br/>
+          Abhishek Goswami
+        </h1>
+      </div>
+    </div>
+  <div id = 'searchSection'>
+    <div id = 'messageDiv'></div>
+    <input type="hidden" id = 'token' value = "{{ csrf_token}}" />
+    <input type = 'text' id = 'searchBar' placeholder="Search for best here..."/>
+    <br/>
+    <h1 id = 'enableAddQuery'>Add your own Query for something best:)</h1>
+    <div id = 'addQueryDiv'>
+      <form method="POST" id = 'addQueryForm'  onsubmit="return theInfoFunctions.checkAddQueryForm()">
+        {% csrf_token %}
+        {{ queryForm }}
+        <h3 id = 'enableAnswerToQuery'>Provide a best answer too(Optional)</h3>
+        <div id = 'answerToQueryDiv'>
+          {{ queryAnswerForm }}
+          <h3 id = 'cancelAnswerToQuery'>Cancel</h3>
+        </div>
+        <input type = 'submit' name = 'postQuery' value = 'Post'/>
+      </form>
+      <h1 id = 'cancelAddQuery'>Cancel</h1>
+    </div>
+    <hr/>
+    <div id="dots-loader"></div>
+    <div id = 'resultDiv'>
+      <!-- <div class = 'queryAnswer'>
+         answer txt comes here
+          <div class = 'answerInfo'>
+            <div class = 'answerTags'>
+              Tags
+            </div>
+            <div class = 'answerQuery'>
+               query
+            </div>
+            <div class = 'votingSection'>
+              <div class = 'voteCount'>
+                votes
+              </div>
+              <div class = "downVoteCount">
+                100
+              </div>
+             <button>UpVote</button><button>DownVote</button>
+            </div>
+          </div>
+      </div> -->
+    </div>
+</div>
+</div>
 {% endblock %}
 {% block script %}
   <script src = "{% static 'js/theInfo/main.js' %}"></script>

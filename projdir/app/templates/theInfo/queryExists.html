@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id = 'main'>
+  <h1>Queries similar to <i>"{{ query_text }}"</i> already exists in the records</h1>
+  ( Click on the query for more info or to add answer to the query )
+  <hr/>
+  <h3>Matched Queries:</h3>
+  {% for query in matched_queries %}
+    <a href = "{% url 'query_details' query.id %}">{{ query.queryText }}</a>
+    <br/>
+    <hr/>
+  {% endfor %}
+</div>
+{% endblock %}
