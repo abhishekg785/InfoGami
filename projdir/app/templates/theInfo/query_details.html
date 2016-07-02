@@ -19,6 +19,8 @@
       {% csrf_token %}
       {{ answer_form }}
       <input type = 'submit' name = 'postAnswer' value = 'Answer!' />
+      <h1 id = 'cancelAnswerButton'>Cancel</h1>
+      <hr/>
     </form>
     {% if not answer_obj %}
       <h1>No results found!!!</h1>
@@ -26,8 +28,13 @@
       <h1>Available answers({{ answer_count }}):</h1>
       {% for answer in answer_obj %}
         {{ answer.answer_text }}
-        <div id = 'voteDiv{{ ans.answer.id }}' class = 'voteDiv'>{{ answer.vote_count }}</div><br/>
-        <button>Vote</button>
+        <div id = 'voteDiv{{ answer.answer_id }}' class = 'voteDiv'>Votes:{{ answer.vote_count }}</div>
+        by:{{ answer.ans_user_name }}<br/>
+        {% if not answer.vote_status %}
+          <button id = '' onclick="queryDetailsFunctions.voteAnswer( {{ answer.answer_id }} )">Vote</button>
+        {% else %}
+          <button id = '' onclick="queryDetailsFunctions.undoVoteAnswer( {{ answer.answer_id }} )">Undo</button>
+        {% endif %}
         <hr/>
       {% endfor %}
     {% endif %}

@@ -193,7 +193,13 @@ def query_details(request, query_id):
     response_obj = []
     for ans in answers:
         vote_count = TheInfoQueryAnswerVoteModel.objects.filter(answer_id = ans.id).count()
-        ans_obj = {'answer_text':ans.answer_text,'vote_count':vote_count,'answer_id':ans.id,'answer_user_id':ans.user.id}
+        try:
+            result = TheInfoQueryAnswerVoteModel.objects.get(answer_id = ans.id , user_id = request.user.id)
+            if(result):
+                logged_user_vote_status = True
+        except:
+            logged_user_vote_status = False
+        ans_obj = {'answer_text':ans.answer_text,'vote_count':vote_count,'answer_id':ans.id,'answer_user_id':ans.user.id,'ans_user_name':ans.user.username,'vote_status':logged_user_vote_status}
         response_obj.append(ans_obj)
     answer_count = len(response_obj)
     return render(request,'theInfo/query_details.html',{'answer_obj':response_obj,'answer_form':answer_form,'query':query,'answer_count':answer_count})

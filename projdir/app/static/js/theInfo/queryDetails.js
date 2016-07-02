@@ -5,6 +5,7 @@ var provideAnswer = $('#giveAnswerButton'),
     answerForm = $('#answerForm'),
     answerTextId = $('#answerText'),
     errorMessageDiv = $('#errorMessage'),
+    cancelAnswerButton = $('#cancelAnswerButton'),
     isForm = false;
 
 
@@ -21,7 +22,8 @@ var queryDetailsFunctions = {
       data:post_data,
       success:function(data){
         voteDivId = voteDivStr + answerId;
-        $('#'+voteDivId).text(data.newVoteCount);
+        $('#'+voteDivId).text('Votes:' + data.newVoteCount);
+        location.reload();
       },
       error:function(error){
         console.log(error);
@@ -46,6 +48,26 @@ var queryDetailsFunctions = {
       return false;
     }
     return true;
+  },
+
+  undoVoteAnswer:function(answerId){
+    var post_data = {
+      'answer_id':answerId,
+      'csrfmiddlewaretoken':token
+    }
+    $.ajax({
+      url:'http://localhost:8000/theInfo/undo-vote-answer/',
+      type:'POST',
+      data:post_data,
+      success:function(data){
+        voteDivId = voteDivStr + answerId;
+        $('#'+voteDivId).text('Votes:' + data.newVoteCount);
+        location.reload();
+      },
+      error:function(error){
+        console.log(error);
+      }
+    });
   }
 }
 
@@ -61,8 +83,8 @@ $(document).ready(function(){
     }
   });
 
-  provideAnswer.click(function(){
-
+  cancelAnswerButton.click(function(){
+    queryDetailsFunctions.hideAnswerForm();
   });
 
 });
