@@ -1,7 +1,74 @@
 {% extends 'base.html' %}
+{% load django_markdown %}
+{% load staticfiles %}
 {% block title %}
   <title>General:{{ ques_details.ques_text }}</title>
 {% endblock %}
 {% block content %}
-
+<div id ='main'>
+  <article class = 'post'>
+    <header>
+      <div class = 'title'>
+        <h1>{{ ques_details.ques_text|markdown }}</h1>
+        {% if ques_details.user.username == user.username %}
+          <!-- <h3><a href="{% url 'edit_codehub_question' ques_details.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_codehub_question' ques_details.id %}">Remove</a></h3> -->
+          <ul class="actions">
+            <li><a class= 'button' href="{%  url 'edit_general_question' ques_details.id %}">Edit</a></li>
+            <li><a class = 'button' href ="{% url 'remove_general_question' ques_details.id %}">Remove</a></li>
+          </ul>
+        {% endif %}
+      </div>
+      <div class = 'meta'>
+        <time class="published">{{ ques_details.created }}</time>
+        {% if ques_details.user_profile.user_profile_pic.name %}
+          <h2><a href="{% url 'user_profile' ques_details.user.id %}" class="author"><span class="name">{{ ques_details.user.username }}</span><img src="/media/{{ ques_details.user_profile.user_profile_pic }}" alt="Profile pic" /></a></h2>
+        {% else %}
+          <h2><a href="{% url 'user_profile' ques_details.user.id %}" class="author"><span class="name">{{ ques_details.user.username }}</span><img src = "{% static 'images/default_gravators/github.png' %}" /></a></h2>
+        {% endif %}
+      </div>
+    </header>
+    by:<i><a href = "{% url 'user_profile' ques_details.user.id %}">{{ ques_details.user.username }}</a></i><br/>
+    Tags:
+    {% for tag in ques_details.ques_tags.all %}
+      <b>"<a href = "">{{ tag.name }}</a>"&nbsp;&nbsp;</b>
+    {% endfor %}
+  </br>
+  </article>
+  <form method = 'POST'>
+    {% csrf_token %}
+    {{ ans_form.as_p }}
+    <input type = 'submit' name = 'answer_ques' value = 'Post Answer'/>
+  </form>
+  <hr/>
+  {% if not answers %}
+    <h3>No answers yet!!!</h3>
+  {% else %}
+  <section>
+    <div class = 'mini-posts'>
+      {% for answer in answers %}
+        <article class = 'mini-post'>
+          <header>
+              <p>{{ answer.answer_text }}</p>
+            <hr/>
+            <time class="published">Created:{{ answer.created }}</time>
+            <time class="published">Last Edited:{{ answer.modified }}</time>
+            {% if answer.user_profile.user_profile_pic.name %}
+              <h2><a style = "top:0.5em" href="{% url 'user_profile' answer.user.id %}" class="author">{{ answer.user.username }}<img src="/media/{{ answer.user_profile.user_profile_pic }}" alt="" /></a></h2>
+            {% else %}
+            <h2><a style = "top:0.5em" href="{% url 'user_profile' answer.user.id %}" class="author">{{ answer.user.username }}<img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a></h2>
+            {% endif %}
+            {% if answer.user.username == request.user.username %}
+            <ul class = 'actions'>
+              <li><a href = "{% url 'edit_general_question_answer' ques_details.id  answer.id %}" class = 'button'>Edit</a></li>
+              <li><a href = "{% url 'remove_general_question_answer' ques_details.id  answer.id %}" class = 'button'>Remove</a></li>
+            </ul>
+              <!-- <h3><a href = "{% url 'edit_codehub_question_comment' answer.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_codehub_question_comment' answer.id %}">Remove</a></h3> -->
+            {% endif %}
+          </header>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>
 {% endblock %}

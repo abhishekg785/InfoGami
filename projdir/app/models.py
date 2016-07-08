@@ -404,7 +404,7 @@ class GeneralQuestionModel(models.Model):
 
 
 
-class GeneralAnswerModel(models.Model):
+class GeneralQuestionAnswerModel(models.Model):
     question = models.ForeignKey(GeneralQuestionModel)
     answer_text = MarkdownField()
     user = models.ForeignKey(User)

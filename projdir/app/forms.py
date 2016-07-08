@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel,HostProjectModel,HostProjectQuestionModel,TheInfoAddQueryModel,TheInfoQueryAnswerModel,GeneralQuestionModel
+from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel,HostProjectModel,HostProjectQuestionModel,TheInfoAddQueryModel,TheInfoQueryAnswerModel,GeneralQuestionModel,GeneralQuestionAnswerModel
 from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
 
@@ -234,6 +234,7 @@ class TheInfoAddQueryForm(forms.ModelForm):
 
 
 
+
 class TheInfoQueryAnswerForm(forms.ModelForm):
     answerText = forms.CharField(required = False, label = '',max_length = 500,widget = forms.Textarea(attrs = {'placeholder':'Provide a best answer(optional)','rows':'2','id':'answerText'}))
 
@@ -242,10 +243,19 @@ class TheInfoQueryAnswerForm(forms.ModelForm):
         fields = ['answerText']
 
 
+
 class GeneralQuestionForm(forms.ModelForm):
-    ques_text = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Project Description goes here'}))
-    ques_tags = TagField(required = True,label = '',widget = TagWidget(attrs = {'placeholder':'Give tags for your question(comma separated)'}))
+    ques_text = forms.CharField(label = '',max_length = 200,widget = MarkItUpWidget(attrs = {'placeholder':'Project Description goes here(max 200 characters)'}))
+    ques_tags = TagField(required = True,label = '',widget = TagWidget(attrs = {'placeholder':'Give tags for your question(comma separated)','id':'quesTagField'}))
 
     class Meta:
         model = GeneralQuestionModel
-        fields = ['ques_text']
+        fields = ['ques_text','ques_tags']
+
+
+
+class GeneralQuestionAnsweForm(forms.ModelForm):
+    answer_text = forms.CharField(label = '',max_length = 250,widget = forms.Textarea(attrs = {'placeholder':'Give answer here...(max 250 characters)','rows':3}))
+    class Meta:
+        fields = ['answer_text']
+        model = GeneralQuestionAnswerModel

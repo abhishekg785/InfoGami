@@ -12,9 +12,9 @@
       <p>"Question everything around you"</p>
     </div>
   </header>
-  <form method="post">
+  <form method="post" id = 'generalQuestionForm' onsubmit="return validateQuestionTags()">
     {% csrf_token %}
-    {{ question_form.as_p }}
+    {{ form.as_p }}
     <input type="submit" name = 'post_question' value="Post Question"/>
   </form>
   </article>
@@ -32,7 +32,7 @@
       {% for question in questions %}
       <article class = 'mini-post'>
         <header>
-          <h3><a href="">{{ question.ques_text }}</a></h3>
+          <h3><a href="{% url 'get_general_question_details' question.id %}">{{ question.ques_text }}</a></h3>
           <time class="published">{{ question.created }}</time>
           {% if question.user_profile.user_profile_pic.name %}
             <a href="{% url 'user_profile' question.user.id %}" class="author"><img src="/media/{{ question.user_profile.user_profile_pic }}" alt="" /></a>
@@ -44,8 +44,17 @@
        </article>
       {% endfor %}
     </div>
-    <h1><a href = "">View all Questions</a></h1>
+    <h1><a href = "{% url 'get_all_general_questions' %}">View all Questions</a></h1>
   </section>
 </section>
-{{ form.media }}
+{% endblock %}
+{% block script %}
+<script>
+  function validateQuestionTags(){
+    var tagVal = $('#quesTagField').val();
+    if(tagVal.indexOf(',') == -1){
+      $('#quesTagField').val(tagVal + ',');
+    }
+  }
+</script>
 {% endblock %}

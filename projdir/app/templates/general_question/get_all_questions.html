@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+  <title>General:All Questions</title>
+{% endblock %}
+{% block css %}
+  <link href = "{% static 'css/general_question/all_questions.css' %}" type = 'text/css' rel = 'stylesheet'/>
+{% endblock %}
+{% block content %}
+<div id = 'main'>
+  <h1>All General Questions:({{ question_count }})</h1>
+  <hr/>
+  {% if not questions %}
+    <h3>No Questions yet!!!</h3>
+  {% else %}
+    {% for question in questions.object_list %}
+    <div class = 'block'>
+      <div class = 'quesInfo'>
+        <h1 class = 'username'><a href = "{% url 'user_profile' question.user.id %}">by:{{ question.user.username }}</a></h1>
+        <p>Tags:
+          {% for tag in question.ques_tags.all %}
+            '<a href = ''>{{ tag.name }}</a>'&nbsp;
+          {% endfor %}
+        </p>
+        <p>Created:{{ question.created }}</p>
+        <p>Modified:{{ question.modified }}</p>
+      </div>
+      <div class = 'quesText'>
+        <a href = "{% url 'get_general_question_details' question.id %}"><p>{{ question.ques_text }}</p></a>
+      </div>
+    </div>
+    <br/>
+    {% endfor %}
+    <div class = "pagination">
+      {% if questions.has_previous %}
+        <li><a href = "?page={{ questions.previous_page_number }}">Previous</a></li>
+      {% endif %}
+      {% for pg in questions.paginator.page_range %}
+        {% if questions.number == pg %}
+          <li class = "active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+        {% else %}
+          <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if questions.has_next %}
+        <li><a href = "?page={{ questions.next_page_number }}">Next</a></li>
+      {% endif %}
+      </ul>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+  <title>General:Edit Answer</title>
+{% endblock %}
+{% block content %}
+<div id = 'main'>
+  <article class = 'post'>
+  <header>
+    <div class = 'title'>
+      <h2><a href="">Edit Answer</a></h2>
+    </div>
+  </header>
+  <form method = 'post'>
+  {% csrf_token %}
+  {{ ans_form.as_p }}
+  <input type='submit' name='Edit Answer'/>
+  </form>
+  </article>
+  <h2><a href = "{% url 'get_general_question_details' ques_id %}">Cancel</a></h2>
+</div>
+{% endblock %}

@@ -1,6 +1,6 @@
 window.onload = function(){
   //create a WebSocket
-  var socket = new WebSocket('ws://localhost:8000');
+  var socket = new WebSocket('ws://localhost:8000 ');
 
   //open the connection open-event
   socket.onopen = function(event){
