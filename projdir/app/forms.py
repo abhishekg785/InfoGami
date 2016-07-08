@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel,HostProjectModel,HostProjectQuestionModel,TheInfoAddQueryModel,TheInfoQueryAnswerModel
+from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel,HostProjectModel,HostProjectQuestionModel,TheInfoAddQueryModel,TheInfoQueryAnswerModel,GeneralQuestionModel
 from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
 
@@ -240,3 +240,12 @@ class TheInfoQueryAnswerForm(forms.ModelForm):
     class Meta:
         model = TheInfoQueryAnswerModel
         fields = ['answerText']
+
+
+class GeneralQuestionForm(forms.ModelForm):
+    ques_text = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Project Description goes here'}))
+    ques_tags = TagField(required = True,label = '',widget = TagWidget(attrs = {'placeholder':'Give tags for your question(comma separated)'}))
+
+    class Meta:
+        model = GeneralQuestionModel
+        fields = ['ques_text']

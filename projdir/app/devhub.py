@@ -101,8 +101,11 @@ def edit_devhub_question(request,ques_id):
     if request.method == 'POST':
         form = DevhubQuestionForm(request.POST)
         if form.is_valid():
+            print 'edited'
             ques_details = DevhubQuestionModel.objects.get(id = ques_id)
             form = DevhubQuestionForm(request.POST,instance = ques_details)
+            print form
+            form.save()
             messages.success(request,'Question edited Successfully')
             return redirect('/developer-section/question/'+str(ques_id)+'/details/')
     else:

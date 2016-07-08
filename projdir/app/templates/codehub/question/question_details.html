@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load my_filters %}
 {% load django_markdown %}
 {% block content %}
 <div id = 'main'>
@@ -35,7 +36,7 @@
       {% if ques_details.link %}
         <p>Link:&nbsp;{{ ques_details.link }}</p>
       {% endif %}
-      <p>{{ ques_details.question_description|markdown }}</p>
+      <p>{{ ques_details.question_description|stripjs }}</p>
     </div>
   </article>
   <form method = 'POST'>
@@ -52,7 +53,9 @@
         {% for answer in ques_answers %}
           <article class = 'mini-post'>
             <header>
-              <p>{{ answer.comment_text|markdown }}</p>
+              <!-- {% autoescape off %} -->
+                <p>{{ answer.comment_text|markdown|stripjs }}</p>
+              <!-- {% endautoescape %} -->
               <hr/>
               <time class="published">Created:{{ answer.created }}</time>
               <time class="published">Last Edited:{{ answer.modified }}</time>

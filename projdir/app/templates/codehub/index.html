@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
-{% block title %}Home{% endblock %}
+{% block head %}
+  {% block title %}
+    <title>CodeHack</title>
+  {% endblock %}
+{% endblock %}
 {% block content %}
   <div id = 'main'>
     <h2>Welcome <a href = "{% url 'user_profile' user.id %}">"{{ user }}"</a> to Codehub</h2>

@@ -1,36 +1,27 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block head %}
-  {% block title %}
-    <title>CodeHack:Ask Questions</title>
-  {% endblock %}
+{% block title %}
+  <title>General:Ask</title>
 {% endblock %}
 {% block content %}
 <div id = 'main'>
   <article class = 'post'>
   <header>
     <div class = 'title'>
-      <h2><a href="">Ask Question</a></h2>
-      <p>"Ask any Question related to programming and we might find an answer for you"</p>
+      <h2><a href="">Ask General Question</a></h2>
+      <p>"Question everything around you"</p>
     </div>
   </header>
-  <form method="post" enctype="multipart/form-data">
+  <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ question_form.as_p }}
     <input type="submit" name = 'post_question' value="Post Question"/>
   </form>
   </article>
 </div>
 <section id = 'sidebar'>
-  <!-- <section id = 'intro'>
-    <header>
-      <h2 style="font-size:20px">Recent Questions</h2>
-      <h3><a href ="{% url 'get_all_codehub_questions' %}">View all Questions</a></h3>
-      <p>"Click on Question for more info"</a></p>
-    </header>
-  </section> -->
   <section>
-    <form method= "post" action = "{% url 'search_question' %}" />
+    <form method= "post" action = "{% url 'search_general_question' %}"/>
       {% csrf_token %}
       {{ search_form.as_p }}
       <input type = 'submit' value = 'Search' name='search_question' />
@@ -41,7 +32,7 @@
       {% for question in questions %}
       <article class = 'mini-post'>
         <header>
-          <h3><a href="{% url 'codehub_question_details' question.id %}">{{ question.question_heading }}</a></h3>
+          <h3><a href="">{{ question.ques_text }}</a></h3>
           <time class="published">{{ question.created }}</time>
           {% if question.user_profile.user_profile_pic.name %}
             <a href="{% url 'user_profile' question.user.id %}" class="author"><img src="/media/{{ question.user_profile.user_profile_pic }}" alt="" /></a>
@@ -52,8 +43,9 @@
         </header>
        </article>
       {% endfor %}
-      <h2><a href ="{% url 'get_all_codehub_questions' %}">View all questions</a></h2>
     </div>
+    <h1><a href = "">View all Questions</a></h1>
   </section>
 </section>
+{{ form.media }}
 {% endblock %}

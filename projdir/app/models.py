@@ -391,3 +391,23 @@ class TheInfoQueryAnswerVoteModel(models.Model):
     user = models.ForeignKey(User)
     user_profile = models.ForeignKey(UserProfileModel)
     answer = models.ForeignKey(TheInfoQueryAnswerModel)
+
+
+
+class GeneralQuestionModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    ques_text = MarkdownField()
+    ques_tags = TaggableManager()
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+
+
+class GeneralAnswerModel(models.Model):
+    question = models.ForeignKey(GeneralQuestionModel)
+    answer_text = MarkdownField()
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
