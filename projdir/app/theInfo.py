@@ -55,7 +55,6 @@ def the_info_main_page(request):
                     answer_text = answer_text
                 )
                 answer_to_query.save()
-                print 'dckcdkbckdjcbkdcbdkc'
             messages.success(request,'Query saved Successfully');
             return redirect('/theInfo/')
     query_form = TheInfoAddQueryForm()
@@ -81,7 +80,9 @@ def search_query(request):
         minimized_word_arr = minimize_word_arr(query_word_arr)
         result_tags = TheInfoAddQueryModel.objects.filter(queryTags__name__in = minimized_word_arr).distinct()
         result_ques_text = TheInfoAddQueryModel.objects.filter(queryText__contains = query_text).distinct()
-        result_list = list(chain(result_tags,result_ques_text))
+        minimize_word_arr_query = reduce(operator.and_, (Q(queryText__contains = item) for item in minimized_word_arr))
+        result_minimized_word_arr = TheInfoAddQueryModel.objects.filter(minimize_word_arr_query)
+        result_list = list(chain(result_tags,result_ques_text,result_minimized_word_arr))
         query_result_list = Set(result_list)
         response_arr = []
         for query in query_result_list:
