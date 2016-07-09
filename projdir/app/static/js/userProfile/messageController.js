@@ -52,6 +52,7 @@ $('#wrapper').on('click',function(event){
 
 
 function sucessFunc(){
+  alert('Message Sent Successfully');
   $('#sendMessageId').text('Send');
   $('#message_text').val('');
 }

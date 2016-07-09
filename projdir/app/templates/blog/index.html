@@ -5,8 +5,8 @@
   <article class = 'post'>
   <header>
     <div class = 'title'>
-      <h2><a href="">Write an Article or Blog</a></h2>
-      <p>"Share your experiences or any other exciting stuff here"</p>
+      <h2><a href="">Write a Blog Post</a></h2>
+      <p>"Share your life experiences with others(The post will be added automatically to your blog posts.)"</p>
     </div>
   </header>
   <form method="POST" enctype="multipart/form-data">
@@ -17,19 +17,20 @@
   </article>
 </div>
 <section id = 'sidebar'>
-  <section id = 'intro'>
-    <header>
-      <h2 style="font-size:20px">Recent Posts and Articles</h2>
-      <h3><a href ="{% url 'get_all_blog_posts' %}">View all posts/articles</a></h3>
-      <p style="font-size:10px">"Click on post/article for more info"</a></p>
-    </header>
-  </section>
   <section>
     <form method="POST" action="{% url 'search_blog_post' %}">
       {% csrf_token %}
       {{ search_form }}
       <input type='submit' name='search_blog_post' value='Go'/>
     </form>
+    <hr/>
+    <section id = 'intro'>
+      <header>
+        <u><h2 style="font-size:20px">Recent blog posts</h2></u>
+        <h3><a href ="{% url 'get_all_blog_posts' %}">View all posts/articles</a></h3>
+        <p style="font-size:10px">"Click on post for more info"</a></p>
+      </header>
+    </section>
     <div class = 'mini-posts'>
       {% for post in blog_posts %}
         <article class='mini-post'>
