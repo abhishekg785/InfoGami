@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel,HostProjectModel,HostProjectQuestionModel,TheInfoAddQueryModel,TheInfoQueryAnswerModel,GeneralQuestionModel,GeneralQuestionAnswerModel
+from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel,HostProjectModel,HostProjectQuestionModel,TheInfoAddQueryModel,TheInfoQueryAnswerModel,GeneralQuestionModel,GeneralQuestionAnswerModel,CreateUserGroupModel
 from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
 
@@ -254,8 +254,22 @@ class GeneralQuestionForm(forms.ModelForm):
 
 
 
+
+
 class GeneralQuestionAnsweForm(forms.ModelForm):
     answer_text = forms.CharField(label = '',max_length = 250,widget = forms.Textarea(attrs = {'placeholder':'Give answer here...(max 250 characters)','rows':3}))
     class Meta:
         fields = ['answer_text']
         model = GeneralQuestionAnswerModel
+
+
+
+
+class CreateUserGroupForm(forms.ModelForm):
+    group_name = forms.CharField(label = '',required = True,max_length = 50,widget = forms.TextInput(attrs = {'placeholder':'Group name comes here..'}))
+    group_description = forms.CharField(label = '',widget = MarkItUpWidget(attrs = {'placeholder':'Description of the group comes here...'}))
+    group_tags = TagField(required = True,label = '',widget = TagWidget(attrs = {'placeholder':'Give tags for the group(comma separated)  eg:for a "python group", mention tags like "python","python lovers"'}))
+
+    class Meta:
+        fields = ['group_name','group_description','group_tags']
+        model = CreateUserGroupModel

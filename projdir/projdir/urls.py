@@ -141,6 +141,7 @@ urlpatterns = [
     # url(r'^devhubQuestion_autocomplete/$',DevhubQuestionAutoComplete.as_view(),name = 'devhubQuestion_autocomplete'),
     url(r'^theInfo/',include('app.the_info_urls')),
     url(r'^general-question/',include('app.general_question_urls')),
+    url(r'^group/',include('app.create_group_urls')),
 ]
 if settings.DEBUG is True:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

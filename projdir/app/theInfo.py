@@ -119,7 +119,6 @@ def minimize_word_arr(word_arr):
     extras = ['or','and','is','there','best','the','for','what']
     for ext in extras:
         if ext in word_arr:
-            print'exists'
             word_arr.remove(ext)
     return word_arr
 

@@ -411,3 +411,25 @@ class GeneralQuestionAnswerModel(models.Model):
     user_profile = models.ForeignKey(UserProfileModel)
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)
+
+
+
+class CreateUserGroupModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    group_name = models.CharField(max_length = 50)
+    group_description = MarkdownField()
+    group_tags = TaggableManager()
+    group_status = models.CharField(max_length = 15,default = 'active')   #other option is deactive
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+
+
+#create track of the user request to join a particular group
+class GroupUsersInterestTrackModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    group = models.ForeignKey(CreateUserGroupModel)
+    request_status = models.CharField(max_length = 15)
+    created = models.DateTimeField(auto_now_add = True)

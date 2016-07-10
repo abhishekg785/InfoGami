@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+  <title>Group:Create</title>
+{% endblock %}
+{% block content %}
+<div id = 'main'>
+  <article class = 'post'>
+  <header>
+    <button style = 'position:absolute;right:0px;top:0px' id = 'dash'>My Group DashBoard</button>
+    <div class = 'title'>
+      <h2><a href="">Create Group</a></h2>
+      <p>"Go and meet people of your interest : Share and Learn"</p>
+    </div>
+  </header>
+  <form method="POST" enctype="multipart/form-data" >
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" name = 'post_group' value = 'Create Group' />
+  </form>
+  </article>
+</div>
+<section id = 'sidebar'>
+  <section>
+    <form method= "post" action = "{% url 'search_group' %}"/>
+      {% csrf_token %}
+      {{ search_form.as_p }}
+      <input type = 'submit' value = 'Search' name='search_question' />
+    </form>
+    <hr/>
+    {% if not groups %}
+      <h1>No groups yet</h1>
+    {% else %}
+      <h1><u>Created Groups</u></h1>
+      <div class = 'mini-posts'>
+        {% for group in groups %}
+        <article class = 'mini-post'>
+          <header>
+            <h3><a href="{% url 'get_group_details' group.id %}">{{ group.group_name }}</a></h3>
+            <time class="published">{{ group.created }}</time>
+            {% if group.user_profile.user_profile_pic.name %}
+              <a href="{% url 'user_profile' group.user.id %}" class="author"><img src="/media/{{ group.user_profile.user_profile_pic }}" alt="" /></a>
+            {% else %}
+              <a href="{% url 'user_profile' group.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+            {% endif %}
+          </header>
+         </article>
+        {% endfor %}
+      </div>
+      <h1><a href = "">View all Groups</a></h1>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}

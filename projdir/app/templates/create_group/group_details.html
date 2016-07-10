@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load django_markdown %}
+{% block title %}
+  <title>Group:Details</title>
+{% endblock %}
+{% block content %}
+<div id = 'main'>
+  <article class = 'post'>
+    <header>
+      <div class = 'title'>
+        <h1>{{ group_details.group_name }}</h1>
+        {% if group_details.user.username == user.username %}
+          <!-- <h3><a href="{% url 'edit_codehub_question' group_details.id %}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href ="{% url 'remove_codehub_question' group_details.id %}">Remove</a></h3> -->
+          <ul class="actions">
+            <li><a class= 'button' href="{%  url 'edit_group_details' group_details.id %}">Edit</a></li>
+            {% if group_details.group_status == 'active' %}
+              <li><a class= 'button'style = 'border:2px solid red' href="{% url 'deactivate_group' group_details.id %}">Deactivate</a></li>
+            {% elif group_details.group_status == 'deactive' %}
+              <li><a href = "{% url 'activate_group' group_details.id %}" class= 'button' style="border:2px solid green"href="">Activate</a></li>
+            {% endif %}
+          </ul>
+        {% else %}
+          <ul class ="actions">
+            {% if group_details.group_status == 'active' %}
+              {% if user_request_status == False %}
+                <li><a href="{% url 'user_request_for_group' group_details.id %}" style = 'border:2px solid green' class = 'button'>Join</a></li>
+              {% elif user_request_status == 'waiting' %}
+                <li><a href="" style = 'border:2px solid yellow' class = 'button'>Request Sent</a></li>
+              {% elif user_request_status == 'accepted' %}
+                <li><a href="" style = 'border:2px solid green' class = 'button'>Accepted</a></li>
+              {% endif %}
+            {% else %}
+              <h1 style="color:red">Closed</h1>
+              <p>' Group is closed at the moment: You can contact the creator of the group '</p>
+            {% endif %}
+          </ul>
+        {% endif %}
+      </div>
+      <div class = 'meta'>
+        <time class="published">{{ group_details.created }}</time>
+        {% if group_details.user_profile.user_profile_pic.name %}
+          <h2><a href="{% url 'user_profile' group_details.user.id %}" class="author"><span class="name">{{ group_details.user.username }}</span><img src="/media/{{ group_details.user_profile.user_profile_pic }}" alt="Profile pic" /></a></h2>
+        {% else %}
+          <h2><a href="{% url 'user_profile' group_details.user.id %}" class="author"><span class="name">{{ group_details.user.username }}</span><img src = "{% static 'images/default_gravators/github.png' %}" /></a></h2>
+        {% endif %}
+      </div>
+    </header>
+    <p>{{ group_details.group_description|markdown }}</p>
+    by:<i><a href = "{% url 'user_profile' group_details.user.id %}">{{ group_details.user.username }}</a></i><br/>
+    Tags:
+    {% for tag in group_details.group_tags.all %}
+      <b>"<a href = "">{{ tag.name }}</a>"&nbsp;&nbsp;</b>
+    {% endfor %}
+  </br>
+  </article>
+  <h1>Show members of the group and tell how this is diff from fb groups</h1>
+</div>
+{% endblock %}

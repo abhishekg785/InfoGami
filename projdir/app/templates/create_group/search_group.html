@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}
+  <title>Group:Search</title>
+{% endblock %}
+{% block css %}
+  <style>
+    #resultSection{
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
+    #results{
+      width: 70%;
+      /*background-color: #bdc3c7;*/
+      position: absolute;
+      left: 0px;
+      top:0px;
+    }
+
+    #suggestions{
+      width: 30%;
+      /*background-color: #7f8c8d ;*/
+      position: absolute;
+      right: 0px;
+      top:0px;
+      padding: 10px;
+      border-left:2px solid black;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+<div id = 'main'>
+  <form method="post">
+    {% csrf_token %}
+    {{ search_form }}
+    <input type="submit" name = 'search_group' value = 'Go'/>
+  </form>
+  <hr/>
+  {% if not results %}
+    {% if not search_str %}
+      <h1>Groups Suggested for you:</h1>
+      {% for suggestion in suggestions %}
+        <a href = '{% url "get_group_details" suggestion.id %}'>{{ suggestion.group_name }}</a><br/>
+      {% endfor %}
+    {% else %}
+      <h1>No results found for '{{ search_str }}'</h1>
+      <h1>But we have some groups you may be interested in:</h1>
+      {% for suggestion in suggestions %}
+        <a href = ''>{{ suggestion.group_name }}</a><br/>
+      {% endfor %}
+    {% endif %}
+  {% else %}
+    <div id = 'resultSection'>
+      <div id = 'results'>
+        <h1><u>Fetched Groups:</u></h1>
+        {% for group in results %}
+          <h1><a href = '{% url "get_group_details" group.id %}'>{{ group.group_name }}</a>
+            {% if group.group_status == 'active' %}
+              <span style="color:green">({{ group.group_status }})</span>
+            {% else %}
+              <span style="color:red">(Closed)</span>
+            {% endif %}
+          </h1>
+          by:<a href = "{% url 'user_profile' group.user.id %}">{{ group.user.username }}</a>
+          <hr/>
+        {% endfor %}
+      </div>
+      <div id = 'suggestions'>
+        <h1><u>Suggested groups for you</u></h1>
+        {% for suggestion in suggestions %}
+          <h1><a href = '{% url "get_group_details" suggestion.id %}'>{{ suggestion.group_name }}</a></h1>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
