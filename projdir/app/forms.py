@@ -1,5 +1,5 @@
 from django import forms
-from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel,HostProjectModel,HostProjectQuestionModel,TheInfoAddQueryModel,TheInfoQueryAnswerModel,GeneralQuestionModel,GeneralQuestionAnswerModel,CreateUserGroupModel
+from .models import CodehubInnovationPostModel,BlogPostCommentModel,CodehubTopicModel,CodehubTopicCommentModel,UserProfileModel,CodehubCreateEventModel,CodehubEventQuestionModel,BlogPostModel,CodehubQuestionModel,CodehubQuestionCommentModel,CodehubInnovationCommentModel,DevhubQuestionModel,ProposeEventModel,ProposeEventSuggestionModel,DevhubQuestionAnswerModel,DevhubTopicModel,DevhubTopicCommentModel,HostProjectModel,HostProjectQuestionModel,TheInfoAddQueryModel,TheInfoQueryAnswerModel,GeneralQuestionModel,GeneralQuestionAnswerModel,CreateUserGroupModel,GroupUserCommentModel
 from django_markdown.widgets import MarkdownWidget
 from taggit.forms import *
 
@@ -273,3 +273,11 @@ class CreateUserGroupForm(forms.ModelForm):
     class Meta:
         fields = ['group_name','group_description','group_tags']
         model = CreateUserGroupModel
+
+
+
+class GroupUserCommentForm(forms.ModelForm):
+    comment_text = forms.CharField(label = '',required = True,max_length = 150,widget = forms.Textarea(attrs = {'placeholder':'Comment here...','rows':1.5}))
+    class Meta:
+        fields = ['comment_text']
+        model = GroupUserCommentModel

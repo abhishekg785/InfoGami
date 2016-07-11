@@ -433,3 +433,13 @@ class GroupUsersInterestTrackModel(models.Model):
     group = models.ForeignKey(CreateUserGroupModel)
     request_status = models.CharField(max_length = 15)
     created = models.DateTimeField(auto_now_add = True)
+
+
+
+class GroupUserCommentModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    group = models.ForeignKey(CreateUserGroupModel)
+    comment_text = models.CharField(max_length = 150,blank = False)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)

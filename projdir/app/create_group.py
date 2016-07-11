@@ -1,6 +1,7 @@
 """
   author: abhishek goswami
   abhishekg785@gmail.com
+
 """
 
 from django.shortcuts import render,redirect,get_object_or_404
@@ -12,8 +13,8 @@ import datetime
 from django.utils.datastructures import MultiValueDictKeyError
 
 
-from .forms import CreateUserGroupForm,SearchForm
-from app.models import CreateUserGroupModel,UserProfileModel,GroupUsersInterestTrackModel,MesssageModel
+from .forms import CreateUserGroupForm,SearchForm,GroupUserCommentForm
+from app.models import CreateUserGroupModel,UserProfileModel,GroupUsersInterestTrackModel,MesssageModel,GroupUserCommentModel
 from app.codehub import loginRequired
 
 from slugify import slugify
@@ -131,13 +132,15 @@ def minimize_arr(search_str_slug):
 
 
 
-
+"""
+ remove the groups created by the user itself in the suggestions
+"""
 def find_suggestions_for_user(request):
     user_skill_arr = []
     user_skills = UserProfileModel.objects.get(user_id = request.user.id).skills.all()
     for skill in user_skills:
         user_skill_arr.append(skill.name)
-    suggestions = CreateUserGroupModel.objects.filter(group_tags__name__in = user_skill_arr).distinct()
+    suggestions = CreateUserGroupModel.objects.filter(group_tags__name__in = user_skill_arr).exclude(user_id = request.user.id).distinct()
     return suggestions
 
 
@@ -145,6 +148,20 @@ def find_suggestions_for_user(request):
 
 @loginRequired
 def get_group_details(request,group_id):
+    form = GroupUserCommentForm()
+    if request.method == 'POST':
+        form = GroupUserCommentForm(request.POST)
+        if form.is_valid():
+            comment_text = request.POST['comment_text']
+            new_comment = GroupUserCommentModel(
+                user = User.objects.get(id = request.user.id),
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
+                group = CreateUserGroupModel.objects.get(id = group_id),
+                comment_text = comment_text
+            )
+            new_comment.save()
+            messages.success(request,'Comment posted Successfully')
+            return redirect('/group/'+str(group_id)+'/details')
     group_details = get_object_or_404(CreateUserGroupModel,id = group_id)
     try:
         user_group_status_details = GroupUsersInterestTrackModel.objects.get(group_id = group_id,user_id = request.user.id)
@@ -152,7 +169,8 @@ def get_group_details(request,group_id):
         print user_group_request_status
     except:
         user_group_request_status = False
-    return render(request,'create_group/group_details.html',{'group_details':group_details,'user_request_status':user_group_request_status})
+    comments = GroupUserCommentModel.objects.filter(group_id = group_id).order_by('-created')
+    return render(request,'create_group/group_details.html',{'group_details':group_details,'user_request_status':user_group_request_status,'comment_form':form,'comments':comments})
 
 
 
@@ -280,6 +298,7 @@ def accept_user_join_request(request,group_id,user_id):
 
 
 
+
 def send_message_to_group_members_api(request):
     message_text = request.POST['messageText']
     success_msg = {'message':'success'}
@@ -302,3 +321,35 @@ def send_message_to_group_members_api(request):
         return HttpResponse(json.dumps(success_msg),content_type = 'application/json')
     else:
         return HttpResponse(json.dumps(error_msg),content_type = 'application/json')
+
+
+
+def edit_group_comment(request,group_id,comment_id):
+    try:
+        comment_obj = GroupUserCommentModel.objects.get(id = comment_id,group_id = group_id,user_id = request.user.id)
+        comment_details_obj = {'comment_text':comment_obj.comment_text}
+    except:
+        messages.success('No such thing exists')
+        return redirect('/')
+    if request.method == 'POST':
+        form = GroupUserCommentForm(request.POST)
+        if form.is_valid():
+            form = GroupUserCommentForm(request.POST,instance = comment_obj)
+            form.save()
+            messages.success(request,'Comment edited Successfully')
+            return redirect('/group/'+str(group_id)+'/details')
+    else:
+        form = GroupUserCommentForm(initial = comment_details_obj)
+    return render(request,'create_group/edit_group_comment.html',{'form':form,'group_id':group_id,'comment_text':comment_obj.comment_text})
+
+
+
+def remove_group_comment(request,group_id,comment_id):
+    try:
+        comm_obj = GroupUserCommentModel.objects.get(id = comment_id,group_id = group_id,user_id = request.user.id)
+        comm_obj.delete()
+        messages.success(request,'comment has been deleted Successfully')
+        return redirect('/group/'+ str(group_id)+'/details')
+    except:
+        messages.warning(request,'No such thing exists')
+        return redirect("/")
