@@ -26,13 +26,17 @@
               {% if user_request_status == False %}
                 <li><a href="{% url 'user_request_for_group' group_details.id %}" style = 'border:2px solid green' class = 'button'>Join</a></li>
               {% elif user_request_status == 'waiting' %}
-                <li><a href="" style = 'border:2px solid yellow' class = 'button'>Request Sent</a></li>
+                <span style = 'color:orange'>Request Sent</span>
               {% elif user_request_status == 'accepted' %}
-                <li><a href="" style = 'border:2px solid green' class = 'button'>Accepted</a></li>
+                <span style = 'color:green'>Accepted:Member of the group:)</span>
               {% endif %}
             {% else %}
-              <h1 style="color:red">Closed</h1>
-              <p>' Group is closed at the moment: You can contact the creator of the group '</p>
+              {% if user_request_status == 'accepted' %}
+                <span style = 'color:green'>Accepted:Member of the group:)</span>
+              {% else %}
+                <h1 style="color:red">Closed</h1>
+                <p>' Group is closed at the moment: You can contact the creator of the group '</p>
+              {% endif %}
             {% endif %}
           </ul>
         {% endif %}

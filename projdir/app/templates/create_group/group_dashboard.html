@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block title %}
+  <title>Group:Dashboard</title>
+{% endblock %}
+{% block css %}
+  <style>
+    .messageArea{
+      display:none;
+    }
+  </style>
+{% endblock %}
+{% block content %}
+<div id = 'main'>
+  <input type = 'hidden' id = 'token' value = '{{ csrf_token }}'/>
+  {% if not group_user_dict %}
+    <h1>You have no groups to manage</h1>
+  {% else %}
+    {% for group,users in group_user_dict.items %}
+      <a href = "{% url 'get_group_details' group.id %}"><h1 style="display:inline-block">{{ group.group_name }}</h1></a>
+      <ul style="display:inline-block;position:relative;"class="actions">
+        {% if group.group_status == 'deactive' %}
+          <li><a href = '{% url "activate_group" group.id %}' style="border:1px solid green" class = 'button'>Activate</a></li>
+        {% elif group.group_status == 'active' %}
+          <li><a href = '{% url "deactivate_group" group.id %}' style="border:1px solid red" class = 'button'>Deactivate</a></li>
+        {% endif %}
+      </ul>
+      {% if not users %}
+        <h1>No users in the group!!!</h1>
+      {% else %}
+      <button id = 'sendMessage{{ group.id }}' onclick="sendMessage({{ group.id }})">Send Message</button>
+      <div class = 'messageArea' id = 'messageArea{{ group.id }}'>
+        <span class = 'messageLogs' id = 'messageLog{{ group.id }}'></span>
+        <input type = 'text' class = 'messageText' id = "messageText{{ group.id }}" placeholder="type your message here" />
+        <button class = 'messageGroup' id = 'messageGroup{{ group.id }}' onclick="sendMessageToGroup({{ group.id }})">Send</button>
+        <button class = 'cancelMessage' id ='cancelMessage{{ group.id }}' onclick="cancelMessage({{ group.id }})">Cancel</button>
+      </div>
+      {% endif %}
+      <br/>
+      {% for user in users %}
+        <a href = '{% url "user_profile" user.user.id %}'>{{ user.user.username }}</a>
+        {% if user.request_status == 'accepted' %}
+          <span style="color:green"><i>accepted</i></span>
+          <a href = '{% url "remove_or_reject_user_from_group" group.id user.user.id %}' style="color:red">Remove</a>
+        {% elif user.request_status == 'waiting' %}
+          <ul style="display:inline-block" class = 'actions'>
+            <span style="color:orange"><i>Waiting</i></span>
+            <li><a style="border:1px solid green" href = '{% url "accept_user_join_request" group.id user.user.id %}' class = 'button'>Accept</a></li>
+            <li><a style="border:1px solid red" href = '{% url "remove_or_reject_user_from_group" group.id user.user.id %}' class = 'button'>Reject</a></li>
+          </ul>
+        {% endif %}
+        <br/>
+      {% endfor %}
+      <hr/>
+    {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}
+{% block script %}
+  <script>
+    var token = $('#token').val(),
+    // console.log(token);
+    groupDashboardFunctions = {
+      sendMessage:function(group_id){
+        var messageTextIdStr = 'messageText' + group_id;
+            messageTextId = $('#'+messageTextIdStr),
+            messageGroupStr = 'messageGroup' + group_id,
+            messageGroupId = $('#' + messageGroupStr),
+            messageLogStr = 'messageLog' + group_id,
+            messageLogId = $('#' + messageLogStr);
+        messageText = messageTextId.val();
+        console.log(messageText.length);
+        if(messageTextId.val() == ''){
+          messageLogId.css('color','red');
+          messageLogId.text('Message field is required');
+          return;
+        }
+        messageGroupId.text('Sending...');
+        var postData = {
+          'csrfmiddlewaretoken':token,
+          'messageText':messageTextId.val(),
+          'group_id':group_id
+        }
+        $.ajax({
+          url:'http://localhost:8000/group/send-group-message-api/',
+          type:'POST',
+          data:postData,
+          success:function(data){
+            messageTextId.val('');
+            messageGroupId.text('Send');
+            message = data.message;
+            if(message == 'success'){
+              messageLogId.css('color','green');
+              messageLogId.text('You message has been sent to the users of the group');
+            }
+            else if(message == 'nouser'){
+              messageLogId.css('color','red');
+              messageLogId.text('No users in the group');
+            }
+          },
+          error:function(error){
+            console.log(error);
+          }
+        })
+      },
+    }
+    function sendMessage(group_id){
+      var messageAreaId = 'messageArea' + group_id;
+      $('#'+messageAreaId).css('display','block');
+    }
+
+    function cancelMessage(group_id){
+      var messageAreaId = 'messageArea' + group_id;
+      $('#'+messageAreaId).css('display','none');
+    }
+
+    function sendMessageToGroup(group_id){
+      groupDashboardFunctions.sendMessage(group_id);
+    }
+
+  </script>
+{% endblock %}

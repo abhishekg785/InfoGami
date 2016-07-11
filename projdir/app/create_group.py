@@ -13,7 +13,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 
 
 from .forms import CreateUserGroupForm,SearchForm
-from app.models import CreateUserGroupModel,UserProfileModel,GroupUsersInterestTrackModel
+from app.models import CreateUserGroupModel,UserProfileModel,GroupUsersInterestTrackModel,MesssageModel
 from app.codehub import loginRequired
 
 from slugify import slugify
@@ -21,6 +21,7 @@ import operator
 from django.db.models import Q
 from itertools import chain
 from sets import Set
+import json
 
 
 #decorators come here
@@ -48,6 +49,15 @@ def check_user_access_to_join_group(func):
         if str(group_details.user.id) == str(request.user.id) or group_details.group_status == 'deactive':
             return redirect('/')
         return func(request,group_id,*args,**kwargs)
+    return wrapper
+
+
+def check_user_access_to_remove_from_group(func):
+    def wrapper(request,group_id,user_id,*args,**kwargs):
+        group_details = get_object_or_404(CreateUserGroupModel,id = group_id)
+        if group_details.user.id != request.user.id:
+            return redirect('/')
+        return func(request,group_id,user_id,*args,**kwargs)
     return wrapper
 
 
@@ -199,8 +209,10 @@ def deactivate_group(request,group_id):
         group_obj = CreateUserGroupModel.objects.get(id = group_id,user_id = request.user.id,group_status = 'active')
         group_obj.group_status = 'deactive'
         group_obj.save()
+        messages.success(request,'Group deactivated Successfully')
         return redirect('/group/'+str(group_id)+'/details')
     except:
+        messages.warning(request,'Not allowed')
         return redirect('/')
 
 
@@ -210,6 +222,83 @@ def activate_group(request,group_id):
         group_obj = CreateUserGroupModel.objects.get(id = group_id,user_id = request.user.id,group_status = 'deactive')
         group_obj.group_status = 'active'
         group_obj.save()
+        messages.success(request,'Group activated Successfully')
         return redirect('/group/'+str(group_id)+'/details')
     except:
+        messages.success(request,'Not allowed')
         return redirect('/')
+
+
+
+"""
+get all the user created groups
+"""
+def get_group_dashboard(request):
+    groups = CreateUserGroupModel.objects.filter(user_id = request.user.id)
+    group_user_dict = {group:'' for group in groups}
+    for group in groups:
+        interested_users = GroupUsersInterestTrackModel.objects.filter(group_id = group.id)
+        group_user_dict[group] = interested_users
+    print group_user_dict
+    # group_user_count = GroupUsersInterestTrackModel.objects.filter(group_id = group_id,request_status = 'accepted').count()
+    return render(request,'create_group/group_dashboard.html',{'group_user_dict':group_user_dict})
+
+
+
+
+"""
+  check user access
+  check user doing this is the owner of the group: request.user.id == group.user.id
+  otherwise redirect him somewhere
+"""
+
+@check_user_access_to_remove_from_group
+def remove_or_reject_user_from_group(request,group_id,user_id):
+    try:
+        group_obj = GroupUsersInterestTrackModel.objects.get(group_id = group_id,user_id = user_id)
+        group_obj.delete()
+        messages.success(request,'The user was Successfully removed')
+        return redirect('/group/dashboard')
+    except:
+        messages.success(request,'No such thing exists')
+        return redirect('/')
+
+
+
+
+@check_user_access_to_remove_from_group
+def accept_user_join_request(request,group_id,user_id):
+    try:
+        group_obj = GroupUsersInterestTrackModel.objects.get(group_id = group_id,user_id = user_id,request_status = 'waiting')
+        group_obj.request_status = 'accepted'
+        group_obj.save()
+        messages.success(request,'User Successfully added to the group')
+        return redirect('/group/dashboard')
+    except:
+        messages.success(request,'No such thing exists')
+        return redirect('/')
+
+
+
+def send_message_to_group_members_api(request):
+    message_text = request.POST['messageText']
+    success_msg = {'message':'success'}
+    error_msg = {'message':'nouser'}
+    group_id = request.POST['group_id']
+    group_details = CreateUserGroupModel.objects.get(id = group_id)
+    group_owner = group_details.user
+    group_users = GroupUsersInterestTrackModel.objects.filter(group_id = group_id,request_status = 'accepted')
+    if len(group_users) > 0:
+        for user in group_users:
+            new_message = MesssageModel(
+              sender = group_owner,
+              receiver = User.objects.get(id = user.user_id),
+              sender_profile = UserProfileModel.objects.get(user_id = group_owner.id),
+              receiver_profile = UserProfileModel.objects.get(user_id = user.user_id),
+              message_text = 'Message regarding group "'+ group_details.group_name +'":' + message_text
+            )
+            new_message.save()
+            # messages.success(request,'Message sent Successfully to group members')
+        return HttpResponse(json.dumps(success_msg),content_type = 'application/json')
+    else:
+        return HttpResponse(json.dumps(error_msg),content_type = 'application/json')
