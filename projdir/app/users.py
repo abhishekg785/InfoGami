@@ -377,6 +377,7 @@ def get_message_center_data_api(request):
         obj2 = {'receiver':msg.receiver.username,'message':msg.message_text,'receiver_profile_pic':receiver_pic,'created':str(msg.created)}
         sent_message_data.append(obj2)
     final_obj = {'sent_message_data':sent_message_data,'received_message_data':received_message_data}
+    print final_obj
     return HttpResponse(json.dumps(final_obj),content_type = 'application/json')
 
 

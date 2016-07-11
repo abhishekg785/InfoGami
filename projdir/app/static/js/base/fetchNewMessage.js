@@ -3,6 +3,7 @@
       message_heading = $('a#message_heading'),
       load_message = $('#loadMessage'),
       mini_post = $('.mini-post'),
+      newMessageMiniPosts = $('#newMessageMiniPosts'),
       message_section = $('#messageSection'),
       new_message_count = 0,
       new_message_arr = [],
@@ -10,7 +11,8 @@
       is_data = false,
       is_read = false,
       csrf_token = $('#csrf_token').val(),
-      userId = $('#userId').val();
+      user_id = $('#userId').val();
+
 
   baseFunctions = {
 
@@ -53,7 +55,7 @@
         item_id = 'new_message' + i;
         message_count += new_message_arr[i].message_count;
         list_item = "<article class = '"+ item_class +"' id = '" + item_id +"' style = 'cursor:pointer' class = 'mini-post'><header><p>" + new_message_arr[i].latest_message +"(" + new_message_arr[i].message_count + ")</p><time class='published'>"+ new_message_arr[i].created.split('.')[0] + "</time><a class='author'><img src='/media/"+ new_message_arr[i].sender_profile_pic +"' alt='' /></a><p>by:<a href = ''>" + new_message_arr[i].sender + "</a></p></header></article>";
-        mini_post.append(list_item);
+        newMessageMiniPosts.append(list_item);
       }
       message_span.text('('+ message_count +')');
       message_span.css('color','red');
@@ -83,9 +85,9 @@
     },
 
     setMessageStatusSeen:function(){
-      var user_id = user_id,
+      var user_id = $('#userId').val(),
           post_data = {
-          'user_id':userId,
+          'user_id':user_id,
           'csrfmiddlewaretoken': csrf_token
           }
       console.log(post_data);

@@ -39,16 +39,20 @@
   <hr/>
   {% if not results %}
     {% if not search_str %}
-      <h1>Groups Suggested for you:</h1>
-      {% for suggestion in suggestions %}
-        <a href = '{% url "get_group_details" suggestion.id %}'>{{ suggestion.group_name }}</a><br/>
-      {% endfor %}
+      {% if suggestions %}
+        <h1>Groups Suggested for you:</h1>
+        {% for suggestion in suggestions %}
+          <a href = '{% url "get_group_details" suggestion.id %}'>{{ suggestion.group_name }}</a><br/>
+        {% endfor %}
+      {% endif %}
     {% else %}
       <h1>No results found for '{{ search_str }}'</h1>
-      <h1>But we have some groups you may be interested in:</h1>
-      {% for suggestion in suggestions %}
-        <a href = ''>{{ suggestion.group_name }}</a><br/>
-      {% endfor %}
+      {% if suggestions %}
+        <h1>But we have some groups you may be interested in:</h1>
+        {% for suggestion in suggestions %}
+          <a href = ''>{{ suggestion.group_name }}</a><br/>
+        {% endfor %}
+      {% endif %}
     {% endif %}
   {% else %}
     <div id = 'resultSection'>
@@ -68,9 +72,13 @@
       </div>
       <div id = 'suggestions'>
         <h1><u>Suggested groups for you</u></h1>
-        {% for suggestion in suggestions %}
-          <h1><a href = '{% url "get_group_details" suggestion.id %}'>{{ suggestion.group_name }}</a></h1>
-        {% endfor %}
+        {% if not suggestions %}
+          <h1>No suggestions found yet</h1>
+        {% else %}
+          {% for suggestion in suggestions %}
+            <h1><a href = '{% url "get_group_details" suggestion.id %}'>{{ suggestion.group_name }}</a></h1>
+          {% endfor %}
+        {% endif %}
       </div>
     </div>
   {% endif %}

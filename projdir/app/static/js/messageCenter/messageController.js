@@ -30,6 +30,7 @@
           'Access-Control-Allow-Origin': '*'
         },
         success:function(data){
+          // console.log(data);
           received_message_data = data.received_message_data;
           sent_message_data = data.sent_message_data;
           received_message_data_len = received_message_data.length;
@@ -54,9 +55,10 @@
               sender_message_date = received_message_details.created;
               index = Functions.getSenderUserIndex(sender_username);
           received_message_text[index].push(sender_message_text);
-          received_message_user_pic.push(sender_profile_pic);
+          received_message_user_pic[index] = sender_profile_pic;
           received_message_created[index].push(sender_message_date);
         }
+        console.log(received_message_user_pic);
       }
 
 
@@ -69,9 +71,10 @@
               receiver_message_date = sent_message_details.created,
               index = Functions.getReceiverUserIndex(receiver_username);
           sent_message_text[index].push(receiver_message_text);
-          sent_message_user_pic.push(receiver_profile_pic)
-          sent_message_created[index].push(receiver_message_date)
+          sent_message_user_pic[index] = receiver_profile_pic;
+          sent_message_created[index].push(receiver_message_date);
         }
+        console.log(sent_message_user_pic);
       }
       return Functions;
     },

@@ -135,15 +135,28 @@ def minimize_arr(search_str_slug):
 """
  remove the groups created by the user itself in the suggestions
 """
+@loginRequired
 def find_suggestions_for_user(request):
     user_skill_arr = []
     user_skills = UserProfileModel.objects.get(user_id = request.user.id).skills.all()
     for skill in user_skills:
         user_skill_arr.append(skill.name)
-    suggestions = CreateUserGroupModel.objects.filter(group_tags__name__in = user_skill_arr).exclude(user_id = request.user.id).distinct()
+    user_group_arr = find_group_users(request)
+    suggestions = CreateUserGroupModel.objects.filter(group_tags__name__in = user_skill_arr).exclude(user_id = request.user.id).exclude(group_name__in = user_group_arr).distinct()
     return suggestions
 
 
+
+"""
+return me the array of groups user is part of
+"""
+@loginRequired
+def find_group_users(request):
+    group_arr = []
+    groups = GroupUsersInterestTrackModel.objects.filter(user_id = request.user.id,request_status = 'accepted').distinct()
+    for group in groups:
+        group_arr.append(group.group.group_name)
+    return group_arr
 
 
 @loginRequired
