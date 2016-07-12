@@ -90,7 +90,6 @@
                  <li><a href = "{% url 'edit_group_comment' group_details.id comment.id %}" class = 'button'>Edit</a></li>
                  <li><a href = "{% url 'remove_group_comment' group_details.id comment.id %}" class = 'button'>Remove</a></li>
                </ul>
-                 <!-- <h3><a href = "{% url 'edit_codehub_question_comment' comment.id %}">Edit</a>&nbsp;&nbsp;<a href = "{% url 'remove_codehub_question_comment' comment.id %}">Remove</a></h3> -->
                {% endif %}
              </header>
            </article>
@@ -99,4 +98,35 @@
      </section>
   {% endif %}
 </div>
+<section id = 'sidebar'>
+  <section>
+      <h1><u>Group Users</u></h1>
+      <div class = 'mini-posts'>
+        <article class = 'mini-post' style="border:2px solid black">
+          <header>
+            <h3><a href="{% url 'user_profile' group_details.user.id %}">{{ group_details.user.username }}</a>&nbsp;&nbsp;(Creator)</h3>
+            <time class="published">Joined:{{ group_details.created }}</time>
+            {% if request.session.user_profile_pic %}
+              <a href="{% url 'user_profile' group_details.user.id %}" class="author"><img src="/media/{{ group_details.user_profile.user_profile_pic }}" alt="" /></a>
+            {% else %}
+              <a href="{% url 'user_profile' group_details.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+            {% endif %}
+          </header>
+         </article>
+        {% for user in group_users %}
+        <article class = 'mini-post'>
+          <header>
+            <h3><a href="{% url 'user_profile' user.user.id %}">{{ user.user.username }}</a></h3>
+            <time class="published">Joined:{{ user.created }}</time>
+            {% if user.user_profile.user_profile_pic.name %}
+              <a href="{% url 'user_profile' user.user.id %}" class="author"><img src="/media/{{ user.user_profile.user_profile_pic }}" alt="" /></a>
+            {% else %}
+              <a href="{% url 'user_profile' user.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+            {% endif %}
+          </header>
+         </article>
+        {% endfor %}
+      </div>
+  </section>
+</section>
 {% endblock %}

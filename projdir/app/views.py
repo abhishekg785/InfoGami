@@ -7,6 +7,7 @@ from django.contrib import messages
 import hashlib
 import urllib
 import datetime
+import json
 
 from .models import UserProfileModel
 # Create your views here.
@@ -66,6 +67,8 @@ def login_view(request):
         if user is not None:
             if user.is_active:
                 login(request,user)
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id)
+                request.session['user_profile_pic'] = user_profile.user_profile_pic.name
                 return redirect('/')
             else:
                 # print 'The password is valid,but the account has been disabled'

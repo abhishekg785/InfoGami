@@ -14,7 +14,7 @@ import os
 
 #this will store the extra profile details of the user
 class UserProfileModel(models.Model):
-    user = models.ForeignKey(User)
+    user = models.OneToOneField(User)
     user_description = MarkdownField()
     skills = TaggableManager()
     user_type_select = models.CharField(max_length = 50,default = 'None')   #developer or programmer

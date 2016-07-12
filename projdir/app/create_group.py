@@ -25,6 +25,12 @@ from sets import Set
 import json
 
 
+request_status_string = {
+    'accepted':'accepted',
+    'waiting':'waiting',
+}
+
+
 #decorators come here
 def check_user_access_for_edit_group(func):
     def wrapper(request,group_id,*args,**kwargs):
@@ -182,8 +188,9 @@ def get_group_details(request,group_id):
         print user_group_request_status
     except:
         user_group_request_status = False
+    group_users = GroupUsersInterestTrackModel.objects.filter(group_id = group_id,request_status = request_status_string['accepted']).distinct()
     comments = GroupUserCommentModel.objects.filter(group_id = group_id).order_by('-created')
-    return render(request,'create_group/group_details.html',{'group_details':group_details,'user_request_status':user_group_request_status,'comment_form':form,'comments':comments})
+    return render(request,'create_group/group_details.html',{'group_details':group_details,'user_request_status':user_group_request_status,'comment_form':form,'comments':comments,'group_users':group_users})
 
 
 
