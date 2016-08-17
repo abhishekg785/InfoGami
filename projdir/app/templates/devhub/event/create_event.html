@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<div id = 'main'>
+  <article class="post">
+    <header>
+      <div class = 'title'>
+        <h2><a href ="">Create a Developer Event</a></h2>
+        <p>"Share your knowledge with others"</p>
+      </div>
+    </header>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type='submit' name='create_event' value='Create Event'/>
+    </form>
+  </article>
+</div>
+<section id = 'sidebar'>
+  <section>
+    <form method="post" action="{% url 'search_devhub_event' %}">  <!-- add search_devhub_event -->
+      {% csrf_token %}
+      {{ search_form.as_p }}
+      <input type='submit' name ='search_event' value = 'Go'/>
+    </form>
+    <h2 style="font-size:15px">Recent Created Developer's Events</h2>
+    {% if not events %}
+      <h1>No events created yet :)</h1>
+    {% else %}
+    <div class = 'mini-posts'>
+      {% for event in events %}
+        <article class = 'mini-post'>
+          <header>
+            <h3><a href="{% url 'devhub_event_details' event.id %}">{{ event.event_heading }}</a></h3> <!-- {% url 'codehub_event_details' event.id %} -->
+            <time class="published">{{ event.created }}</time>
+            {% if event.user_profile.user_profile_pic.name %}
+              <a href="{% url 'user_profile' event.user.id %}" class="author"><img src="/media/{{ event.user_profile.user_profile_pic }}" alt="" /></a>
+            {% else %}
+              <a href="{% url 'user_profile' event.user.id %}" class="author"><img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a>
+            {% endif %}
+          </header>
+        </article>
+      {% endfor %}
+    </div>
+    <h3><a href ="{% url 'get_devhub_events' %}">View all upcoming Events</a></h3> <!-- {% url 'codehub_events' %} -->
+    {% endif %}
+  </section>
+</section>
+{% endblock %}

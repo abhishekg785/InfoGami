@@ -150,6 +150,7 @@ class BlogPostModel(models.Model):
     image_file = models.FileField(upload_to = 'blog_images/',blank = True)
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)
+    views_count = models.CharField(max_length = 15, default = 0)
 
     def __str__(self):
         return self.title
@@ -441,5 +442,31 @@ class GroupUserCommentModel(models.Model):
     user_profile = models.ForeignKey(UserProfileModel)
     group = models.ForeignKey(CreateUserGroupModel)
     comment_text = models.CharField(max_length = 150,blank = False)
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+
+
+class DevhubCreateEventModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    event_heading = models.CharField(max_length = 100)
+    event_date = models.DateTimeField(null = True,blank = True)
+    event_venue = models.CharField(max_length = 100)
+    event_description = MarkdownField()
+    event_for  = models.CharField(max_length = 25)#basic or advanced
+    tags = TaggableManager()
+    created = models.DateTimeField(auto_now_add = True)
+    modified = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.event_heading
+
+
+class DevhubEventQuestionModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    event = models.ForeignKey(CodehubCreateEventModel)
+    question_text = MarkdownField()
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)

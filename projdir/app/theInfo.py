@@ -38,7 +38,14 @@ def the_info_main_page(request):
             result = TheInfoAddQueryModel.objects.filter(query)
             print result
             if(result):
-                return render(request,'theInfo/queryExists.html',{'query_text':queryText,'matched_queries':result});
+                return render(
+                    request,
+                    'theInfo/queryExists.html',
+                    {
+                        'query_text':queryText,
+                        'matched_queries':result
+                    }
+                );
             new_query = TheInfoAddQueryModel(
                 user = User.objects.get(id = request.user.id),
                 user_profile = UserProfileModel.objects.get(user_id = request.user.id),

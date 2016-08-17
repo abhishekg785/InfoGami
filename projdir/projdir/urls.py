@@ -25,7 +25,6 @@ from app.create_event import codehub_events,create_codehub_event,edit_codehub_ev
 from app.music import music_list
 from app.match_skill import match_user_skills,search_users_by_skill,get_all_skills_stat,get_all_skills_stat_apiv1,get_user_skills_stat_apiv1
 from app.tags import tags
-from app.devhub import devhub,devhub_question,devhub_question_details,edit_devhub_question,remove_devhub_question,get_all_devhub_questions,search_devhub_question,edit_devhub_question_answer,remove_devhub_question_answer,devhub_topic,get_all_devhub_topics,search_devhub_topic,devhub_topic_details,edit_devhub_topic,remove_devhub_topic,edit_devhub_topic_comment,remove_devhub_topic_comment
 from app.host_project import work_collaborately,host_project,get_all_hosted_projects,hosted_project_details,edit_hosted_project,remove_hosted_project,activate_hosted_project,deactivate_hosted_project,skill_matched_hosted_project,user_hosted_projects,ping_hosted_project,hosted_project_interested_users,search_hosted_project,accept_hosted_project_request,reject_hosted_project_request,edit_hosted_project_query,remove_hosted_project_query
 
 
@@ -105,23 +104,7 @@ urlpatterns = [
     url(r'get-all-skills-stat-api/v1/$',get_all_skills_stat_apiv1,name = 'get_all_skills_stat_apiv1'),
     url(r'get-user-skills-stat-api/v1/(?P<user_id>\d+)/$',get_user_skills_stat_apiv1,name = 'get_user_skills_stat_apiv1'),
     #developers out there
-    url(r'^developer-section/$',devhub,name = 'devhub'),
-    url(r'^developer-section/ask-question/$',devhub_question,name = 'devhub_question'),
-    url(r'^developer-section/question/(?P<ques_id>\d+)/details/$',devhub_question_details,name = 'devhub_question_details'),
-    url(r'^developer-section/question/(?P<ques_id>\d+)/edit/$',edit_devhub_question,name = 'edit_devhub_question'),
-    url(r'^developer-section/question/(?P<ques_id>\d+)/remove/$',remove_devhub_question,name = 'remove_devhub_question'),
-    url(r'^developer-section/question/(?P<ques_id>\d+)/answer/(?P<ans_id>\d+)/edit/$',edit_devhub_question_answer,name = 'edit_devhub_question_answer'),
-    url(r'^developer-section/question/(?P<ques_id>\d+)/answer/(?P<ans_id>\d+)/remove/$',remove_devhub_question_answer,name = 'remove_devhub_question_answer'),
-    url(r'^developer-section/all-questions/$',get_all_devhub_questions,name = 'get_all_devhub_questions'),
-    url(r'^developer-section/search-question/$',search_devhub_question,name = 'search_devhub_question'),
-    url(r'^developer-section/post-topic/$',devhub_topic,name = 'devhub_topic'),
-    url(r'^developer-section/all-topics/$',get_all_devhub_topics,name = 'get_all_devhub_topics'),
-    url(r'^developer-section/search-topic/$',search_devhub_topic,name = 'search_devhub_topic'),
-    url(r'^developer-section/topic/(?P<topic_id>\d+)/details/$',devhub_topic_details,name = 'devhub_topic_details'),
-    url(r'^developer-section/topic/(?P<topic_id>\d+)/edit/$',edit_devhub_topic,name = 'edit_devhub_topic'),
-    url(r'^developer-section/topic/(?P<topic_id>\d+)/remove/$',remove_devhub_topic,name = 'remove_devhub_topic'),
-    url(r'^developer-section/topic/(?P<topic_id>\d+)/comment/(?P<comm_id>\d+)/edit/$',edit_devhub_topic_comment,name = 'edit_devhub_topic_comment'),
-    url(r'^developer-section/topic/(?P<topic_id>\d+)/comment/(?P<comm_id>\d+)/remove/$',remove_devhub_topic_comment,name = 'remove_devhub_topic_comment'),
+    url(r'^developer-section/',include('app.devhub_urls')),
     #propose event routtes
     url(r'^event/propose-event/$',propose_event,name = 'propose_event'),
     url(r'^event/propose-event/(?P<event_id>\d+)/details/$',propose_event_details,name = 'propose_event_details'),

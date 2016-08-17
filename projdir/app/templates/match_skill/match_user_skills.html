@@ -19,13 +19,13 @@
   {% endfor %}
   <h3>Skills statistics</h3>
   <hr/>
-  <h2>Skills Count:</h2>
+  <h2>Skills count among community:</h2>
   {% for key,value in skill_user_count_dict.items %}
     <a href = "{% url 'search_users_by_skill' key.slug %}">{{ key }}</a>:{{ value }}
     <br/>
   {% endfor %}
   <hr/>
-  <h2>Skill Percentile</h2>
+  <h2>Skill Percentile among community</h2>
   {% for key,value in skill_user_per_dict.items %}
     <a href = "{% url 'search_users_by_skill' key.slug %}">{{ key }}</a>:{{ value }}
     <br/>

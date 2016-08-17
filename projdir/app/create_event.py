@@ -3,8 +3,8 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-from .forms import CodehubCreateEventForm,CodehubEventQuestionForm,SearchForm,ProposeEventForm,ProposeEventSuggestionForm
-from .models import CodehubCreateEventModel,CodehubEventQuestionModel,UserProfileModel,ProposeEventModel,ProposeEventVoteModel,ProposeEventSuggestionModel
+from .forms import CodehubCreateEventForm,CodehubEventQuestionForm,SearchForm,ProposeEventForm,ProposeEventSuggestionForm,DevhubCreateEventForm,DevhubEventQuestionForm
+from .models import CodehubCreateEventModel,CodehubEventQuestionModel,UserProfileModel,ProposeEventModel,ProposeEventVoteModel,ProposeEventSuggestionModel,DevhubCreateEventModel,DevhubEventQuestionModel
 from .views import loginRequired
 import datetime
 
@@ -453,3 +453,152 @@ def remove_suggestion_to_propose_event(request,event_id,sugg_id):
     sugg_obj.delete()
     messages.success(request,'Suggestion removed Successfully')
     return redirect('/event/propose-event/'+str(event_id)+'/details')
+
+
+
+@loginRequired
+def create_devhub_event(request):
+    if request.method == 'POST':
+        form = DevhubCreateEventForm(request.POST)
+        if form.is_valid():
+            tags = form.cleaned_data['tags']
+            new_event = DevhubCreateEventModel(
+                user = request.user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
+                event_heading = form.cleaned_data['event_heading'],
+                event_date = form.cleaned_data['event_date'],
+                event_venue = form.cleaned_data['event_venue'],
+                event_description = form.cleaned_data['event_venue'],
+                event_for = form.cleaned_data['event_for'],
+            )
+            new_event.save()
+            new_event.tags.add(*tags)
+            messages.success(request,'Event created Successfully')
+            return redirect('/developer-section/events')
+    else:
+        form = DevhubCreateEventForm()
+    search_form = SearchForm()
+    events = DevhubCreateEventModel.objects.all().order_by("-created")[:5]
+    return render(request,'devhub/event/create_event.html',{'form':form,'events':events,'search_form':search_form})
+
+
+
+def get_devhub_events(request):
+    events_list = DevhubCreateEventModel.objects.all().order_by("-created")
+    events = do_pagination(request,events_list,5)
+    search_form = SearchForm()
+    return render(request,'devhub/event/events.html/',{'events':events,'search_form':search_form})
+
+
+
+@loginRequired
+def devhub_event_details(request,event_id):
+    if request.method == 'POST':
+        form = DevhubEventQuestionForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(username = request.user.username)
+            event = get_object_or_404(CodehubCreateEventModel,id = event_id)
+            new_question = DevhubEventQuestionModel(
+                user = user,
+                user_profile = UserProfileModel.objects.get(user_id = request.user.id),
+                event = event,
+                question_text = form.cleaned_data['question_text'],
+            )
+            new_question.save()
+            print 'saved'
+            messages.success(request,'Question posted Successfully')
+            return redirect('/developer-section/event/'+str(event_id)+'/details/')
+    else:
+        form = DevhubEventQuestionForm()
+    event_details = get_object_or_404(DevhubCreateEventModel,id = event_id)
+    event_questions = DevhubEventQuestionModel.objects.filter(event_id = event_id).order_by("-created")
+    return render(request,'devhub/event/event_details.html',{'event':event_details,'form':form,'event_questions':event_questions})
+
+
+
+
+@loginRequired
+def edit_devhub_event(request,event_id):
+    try:
+        get_object_or_404(DevhubCreateEventModel,id = event_id,user_id = request.user.id)
+    except:
+        messages.success(request,'No such thing exists')
+        return redirect('/')
+    if request.method == 'POST':
+        form = DevhubCreateEventForm(request.POST)
+        if form.is_valid():
+            event_details = get_object_or_404(DevhubCreateEventModel,id = event_id)
+            form = DevhubCreateEventForm(request.POST,instance = event_details)
+            form.save()
+            messages.success(request,'Event edited Successfully')
+            return redirect('/developer-section/events')
+    else:
+        event_details = get_object_or_404(DevhubCreateEventModel,id = event_id)
+        tagArr = []
+        for tag in event_details.tags.all():
+            tagArr.append(tag.name)
+        tags = ",".join(tagArr)
+        data = {'event_heading':event_details.event_heading,'event_date':event_details.event_date,'event_venue':event_details.event_venue,'event_description':event_details.event_description,'event_for':event_details.event_for,'tags':tags}
+        form = DevhubCreateEventForm(initial = data)
+    return render(request,'devhub/event/edit_devhub_event.html',{'form':form,'event_title':event_details.event_heading})
+
+
+
+def remove_devhub_event(request,event_id):
+    try:
+        event_obj = get_object_or_404(DevhubCreateEventModel,id = event_id ,user_id = request.user.id)
+        event_obj.delete()
+        messages.success(request,'Event removed Successfully')
+        return redirect('/developer-section/events')
+    except:
+        messages.warning(request,'Nothing such exists');
+        return redirect('/')
+
+
+
+@loginRequired
+def edit_devhub_event_question(request,event_id,ques_id):
+    if request.method == 'POST':
+        form = DevhubEventQuestionForm(request.POST)
+        if form.is_valid():
+            ques_details = get_object_or_404(DevhubEventQuestionModel,id = ques_id)
+            event_id = ques_details.event.id
+            form = DevhubEventQuestionForm(request.POST,instance = ques_details)
+            form.save()
+            print 'data updated'
+            messages.success(request,'Question edited Successfully')
+            return redirect('/developer-section/event/'+str(event_id)+'/details/')
+    else:
+        quest_details = get_object_or_404(DevhubEventQuestionModel,id = ques_id)
+        ques_data = {'question_text':quest_details.question_text}
+        form = DevhubEventQuestionForm(initial = ques_data)
+    return render(request,'devhub/event/edit_event_question.html',{'form':form})
+
+
+@loginRequired
+def remove_devhub_event_question(request,event_id,ques_id):
+    try:
+        quest_details = get_object_or_404(DevhubEventQuestionModel,id = ques_id)
+        event_id = quest_details.event.id
+        quest_details.delete()
+        messages.success(request,'Question removed Successfully')
+        return redirect('/developer-section/event/'+str(event_id)+'/details/')
+    except:
+        messages.warning(request,'No such thing exists')
+        return redirect('/')
+
+
+def search_devhub_event(request):
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search_str = form.cleaned_data['search_str']
+            event_by_name_list = DevhubCreateEventModel.objects.filter(event_heading__contains = search_str)
+            event_by_tag_list = DevhubCreateEventModel.objects.filter(tags__name__in = [search_str])
+            result_list = list(chain(event_by_name_list,event_by_tag_list))
+            result_list = Set(result_list)
+            form = SearchForm()
+            return render(request,'devhub/event/search_event.html',{'search_form':form,'result':result_list,'search_str':search_str})
+    else:
+        form = SearchForm()
+    return render(request,'devhub/event/search_event.html',{'search_form':form})

@@ -156,8 +156,6 @@ def edit_general_question_answer(request,ques_id,ans_id):
         return redirect('/')
 
 
-
-
 @loginRequired
 @check_user_acess_for_question_answer_edit
 def remove_general_question_answer(request,ques_id,ans_id):
@@ -168,8 +166,6 @@ def remove_general_question_answer(request,ques_id,ans_id):
     except:
         return redirect('/')
     return redirect('/general-question/question/'+ str(ques_id) +'/details/')
-
-
 
 
 def get_all_general_questions(request):

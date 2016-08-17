@@ -1,3 +1,10 @@
+/*
+*   author : abhishek goswami (hiro)
+*   abhishekg785@gmail.com
+*
+*   createVisual.js  : script used to create a visuals for the user skills
+*/
+
 function createStatVisual(skill_data,div_name){
   var svgHeight = 500 ,
       svgWidth = 1000,

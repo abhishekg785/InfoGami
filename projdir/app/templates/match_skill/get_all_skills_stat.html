@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% block title %}
+  <title>Skills Statistics</title>
+{% endblock %}
 {% load staticfiles %}
 {% block content %}
 <div id = 'main'>
@@ -15,19 +18,20 @@
     <a href = "{% url 'search_users_by_skill' key.slug %}">{{ key }}</a>:{{ value }}<br/>
   {% endfor %}
 </div>
-<script src = "{% static 'js/jquery.min.js' %}"></script>
-<script src = 'http://d3js.org/d3.v3.min.js' charset = 'utf-8'></script>
-<script src = "{% static 'js/createVisual.js' %}"></script>
-<script>
-  $.ajax({
-    url:'http://localhost:8000/get-all-skills-stat-api/v1/',
-    type:'GET',
-    success:function(data){
-      createStatVisual(data,'skills_stat_visual');
-    },
-    error:function(e){
-      console.log(e);
-    }
-  });
-</script>
+  {% block script %}
+      <script src = 'http://d3js.org/d3.v3.min.js' charset = 'utf-8'></script>
+      <script src = "{% static 'js/createVisual.js' %}"></script>
+      <script>
+        $.ajax({
+          url:'http://localhost:8000/get-all-skills-stat-api/v1/',
+          type:'GET',
+          success:function(data){
+            createStatVisual(data,'skills_stat_visual');
+          },
+          error:function(e){
+            console.log(e);
+          }
+        });
+      </script>
+  {% endblock %}
 {% endblock %}

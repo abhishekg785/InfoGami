@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}
+  <title>Developer-Section:Event Details</title>
+{% endblock %}
+{% block content %}
+{% load django_markdown %}
+{% load staticfiles %}
+<div id = 'main'>
+  <article class = 'post'>
+    <header>
+      <div class="title">
+        <h2><a href="#">{{ event.event_heading }}</a></h2>
+        {% if event.user.is_superuser == 1 %}
+          <p style = 'color:red'>Created by Admin</p>
+        {% endif %}
+        {% if event.user.username == user.username %}
+          <ul class="actions">
+            <li><a class= 'button' href="{% url 'edit_devhub_event' event.id %}">Edit</a></li>
+            <li><a class = 'button' href ="{% url 'remove_devhub_event' event.id %}">Remove</a></li>
+        {% endif %}
+      </div>
+      <div class="meta">
+        <time class="published">{{ event.created }}</time>
+        {% if event.user_profile.user_profile_pic.name %}
+          <h2><a href="{% url 'user_profile' event.user.id %}" class="author"><span class="name">{{ event.user.username }}</span><img src="/media/{{ event.user_profile.user_profile_pic }}" alt="Profile pic" /></a></h2>
+        {% else %}
+          <h2><a href="{% url 'user_profile' event.user.id %}" class="author"><span class="name">{{ event.user.username }}</span><img src = "{% static 'images/default_gravators/github.png' %}" /></a></h2>
+        {% endif %}
+      </div>
+    </header>
+    <div class = 'make_sober'>
+      <p>Last Edited:&nbsp;{{ event.modified }}</p>
+      <p>Venue:&nbsp;{{ event.event_venue }}</p>
+      {% if event.event_date %}
+        <p>Event on:{{ event.event_date }}</p>
+      {% else %}
+      <p>Event on:&nbsp;&nbsp;No date yet</p>
+      {% endif %}
+      {% if event.event_for != 'None' %}
+        <p>Event for:{{ event.event_for }}</p>
+      {% endif %}
+      <p>{{ event.event_description|markdown }}</p>
+    </div>
+  </article>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' name='post_question' value = 'Post Question' />
+  </form>
+  <hr/>
+  {% if not event_questions %}
+    <h3>No questions yet!!!</h3>
+  {% else %}
+    <section>
+      <div class ='mini-posts'>
+        {% for question in event_questions %}
+          <article class = 'mini-post'>
+            <header>
+              <p>{{ question.question_text }}</p>
+              <time class="published">{{ question.created }}</time>
+              {% if question.user_profile.user_profile_pic.name %}
+                <h2><a style = "top:0.5em" href="{% url 'user_profile' question.user.id %}" class="author">{{ question.user.username }}<img src="/media/{{ question.user_profile.user_profile_pic }}" alt="" /></a></h2>
+              {% else %}
+              <h2><a style = "top:0.5em" href="{% url 'user_profile' question.user.id %}" class="author">{{ question.user.username }}<img src="{% static 'images/default_gravators/github.png' %}" alt="" /></a></h2>
+              {% endif %}
+              {% if question.user.username == request.user.username %}
+              <ul class = 'actions'>
+                <li><a href = "{% url 'edit_devhub_event_question' event.id question.id %}" class = 'button'>Edit</a></li>
+                <li><a href = "{% url 'remove_devhub_event_question' event.id question.id %}" class = 'button'>Remove</a></li>
+              </ul>
+              {% endif %}
+            </header>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+</div>
+{% endblock %}

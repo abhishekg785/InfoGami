@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block title %}
-  <title>Coding-Section:Search</title>
+  <title>Developer-Section:Search</title>
 {% endblock %}
 {% block content %}
 <div id ='main'>
-  <h3>Search Events:</h3>
+  <h3>Search Developer's Events:</h3>
   <form method="post">
     {% csrf_token %}
     {{ search_form.as_p }}
@@ -21,7 +21,7 @@
         <li>
           <article>
             <header>
-              <h2><a href="{% url 'codehub_event_details' event.id %}">{{ event.event_heading }}</a></h2>
+              <h2><a href="{% url 'devhub_event_details' event.id %}">{{ event.event_heading }}</a></h2>
               <time class="published">{{ event.created }}</time>
               <p class="published">by:<a href = "{% url 'user_profile' event.user.id %}">{{ event.user.username }}</a></p>
             </header>
