@@ -43,12 +43,12 @@ class UserProfileForm(forms.ModelForm):
     programme = forms.ChoiceField(choices = PROGRAMME_CHOICE, required = True)
     branch = forms.CharField(label = 'Branch (Does it matter :p)', widget = forms.TextInput(attrs = {'placeholder' : 'Your Branch'}))
     # branch = forms.ChoiceField(label = 'Branch (Does it matter :p)' , choices = BRANCH_CHOICES, required = True)
-    graduation_year = forms.CharField(label = '', max_length = 4, widget = forms.TextInput(attrs = {'placeholder' : 'Graduation Year'}))
     college_year = forms.ChoiceField(label = 'College Year/ Alumni', choices = USER_YEAR_CHOICES, required = True)
+    graduation_year = forms.CharField(label = '', max_length = 4, widget = forms.TextInput(attrs = {'placeholder' : 'Graduation Year'}))
     user_profile_pic = forms.FileField(label = 'Profile Pic (Look Smart !)',required = False)
     class Meta:
         model = UserProfileModel
-        fields = ['user_description', 'skills', 'user_type_select', 'programme', 'branch', 'graduation_year', 'college_year','user_profile_pic']
+        fields = ['user_description', 'skills', 'user_type_select', 'programme', 'branch', 'college_year', 'graduation_year', 'user_profile_pic']
 
 
 
