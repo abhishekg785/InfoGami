@@ -73,7 +73,7 @@ def user_profile(request,user_id):
 @loginRequired
 @check_user_access_for_profile_edit
 def edit_user_profile(request,user_id):
-    data = ['user_description','skills','user_type_select','user_profile_pic']
+    data = ['user_description', 'skills', 'user_type_select', 'branch', 'graduation_year', 'college_year', 'user_profile_pic']
     if request.method == 'POST':
         form = UserProfileForm(request.POST)
         if form.is_valid():

@@ -33,19 +33,22 @@ class CodehubTopicCommentForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    CHOICES = (('','--Select Type--'),('Programmer','Programmer'),('Developer','Developer'),('Not sure right now:)','Not sure right now:)'),(''),)
-    BRANCH_CHOICES = (('', '--Select Branch--'), ('Computer Science', 'Computer Science'), ('Information Technology', 'Information Technology'), ('Electronics', 'Electronics'), ('Electrical Engineering', 'Electrical Engineering'), ('Mechanical', 'Mechanical'), ('Civil Engineering', 'Civil Engineering'), ('Production Engineering', 'Production Engineering'))
-    USER_YEAR_CHOICES = (('', '--Select Year--'), ('First Year', 'First Year'), ('Second Year', 'Second Year'), ('Third Year', 'Third Year'), ('Fourth Year', 'Fourth Year'))
+    USER_TYPE_CHOICES = (('','--Select Type--'),('Programmer','Programmer'),('Developer/Hacker','Developer/Hacker'), ('Nerd/Geek', 'Nerd/Geek'), ('Entrepreneur', 'Entrepreneur'), ('Not sure right now:)','Not sure right now:)'))
+    PROGRAMME_CHOICE = (('','--Select Type--'), ('B-Tech', 'B-Tech'), ('M-Tech', 'M-Tech'), ('MCA', 'MCA'), ('PHD', 'PHD'),)
+    # BRANCH_CHOICES = (('', '--Select Branch--'), ('Computer Science', 'Computer Science'), ('Information Technology', 'Information Technology'), ('Electronics', 'Electronics'), ('Electrical Engineering', 'Electrical Engineering'), ('Mechanical', 'Mechanical'), ('Civil Engineering', 'Civil Engineering'), ('Production Engineering', 'Production Engineering'))
+    USER_YEAR_CHOICES = (('', '--Select Year--'), ('First Year', 'First Year'), ('Second Year', 'Second Year'), ('Pre-Final', 'Pre-Final'), ('Final Year', 'Final Year'), ('Alumni', 'Alumni'))
     user_description = forms.CharField(label = '', max_length = 300, widget = forms.TextInput(attrs = {'placeholder' : 'A line about yourself (max 300 chars)'}))
     skills = TagField(label = 'Skills (What makes you itch ? )', widget = TagWidget(attrs = {'placeholder':'Enter your skills like python, poetry, c. c++, etc'}))
-    branch = forms.ChoiceField(label = 'Branch (Does it matter :p)' , choices = BRANCH_CHOICES, required = True)
+    user_type_select = forms.ChoiceField(choices = USER_TYPE_CHOICES, required = True )
+    programme = forms.ChoiceField(choices = PROGRAMME_CHOICE, required = True)
+    branch = forms.CharField(label = 'Branch (Does it matter :p)', widget = forms.TextInput(attrs = {'placeholder' : 'Your Branch'}))
+    # branch = forms.ChoiceField(label = 'Branch (Does it matter :p)' , choices = BRANCH_CHOICES, required = True)
     graduation_year = forms.CharField(label = '', max_length = 4, widget = forms.TextInput(attrs = {'placeholder' : 'Graduation Year'}))
-    user_year = forms.ChoiceField(choices = USER_YEAR_CHOICES, required = True)
-    user_type_select = forms.ChoiceField(choices = CHOICES, required = True )
+    college_year = forms.ChoiceField(label = 'College Year/ Alumni', choices = USER_YEAR_CHOICES, required = True)
     user_profile_pic = forms.FileField(label = 'Profile Pic (Look Smart !)',required = False)
     class Meta:
         model = UserProfileModel
-        fields = ['user_description','skills','user_type_select','user_profile_pic']
+        fields = ['user_description', 'skills', 'user_type_select', 'programme', 'branch', 'graduation_year', 'college_year','user_profile_pic']
 
 
 
