@@ -11,7 +11,7 @@ from sets import Set
 
 from .views import loginRequired
 from .forms import UserProfileForm,SearchForm
-from .models import UserProfileModel,CodehubTopicModel,CodehubQuestionModel,BlogPostModel,CodehubInnovationPostModel,CodehubCreateEventModel,FollowUserModel,MesssageModel
+from .models import UserProfileModel,CodehubTopicModel,CodehubQuestionModel,BlogPostModel,CodehubInnovationPostModel,CodehubCreateEventModel,FollowUserModel,MesssageModel, UserSocialAccountModel
 import datetime
 
 #pagination stuff
@@ -359,17 +359,6 @@ def get_message_center(request):
 
 
 
-    # """
-    # sender
-    # received messages
-    # sent messages
-    # """
-    # messages = MesssageModel.objects.filter(receiver_id = request.user.id)
-    # return HttpResponse(messages)
-
-
-
-
 #api to fetch data for message center api
 @loginRequired
 def get_message_center_data_api(request):
@@ -392,9 +381,6 @@ def get_message_center_data_api(request):
 
 
 
-
-
-
 @loginRequired
 def fetch_user_messages_message_center_api(request,sender_id):
     #fetch user messages by the sender having id = sender_id
@@ -405,7 +391,27 @@ def fetch_user_messages_message_center_api(request,sender_id):
 
 """
   api for adding social accounts of a user logged in
+  url will be /user/social-accounts/save
 """
 @loginRequired
-def add_user_social_accounts(request):
-    pass
+def save_user_social_accounts(request):
+    if request.method == 'POST':
+        postData = request.POST['socialAccountData']
+        postData =  json.loads(postData)
+        socialAccountNames =  postData['socialAccountNames']
+        socialAccountLinks = postData['socialAccountLinks']
+        user = User.objects.get(id = request.user.id)
+        user_profile = UserProfileModel.objects.get(user_id = request.user.id)
+        for index in range(len(socialAccountNames)):
+            new_account = UserSocialAccountModel(
+                user = user,
+                user_profile = user_profile,
+                social_profile_name = socialAccountNames[index],
+                social_profile_link = socialAccountLinks[index]
+            )
+            new_account.save()
+            print 'saved'
+        return HttpResponse('vkjfbvkfbvkfbvk')
+    user_accounts = UserSocialAccountModel.objects.filter(user_id = request.user.id)
+    print user_accounts
+    return HttpResponse('vkjfbvkfbvkfbvk')

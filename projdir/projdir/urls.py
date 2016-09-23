@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 
 from app.views import login_view,register_view,logout_view,index,about_view
 from app.codehub import codehub_question,remove_codehub_question,edit_codehub_question,codehub,codehub_topic,edit_topic,remove_topic,comment_on_topic,search_topic,remove_topic_comment,edit_topic_comment,codehub_question_details,remove_codehub_question_comment,edit_codehub_question_comment,search_question,codehub_innovation,codehub_innovation_details,edit_codehub_innovation_idea,remove_codehub_innovation_idea,edit_codehub_innovation_idea_comment,remove_codehub_innovation_idea_comment,search_codehub_innovation_post,get_all_codehub_topics,get_all_codehub_questions
-from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog,follow_user_profile,get_user_new_ideas,get_codehub_user_events,unfollow_user_profile,get_user_notifications,get_following_users,get_users_followed,user_new_messages_api,get_user_messages,post_message_api,set_message_status_true_api,fetch_user_messages_message_center_api,get_message_center,get_message_center_data_api
+from app.users import get_users,user_profile,edit_user_profile,get_user_questions,get_user_topics,user_blog,follow_user_profile,get_user_new_ideas,get_codehub_user_events,unfollow_user_profile,get_user_notifications,get_following_users,get_users_followed,user_new_messages_api,get_user_messages,post_message_api,set_message_status_true_api,fetch_user_messages_message_center_api,get_message_center,get_message_center_data_api,save_user_social_accounts
 from app.create_event import codehub_events,create_codehub_event,edit_codehub_event,remove_codehub_event,codehub_event_details,remove_codehub_event_question,edit_codehub_event_question,search_codehub_event,propose_event,propose_event_details,upVote_propose_event,downVote_propose_event,propose_event_users_upvoted,propose_event_users_downvoted,edit_propose_event,remove_propose_event,search_propose_event,get_all_proposed_events,edit_suggestion_to_propose_event,remove_suggestion_to_propose_event
 from app.music import music_list
 from app.match_skill import match_user_skills,search_users_by_skill,get_all_skills_stat,get_all_skills_stat_apiv1,get_user_skills_stat_apiv1
@@ -70,6 +70,8 @@ urlpatterns = [
     url(r'^codehub/question/answer/(?P<ans_id>\d+)/remove/$',remove_codehub_question_comment,name = 'remove_codehub_question_comment'),
     url(r'^codehub/question/answer/(?P<ans_id>\d+)/edit/$',edit_codehub_question_comment,name = 'edit_codehub_question_comment'),
     url(r'^codehub/all_questions/$',get_all_codehub_questions,name = 'get_all_codehub_questions'),
+    #storing user profile api
+    url(r'^user/social-accounts/save', save_user_social_accounts, name = 'save_user_social_accounts'),
     #user's specific
     url(r'^notifications/',get_user_notifications,name = 'notifications'),
     url(r'^user/(?P<user_id>\d+)/topics/$',get_user_topics,name = 'get_user_topics'),

@@ -65,6 +65,7 @@
   <div id = 'userSocialAccounts'>
     <button id = 'addSocialInput'>Add+</button>
     <button id = 'saveSocialProfiles' style="display:none">Save</button>
+    <input type="hidden" value = "{{ csrf_token }}" id = 'csrf_token' />
   </div>
   <hr/>
   <div id = 'user_skill_stat_div'>
@@ -86,7 +87,8 @@
         $saveSocialProfiles = $('#saveSocialProfiles'),
         SocialAccountNameArr = [],
         SocialAccountLinkArr = [],
-        AccountCount = 0;
+        AccountCount = 0,
+        csrf_token = $('#csrf_token');
 
     AddSocialAccountFunctions = {
       hideSaveButton : function(){
@@ -95,6 +97,30 @@
 
       showSaveButton : function(){
         $saveSocialProfiles.show();
+      },
+
+      sendData : function(data){
+        var postData = {
+          'socialAccountData' : JSON.stringify(data),
+          'csrfmiddlewaretoken' : csrf_token.val()
+        }
+        console.log(postData);
+        $.ajax({
+          url : 'http://localhost:8000/user/social-accounts/save',
+          type : 'POST',
+          data : postData,
+          success : function(res){
+            console.log(res);
+          },
+          error: function(err){
+            console.log(err);
+          }
+        })
+      },
+
+      clearData : function(){
+        SocialAccountNameArr = [];
+        SocialAccountLinkArr = [];
       }
     }
 
@@ -134,7 +160,9 @@
           "socialAccountLinks" : SocialAccountLinkArr
         }
         console.log(SocialAccountJSON);
-        //call the api here
+        console.log('sending data');
+        AddSocialAccountFunctions.sendData(SocialAccountJSON);
+        AddSocialAccountFunctions.clearData();
       }
     });
   </script>
