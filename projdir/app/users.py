@@ -75,8 +75,8 @@ def user_profile(request,user_id):
 def edit_user_profile(request,user_id):
     data = ['user_description', 'skills', 'user_type_select', 'programme', 'branch', 'graduation_year', 'college_year', 'user_profile_pic']
     if request.method == 'POST':
+        print request.POST
         form = UserProfileForm(request.POST)
-        print form
         if form.is_valid():
             try:
                 file = request.FILES['user_profile_pic']

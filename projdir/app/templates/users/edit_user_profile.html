@@ -7,9 +7,9 @@
   <h1>User Profile : Give us some of your info to understand you better :)</h1>
   <hr/>
   <form method = 'post' enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type='submit' name='edit_profile' value = 'Save Changes'/>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' name='edit_profile' value = 'Save Changes'/>
   </form>
 </div>
 {% endblock %}
