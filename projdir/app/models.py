@@ -474,3 +474,12 @@ class DevhubEventQuestionModel(models.Model):
     question_text = MarkdownField()
     created = models.DateTimeField(auto_now_add = True)
     modified = models.DateTimeField(auto_now = True)
+
+"""
+  models for storing the user diff accounts
+"""
+class UserSocialAccountModel(models.Model):
+    user = models.ForeignKey(User)
+    user_profile = models.ForeignKey(UserProfileModel)
+    social_profile_name = models.CharField(max_length = 50)
+    social_profile_link = models.CharField(max_length = 100)

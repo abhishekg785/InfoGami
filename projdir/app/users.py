@@ -401,3 +401,11 @@ def fetch_user_messages_message_center_api(request,sender_id):
     messages = MesssageModel.objects.filter(receiver_id = request.user.id, sender_id = sender_id).order_by('-created')
     return HttpResponse(messages)
     #return HttpResponse(json.dumps(messages), content_type = 'application/json')
+
+
+"""
+  api for adding social accounts of a user logged in
+"""
+@loginRequired
+def add_user_social_accounts(request):
+    pass
