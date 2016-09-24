@@ -62,6 +62,13 @@
   <a href = "{% url 'get_codehub_user_events' user_info.id %}">Talks or Events by User</a><br/>
   <a href = "{% url 'user_hosted_projects' user_info.id %}">Hosted projects by user</a>
   <hr/>
+  <div id = 'displayUserSocialAccounts'>
+  <h1>User Social Accounts:</h1>
+    {% for account in user_social_accounts %}
+      {{ account.social_profile_name }} : <a href = "{{ account.social_profile_link}}">{{ account.social_profile_link}}</a>
+      <br/>
+    {% endfor %}
+  </div>
   {% if user_info.username == user.username %}
     <div id = 'userSocialAccounts'>
       <button id = 'addSocialInput'>Add+</button>

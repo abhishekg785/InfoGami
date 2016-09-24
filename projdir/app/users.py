@@ -53,6 +53,9 @@ def get_users(request):
     return render(request,'users/user_list.html',{'users':users,'form':form})
 
 
+"""
+  get the user_proile
+"""
 @loginRequired
 def user_profile(request,user_id):
     # info = User.objects.get(id = user_id)
@@ -61,13 +64,16 @@ def user_profile(request,user_id):
         user_profile = UserProfileModel.objects.get(user_id = user_id)
     except:
         user_profile = False
-    #getting user following data
+    #getting whether the logged user follows the current user or not
     try:
         follow_result = FollowUserModel.objects.get(following_user_id = request.user.id,followed_user_id = user_id)
         is_following = follow_result
     except:
         is_following = False
-    return render(request,'users/user_profile.html',{'user_info':info,'user_profile':user_profile,'is_following':is_following})
+    #get the social accounts of the corresponsing user
+    user_social_accounts = UserSocialAccountModel.objects.filter(user_id = request.user.id)
+    print user_social_accounts
+    return render(request,'users/user_profile.html',{'user_info':info,'user_profile':user_profile,'is_following':is_following, 'user_social_accounts' : user_social_accounts})
 
 
 @loginRequired
@@ -412,6 +418,3 @@ def save_user_social_accounts(request):
             new_account.save()
             print 'saved'
         return HttpResponse('vkjfbvkfbvkfbvk')
-    user_accounts = UserSocialAccountModel.objects.filter(user_id = request.user.id)
-    print user_accounts
-    return HttpResponse('vkjfbvkfbvkfbvk')

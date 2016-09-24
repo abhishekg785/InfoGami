@@ -9,6 +9,7 @@
   var $addSocialInput = $('#addSocialInput'),
       $userSocialAccounts = $('#userSocialAccounts'),
       $saveSocialProfiles = $('#saveSocialProfiles'),
+      $displayUserSocialAccounts = $('#displayUserSocialAccounts'),
       SocialAccountNameArr = [],
       SocialAccountLinkArr = [],
       AccountCount = 0,
@@ -35,16 +36,38 @@
         data : postData,
         success : function(res){
           console.log(res);
+          AddSocialAccountFunctions.updateDataINDOM().clearData().successMessage();
         },
         error: function(err){
-          console.log(err);
+          AddSocialAccountFunctions.errorMessage();
         }
       })
+      return AddSocialAccountFunctions;
     },
 
     clearData : function(){
       SocialAccountNameArr = [];
       SocialAccountLinkArr = [];
+      return AddSocialAccountFunctions;
+    },
+
+    successMessage : function(){
+      $userSocialAccounts.empty();
+      $userSocialAccounts.append('<h1 style = "color:green">All accounts Saved Successfully!</h1>');
+    },
+
+    errorMessage : function(){
+      $userSocialAccounts.empty();
+      $userSocialAccounts.append('<h1 style = "color:red">Error Occurred! Try Refreshing the page</h1>');
+    },
+
+    updateDataINDOM : function(){
+      //set the all accounts in the $userSocialAccounts
+      for(var i = 0 ; i < SocialAccountNameArr.length; i++){
+        var item = SocialAccountNameArr[i] + ':' + '<a href = "'+ SocialAccountLinkArr[i] +'">'+ SocialAccountLinkArr[i] +'</a>';
+        $displayUserSocialAccounts.append(item);
+      }
+      return AddSocialAccountFunctions;
     }
   }
 
@@ -86,6 +109,5 @@
       console.log(SocialAccountJSON);
       console.log('sending data');
       AddSocialAccountFunctions.sendData(SocialAccountJSON);
-      AddSocialAccountFunctions.clearData();
     }
   });
