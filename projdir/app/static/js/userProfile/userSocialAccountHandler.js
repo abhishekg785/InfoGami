@@ -10,6 +10,7 @@
       $userSocialAccounts = $('#userSocialAccounts'),
       $saveSocialProfiles = $('#saveSocialProfiles'),
       $displayUserSocialAccounts = $('#displayUserSocialAccounts'),
+      $editSocialAccounts = $('#editSocialAccounts'),
       SocialAccountNameArr = [],
       SocialAccountLinkArr = [],
       AccountCount = 0,
@@ -72,7 +73,7 @@
   }
 
   $addSocialInput.click(function(){
-    var item = '<div id = "fillSocialAccount'+ AccountCount +'"><input type = "text"  id = "socialAccountName'+ AccountCount +'" class = "socialAccountName" placeholder = "Social Account" /><input type = "text" id = "socialAccountLink'+ AccountCount +'" class = "socialAccountLink" placeholder = "Link"/><button onclick = "cancelSocialAccount('+ AccountCount  +')" class = "cancelSocialAccount" id = "cancelSocialAccount'+ AccountCount +'">Cancel</button><hr/></div>';
+    var item = '<div id = "fillSocialAccount'+ AccountCount +'"><input type = "text"  id = "socialAccountName'+ AccountCount +'" class = "socialAccountName" placeholder = "Social Account" /><input type = "text" id = "socialAccountLink'+ AccountCount +'" class = "socialAccountLink" placeholder = "Link to the account"/><button onclick = "cancelSocialAccount('+ AccountCount  +')" class = "cancelSocialAccount" id = "cancelSocialAccount'+ AccountCount +'">Cancel</button><hr/></div>';
     // $userSocialAccounts.append(item);
     $addSocialInput.before(item);
     AddSocialAccountFunctions.showSaveButton();

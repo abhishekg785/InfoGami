@@ -72,6 +72,7 @@
   {% if user_info.username == user.username %}
     <div id = 'userSocialAccounts'>
       <button id = 'addSocialInput'>Add+</button>
+      <a href = '{% url "edit_user_social_accounts" %}' class = 'button'>Edit</a>
       <button id = 'saveSocialProfiles' style="display:none">Save</button>
       <input type="hidden" value = "{{ csrf_token }}" id = 'csrf_token' />
     </div>
@@ -80,7 +81,6 @@
   <div id = 'user_skill_stat_div'>
     <h1>"{{ user_info.username  }}" skills statstics among community</h1>
     <div id = 'user_stat_visual'>
-
     </div>
   </div>
   </div>

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}
+  <title>User Accounts : Edit</title>
+{% endblock %}
+{% block content %}
+  <div id = 'main'>
+    {% for account in user_social_accounts %}
+      <div class = ''>
+        <input class = 'userAccountName' type = 'text' value = "{{ account.social_profile_name }}" />
+        <input class = 'userAccountLink' type= 'text' value = "{{ account.social_profile_link }}" />
+        <hr/>
+      </div>
+    {% endfor %}
+    <button id = 'saveAccounts'>Save</button>
+  </div>
+  <script>
+  </script>
+{% endblock %}

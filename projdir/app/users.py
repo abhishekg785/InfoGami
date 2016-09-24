@@ -418,3 +418,10 @@ def save_user_social_accounts(request):
             new_account.save()
             print 'saved'
         return HttpResponse('vkjfbvkfbvkfbvk')
+
+
+@loginRequired
+def edit_user_social_accounts(request):
+    user_id = request.user.id
+    user_social_accounts = UserSocialAccountModel.objects.filter(user_id = request.user.id)
+    return render(request, 'users/edit_user_social_accounts.html', {'user_social_accounts' : user_social_accounts})
