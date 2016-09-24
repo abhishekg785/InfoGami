@@ -4,15 +4,78 @@
 {% endblock %}
 {% block content %}
   <div id = 'main'>
+    <input type="hidden" id = "csrf_token" value = "{{ csrf_token }}"/>
+    <input type="hidden" id = "loggedUserId" value = "{{ user.id }}"/>
     {% for account in user_social_accounts %}
-      <div class = ''>
-        <input class = 'userAccountName' type = 'text' value = "{{ account.social_profile_name }}" />
-        <input class = 'userAccountLink' type= 'text' value = "{{ account.social_profile_link }}" />
+      <div id = "{{ account.social_profile_name }}">
+        <input  class = 'userAccountName' type = 'text' value = "{{ account.social_profile_name }}" />
+        <input  class = 'userAccountLink' type= 'text' value = "{{ account.social_profile_link }}" />
+        <button onclick = "removeAccount('{{account.social_profile_name}}')" class = 'removeAccount'>Remove</button>
         <hr/>
       </div>
     {% endfor %}
     <button id = 'saveAccounts'>Save</button>
   </div>
-  <script>
-  </script>
-{% endblock %}
+  {% endblock %}
+  {% block script %}
+    <script>
+    var socialAccountNameArr = document.getElementsByClassName('userAccountName'),
+        socialAccountLinkArr = document.getElementsByClassName('userAccountLink'),
+        saveAccounts = $('#saveAccounts'),
+        AccountNameArr = [],
+        AccountLinkArr = [],
+        csrf_token = $('#csrf_token').val(),
+        loggedUserId = $('#loggedUserId').val();
+
+      var EditSocialAccountFunctions = {
+        sendData : function(data){
+          var postData = {
+            'csrfmiddlewaretoken' : csrf_token,
+            'newSocialAccountData' : JSON.stringify(data)
+          }
+          $.ajax({
+            url : 'http://localhost:8000/user/social-accounts/edit',
+            type : 'POST',
+            data : postData,
+            success : function(res){
+              console.log(res);
+              // window.location = '/user/profile/' + loggedUserId;
+            },
+            error : function(err){
+              console.log(err);
+            }
+          });
+        },
+
+        clearData : function(){
+          AccountNameArr = [];
+          AccountLinkArr = [];
+        }
+      }
+
+      saveAccounts.click(function(){
+        EditSocialAccountFunctions.clearData();
+        for(var i = 0 ; i < socialAccountNameArr.length; i++){
+          if(socialAccountNameArr[i].value == '' || socialAccountLinkArr[i].value == ''){
+            alert('all fields are required!');
+            return;
+          }
+          else{
+            AccountNameArr.push(socialAccountNameArr[i].value);
+            AccountLinkArr.push(socialAccountLinkArr[i].value);
+          }
+        }
+        var dataJSON = {
+          "socialAccountNamesArr" : AccountNameArr,
+          "socialAccountLinkArr" : AccountLinkArr
+        }
+        console.log(AccountNameArr);
+        console.log(AccountLinkArr);
+        EditSocialAccountFunctions.sendData(dataJSON);
+      });
+
+      function removeAccount(accountName){
+        $('#' + accountName).remove();
+      }
+    </script>
+  {% endblock %}

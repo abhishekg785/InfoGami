@@ -422,6 +422,27 @@ def save_user_social_accounts(request):
 
 @loginRequired
 def edit_user_social_accounts(request):
+    if request.method == 'POST':
+        new_account_data = request.POST['newSocialAccountData']
+        new_account_data = json.loads(new_account_data)
+        social_account_link_arr = new_account_data['socialAccountLinkArr']
+        social_account_name_arr = new_account_data['socialAccountNamesArr']
+        #delete previous data
+        #insert new data
+        user = User.objects.get(id = request.user.id)
+        user_profile = UserProfileModel.objects.get(user_id = request.user.id)
+        UserSocialAccountModel.objects.filter(user_id = request.user.id).delete()
+        for index in range(len(social_account_name_arr)):
+            new_account = UserSocialAccountModel(
+                user = user,
+                user_profile = user_profile,
+                social_profile_name = social_account_name_arr[index],
+                social_profile_link = social_account_link_arr[index]
+            )
+            new_account.save()
+            print 'saved'
+        messages.success(request,'Accounts updated Successfully')
+        return HttpResponse('success')
     user_id = request.user.id
     user_social_accounts = UserSocialAccountModel.objects.filter(user_id = request.user.id)
     return render(request, 'users/edit_user_social_accounts.html', {'user_social_accounts' : user_social_accounts})
