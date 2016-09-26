@@ -7,10 +7,10 @@
     <input type="hidden" id = "csrf_token" value = "{{ csrf_token }}"/>
     <input type="hidden" id = "loggedUserId" value = "{{ user.id }}"/>
     {% for account in user_social_accounts %}
-      <div id = "{{ account.social_profile_name }}">
+      <div>
         <input  class = 'userAccountName' type = 'text' value = "{{ account.social_profile_name }}" />
         <input  class = 'userAccountLink' type= 'text' value = "{{ account.social_profile_link }}" />
-        <button onclick = "removeAccount('{{account.social_profile_name}}')" class = 'removeAccount'>Remove</button>
+        <button  class = 'removeAccount'>Remove</button>
         <hr/>
       </div>
     {% endfor %}
@@ -75,7 +75,13 @@
       });
 
       function removeAccount(accountName){
-        $('#' + accountName).remove();
+        console.log(this);
+        // $('#' + accountName).remove();
       }
+
+      //find the parent of the button we clicked to remove
+      $('.removeAccount').on('click', function(){
+        console.log($(this).parent().remove());
+      });
     </script>
   {% endblock %}

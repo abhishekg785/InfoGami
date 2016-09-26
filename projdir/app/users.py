@@ -352,10 +352,6 @@ def set_message_status_true_api(request):
     return HttpResponse('success')
 
 
-
-
-
-
 #MESSAGE CENTER apis
 #fetch the user's messages by the given sender
 
@@ -420,6 +416,9 @@ def save_user_social_accounts(request):
         return HttpResponse('vkjfbvkfbvkfbvk')
 
 
+"""
+  edit user social accounts
+"""
 @loginRequired
 def edit_user_social_accounts(request):
     if request.method == 'POST':
