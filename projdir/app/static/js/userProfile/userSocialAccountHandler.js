@@ -107,6 +107,7 @@
         "socialAccountNames" : SocialAccountNameArr,
         "socialAccountLinks" : SocialAccountLinkArr
       }
+      
       console.log(SocialAccountJSON);
       console.log('sending data');
       AddSocialAccountFunctions.sendData(SocialAccountJSON);

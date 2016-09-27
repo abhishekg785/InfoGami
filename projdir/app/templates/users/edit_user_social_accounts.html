@@ -7,7 +7,7 @@
     <input type="hidden" id = "csrf_token" value = "{{ csrf_token }}"/>
     <input type="hidden" id = "loggedUserId" value = "{{ user.id }}"/>
     {% for account in user_social_accounts %}
-      <div>
+      <div class = 'accountInfoDIV'>
         <input  class = 'userAccountName' type = 'text' value = "{{ account.social_profile_name }}" />
         <input  class = 'userAccountLink' type= 'text' value = "{{ account.social_profile_link }}" />
         <button  class = 'removeAccount'>Remove</button>
@@ -39,7 +39,7 @@
             data : postData,
             success : function(res){
               console.log(res);
-              // window.location = '/user/profile/' + loggedUserId;
+              window.location = '/user/profile/' + loggedUserId;
             },
             error : function(err){
               console.log(err);
