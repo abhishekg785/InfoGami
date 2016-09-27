@@ -116,7 +116,12 @@
         for(var i = 0; i < received_message_users_len; i++){
           var id = received_message_users[i],
               sender_pic = received_message_user_pic[i];
-              list_elem = "<article onclick = 'Functions.loadReceivedMessage(" + '"' + received_message_users[i] + '"' + ")' data-user = '" + id +"' id = '" + id +"' class = 'mini-post user_name_sec'><header><h3>" + received_message_users[i] + "</h3><a class='author'><img src='/media/" + sender_pic +"' alt='' /></a></header></article>";
+              if(sender_pic == ''){
+                list_elem = "<article onclick = 'Functions.loadReceivedMessage(" + '"' + received_message_users[i] + '"' + ")' data-user = '" + id +"' id = '" + id +"' class = 'mini-post user_name_sec'><header><h3>" + received_message_users[i] + "</h3><a class='author'><img src = '/static/images/default_gravators/github.png' /></a></header></article>";
+              }
+              else{
+                list_elem = "<article onclick = 'Functions.loadReceivedMessage(" + '"' + received_message_users[i] + '"' + ")' data-user = '" + id +"' id = '" + id +"' class = 'mini-post user_name_sec'><header><h3>" + received_message_users[i] + "</h3><a class='author'><img src='/media/" + sender_pic +"' alt='' /></a></header></article>";
+              }
           mini_posts_div.append(list_elem);
         }
       }
@@ -183,7 +188,12 @@
         for(var i = 0 ; i < sent_users_list_len ; i++){
           var receiver_pic = sent_message_user_pic[i],
               receiver_name = sent_message_users[i];
-              list_item = "<article onclick = 'Functions.loadSentMessage(" + '"' + receiver_name + '"' + ")'  class = 'mini-post user_name_sec'><header><h3>" + receiver_name + "</h3><a class='author'><img src='/media/" + receiver_pic +"' alt='' /></a></header></article>";
+              if(receiver_pic == ''){
+                list_item = "<article onclick = 'Functions.loadSentMessage(" + '"' + receiver_name + '"' + ")'  class = 'mini-post user_name_sec'><header><h3>" + receiver_name + "</h3><a class='author'><img src = '/static/images/default_gravators/github.png' /></a></header></article>";
+              }
+              else{
+                list_item = "<article onclick = 'Functions.loadSentMessage(" + '"' + receiver_name + '"' + ")'  class = 'mini-post user_name_sec'><header><h3>" + receiver_name + "</h3><a class='author'><img src='/media/" + receiver_pic +"' alt='' /></a></header></article>";
+              }
           mini_posts_div.append(list_item);
         }
       }
