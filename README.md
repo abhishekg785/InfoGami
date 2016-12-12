@@ -2,7 +2,7 @@
 -------------------------------------
 
 An online Social Network for a college made for the developers, coders, electronic freaks etc.
-http://107.170.48.240/
+
 
 During the starting years in the college , a student has no idea about college, students around him, people of his/her interest, their social accounts, contact with seniors and alumnis etc.
 So bringing all these things together makes InfoGami.
