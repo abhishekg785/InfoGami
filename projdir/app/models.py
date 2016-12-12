@@ -18,7 +18,7 @@ class UserProfileModel(models.Model):
     user_description = MarkdownField()
     skills = TaggableManager()
     user_type_select = models.CharField(max_length = 50,default = 'None')
-    programme = models.CharField(max_length = 15)
+    programme = models.CharField(max_length = 15)   
     branch = models.CharField(max_length = 100)
     college_year = models.CharField(max_length = 10)
     graduation_year = models.CharField(max_length = 4)
