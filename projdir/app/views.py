@@ -32,8 +32,6 @@ def check_authentication(func):
 
 
 
-
-
 def check_if_user_profile_exists(func):
     def wrapper(request,*args,**kwargs):
         try:
@@ -42,7 +40,6 @@ def check_if_user_profile_exists(func):
             return redirect('/users/profile/'+str(request.user.id)+'/edit')
         return func(request,*args,**kwargs)
     return wrapper
-
 
 
 
